@@ -5,18 +5,31 @@ using FrostweepGames.Plugins.WebGLFileBrowser;
 using TMPro;
 using UnityEditor.Experimental;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ImageSequenceElement : UploadFileElement
+public class ImageSequenceElement : UploadFileElement, IPointerDownHandler, IBeginDragHandler, IEndDragHandler,IDragHandler
 {
     [SerializeField] private Button alterarImg;
     public bool IsActive = false;
 
     private int index = -1;
+
+    public int Index => index;
     public event Action<int> OnUploadFile;
     public event Action<ImageSequenceElement> OnDelete;
 
-    protected virtual void Start()
+    public event Action<ImageSequenceElement, PointerEventData, bool> OnEndDragElement;
+
+    private RectTransform rect;
+    [SerializeField] private Canvas canvas;
+
+    private void Awake()
+    {
+        rect = GetComponent<RectTransform>();
+    }
+
+    protected override void Start()
     {
         base.Start();
         alterarImg.onClick.AddListener(OpenFileDialogButtonOnClickHandler);
@@ -40,6 +53,22 @@ public class ImageSequenceElement : UploadFileElement
         alterarImg.gameObject.SetActive(true);
     }
 
+    public void IncreaseIndex()
+    {
+        if (IsActive)
+        {
+            SetIndex(index +1);
+        }
+    }
+    
+    public void DecreaseIndex()
+    {
+        if (IsActive)
+        {
+            SetIndex(index -1);
+        }
+    }
+    
     public void SetIndex(int index)
     {
         this.index = index;
@@ -71,10 +100,30 @@ public class ImageSequenceElement : UploadFileElement
         showImage.gameObject.SetActive(false);
         alterarImg.gameObject.SetActive(false);
         deleteFile.gameObject.SetActive(false);
-        transform.SetAsLastSibling();
         IsActive = false;
         OnDelete?.Invoke(this);
         SetIndex(-1);
         
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        OnEndDragElement?.Invoke(this, eventData, false);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (IsActive)
+            rect.anchoredPosition += eventData.delta/canvas.scaleFactor;
     }
 }
