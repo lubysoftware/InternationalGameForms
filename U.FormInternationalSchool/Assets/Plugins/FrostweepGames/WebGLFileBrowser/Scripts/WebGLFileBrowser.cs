@@ -540,6 +540,8 @@ namespace FrostweepGames.Plugins.WebGLFileBrowser
     public enum AudioType
     {
         WAV,
+        OGG,
+        MP3
     }
 
     public class FileInfo
@@ -668,12 +670,12 @@ namespace FrostweepGames.Plugins.WebGLFileBrowser
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public static AudioClip ToWavAudioClip(this File file)
+        public static AudioClip ToAudioClip(this File file)
         {
             if (file == null || file.data == null)
                 throw new Exception($"Failed to create an Audio Clip. File or it's data is null.");
 
-            return WavFileToUnityAudioClip.ToAudioClip(file.data, file.fileInfo.name);
+            return OggFileToUnityAudioClip.ToAudioClip(file.data, file.fileInfo.name);
         }
 
         public static bool IsImage(this File file)

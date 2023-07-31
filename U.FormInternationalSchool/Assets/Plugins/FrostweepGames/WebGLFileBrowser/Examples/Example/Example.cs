@@ -149,7 +149,7 @@ namespace FrostweepGames.Plugins.WebGLFileBrowser.Examples
                     {
                         Debug.Log("Its audio. try play it");
 
-                        AudioClip clip = file.ToWavAudioClip();
+                        AudioClip clip = file.ToAudioClip();
 
                         WebGLFileBrowser.RegisterFileObject(clip); // add audio clip to cache list. should be used with  WebGLFileBrowser.FreeMemory() when its no need anymore
 

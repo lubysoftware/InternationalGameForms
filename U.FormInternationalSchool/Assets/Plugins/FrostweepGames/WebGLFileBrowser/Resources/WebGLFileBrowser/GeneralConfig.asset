@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 881eeda21b4a6864197761f79fbb58df, type: 3}
   m_Name: GeneralConfig
   m_EditorClassIdentifier: 
-  showWelcomeDialogAtStartup: 1
+  showWelcomeDialogAtStartup: 0
   usePostProcess: 1
   saveToPersistentDataPathOnPlatformsExceptWebGL: 1
