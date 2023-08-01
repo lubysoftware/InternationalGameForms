@@ -21,11 +21,18 @@ public class UploadFileElement : MonoBehaviour
 
     protected virtual void Start()
     {
-        uploadFileButton.onClick.AddListener(OpenFileDialogButtonOnClickHandler);
-        deleteFile.onClick.AddListener(CleanupButtonOnClickHandler);
+        if (uploadFileButton != null)
+        {
+            uploadFileButton.onClick.AddListener(OpenFileDialogButtonOnClickHandler);
+        }
+
+        if (deleteFile != null)
+        {
+            deleteFile.onClick.AddListener(CleanupButtonOnClickHandler);
+        }
+        
         if (isImage)
         {
-            showImage.gameObject.SetActive(true);
             types = ".png,.jpg";
         }
         else
@@ -67,7 +74,8 @@ public class UploadFileElement : MonoBehaviour
     {
         _loadedFiles =
             null; // you have to remove link to file and then GarbageCollector will think that there no links to that object
-        deleteFile.gameObject.SetActive(false);
+        if(deleteFile != null)
+            deleteFile.gameObject.SetActive(false);
 
         fileData.text = string.Empty;
         if (showImage != null)
@@ -107,7 +115,8 @@ public class UploadFileElement : MonoBehaviour
 
             }
 
-            deleteFile.gameObject.SetActive(true);
+            if (deleteFile != null)
+                deleteFile.gameObject.SetActive(true);
             
             if (_loadedFiles.Length == 1)
             {
@@ -117,6 +126,7 @@ public class UploadFileElement : MonoBehaviour
                     {
                         if (showImage != null)
                         {
+                            showImage.gameObject.SetActive(true);
                             showImage.color = new Color(1, 1, 1, 1);
                             showImage.sprite = file.ToSprite(); // dont forget to delete unused objects to free memory!
                         }

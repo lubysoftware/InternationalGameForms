@@ -15,6 +15,8 @@ public class MaterialInputARea : MonoBehaviour
 
     [SerializeField] private Button delete;
 
+    [SerializeField] private UploadFileElement imageUploader;
+
     public bool IsText;
 
     public string Text => text.text;
@@ -40,7 +42,8 @@ public class MaterialInputARea : MonoBehaviour
     {
         IsText = false;
         textButton.gameObject.SetActive(false);
-        text.gameObject.SetActive(false);
+        imageButton.gameObject.SetActive(false);
+        imageUploader.gameObject.SetActive(true);
     }
 
     private void OnDeleteButton()
