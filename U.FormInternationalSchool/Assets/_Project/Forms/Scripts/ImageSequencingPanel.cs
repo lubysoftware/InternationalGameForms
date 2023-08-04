@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using File = FrostweepGames.Plugins.WebGLFileBrowser.File;
 using UnityEngine.UI;
 
 public class ImageSequencingPanel : MonoBehaviour
@@ -27,6 +28,20 @@ public class ImageSequencingPanel : MonoBehaviour
     public void OnNewImageButton()
     {
         transform.GetChild(counter).GetComponentInChildren<ImageSequenceFrame>().Image.AddImage();
+    }
+
+    public List<File> GetImages()
+    {
+        List<File> listImages = new List<File>();
+        foreach (Transform child in transform)
+        {
+            ImageSequenceElement el = child.GetComponent<ImageSequenceFrame>().Image;
+            if (el.IsActive && el.UploadedFile != null)
+            {
+                listImages.Add(el.UploadedFile);
+            }
+        }
+        return listImages;
     }
 
     private void OnAddImage(bool isUpdate)

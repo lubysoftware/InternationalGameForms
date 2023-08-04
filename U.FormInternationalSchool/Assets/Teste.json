@@ -1,0 +1,33 @@
+{
+  "game": {
+    "gameTitle": "tahs",
+    "gameTitleImageUrl": "gameTitleImageUrl",
+    "backgroundUrl": "backgroundUrl",
+    "backgroundMusicUrl": "\"theme_song-239f0005-a8de-4bb8-81e8-0b1d9d5d55ba.ogg\"",
+    "questionStatementPortugueseVersion": "saassa",
+    "questionStatementEnglishVersion": "saasa",
+    "questionStatementPortugueseAudioUrl": "questionStatementPortugueseAudioUrl",
+    "questionStatementEnglishAudioUrl": "questionStatementEnglishAudioUrl",
+    "hasSupportMaterial": true,
+    "hasTimer": true,
+    "timer": "12",
+    "bonusTimer": "12"
+  },
+  "gameData": {
+    "failsPenalty": "21",
+    "sequences": [
+      {
+        "position": 0,
+        "imageUrl": "[\"girafa-105e18c4-5d01-426d-99b5-4699e34f7f55.jpg\""
+      },
+      {
+        "position": 1,
+        "imageUrl": "\"mico-037c3206-11e8-42f0-848e-30fb363fc473.jpg\""
+      },
+      {
+        "position": 2,
+        "imageUrl": "\"tucano-3565f3aa-a717-4a1e-9578-a5f9f9f2ba79.jpg\"]"
+      }
+    ]
+  }
+}

@@ -19,6 +19,8 @@ public class UploadFileElement : MonoBehaviour
     private string types;
     private File[] _loadedFiles;
 
+    public File UploadedFile => _loadedFiles[0];
+
     protected virtual void Start()
     {
         if (uploadFileButton != null)
@@ -78,7 +80,7 @@ public class UploadFileElement : MonoBehaviour
             deleteFile.gameObject.SetActive(false);
 
         fileData.text = string.Empty;
-        if (showImage != null)
+        if (isImage)
         {
             showImage.color = new Color(1, 1, 1, 0);
             showImage.sprite = null;
@@ -132,7 +134,7 @@ public class UploadFileElement : MonoBehaviour
                         }
                         else
                         {
-                            fileData.text = $"{file.fileInfo.name}";
+                            fileData.text = $"{file.fileInfo.name}{file.fileInfo.extension}";
                         }
 
                         WebGLFileBrowser
@@ -158,7 +160,7 @@ public class UploadFileElement : MonoBehaviour
 
                         WebGLFileBrowser.RegisterFileObject(clip);
                         // add audio clip to cache list. should be used with  fileBrowserFreeMemory() when its no need anymore
-                        fileData.text = $"{file.fileInfo.name}";
+                        fileData.text = $"{file.fileInfo.name}.{file.fileInfo.extension}";
                         _audioSource.clip = clip;
                         playAudio.gameObject.SetActive(true);
                     }
