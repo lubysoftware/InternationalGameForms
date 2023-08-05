@@ -17,9 +17,9 @@ public class UploadFileElement : MonoBehaviour
     [SerializeField] private Button playAudio;
 
     private string types;
-    private File[] _loadedFiles;
+    private File[] _loadedFiles = null;
 
-    public File UploadedFile => _loadedFiles[0];
+    public File UploadedFile => _loadedFiles != null? _loadedFiles[0]: null;
 
     protected virtual void Start()
     {
