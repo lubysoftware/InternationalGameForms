@@ -4,13 +4,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FrostweepGames.Plugins.WebGLFileBrowser;
+using LubyLib.Core.Extensions;
 using LubyLib.Core.Singletons;
 using TMPro;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Serialization;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
 using File = FrostweepGames.Plugins.WebGLFileBrowser.File;
 using FileIO = System.IO.File;
+using Toggle = UnityEngine.UI.Toggle;
 
 public class FormScreen : MonoBehaviour
 {
@@ -24,43 +28,211 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private Button openMaterialSupportPanel;
     [SerializeField] private TMP_InputField timerBonus;
     [SerializeField] private UploadFileElement titleImage;
-    [SerializeField] private TMP_InputField failsPenalty;
     [SerializeField] private Button sendForm;
-    [SerializeField] private ImageSequencingPanel panel;
-    
-    private readonly string PATH = Application.dataPath + "/Teste.json";
+    [SerializeField] private Transform errorPanel;
+    [SerializeField] private TextMeshProUGUI errorText;
 
-    private bool isbaseForm;
+    private bool IsbaseForm { get; set; }
 
-    private FormBase game = new FormBase();
+    protected FormBase game = new FormBase();
     
     private Dictionary<string, string> urlFiles = new Dictionary<string, string>();
     private List<string> fields = new() { Const.IMAGE_TITLE, Const.MUSIC_BACK, Const.IMAGE_BACK ,Const.AUDIO_PT,Const.AUDIO_EN };
+
+    private int timeInSec = 0;
+    private int bonusTimer = 0;
+
     void Start()
     {
-        SendFilesToAPI.Instance.OnUploadFiles += SerializeFormData;
-        Debug.LogError(gameObject.name);
-        Debug.LogError(PATH);
+        sendForm.onClick.AddListener(SendFormData);
+        SendFilesToAPI.Instance.OnUploadFiles += SerializeBaseFormData;
     }
 
     public void SendFormData()
     {
-        
+        CheckBaseFormFields();
     }
 
-    private void SetIsBaseForm(bool value)
+    #region BASE_FORM
+
+    private void CheckBaseFormFields()
     {
-        isbaseForm = value;
-        Debug.LogError(isbaseForm);
+        if (title.text.IsNullEmptyOrWhitespace())
+        {
+            ShowError("Identificador do jogo", ErrorType.EMPTY, null);
+            return;
+        }
+
+        if (titleImage.UploadedFile == null)
+        {
+            ShowError("Imagem de título do jogo", ErrorType.EMPTY, null);
+            return;
+        }
+
+        if (backgroundMusic.UploadedFile == null)
+        {
+            ShowError("Música de fundo", ErrorType.EMPTY, null);
+            return;
+        }
+
+        if (statement_EN.text.IsNullEmptyOrWhitespace())
+        {
+            ShowError("Enunciado em Inglês", ErrorType.EMPTY, null);
+            return;
+        }
+        
+        if (audioStatement_EN.UploadedFile == null)
+        {
+            ShowError("Áudio do enunciado em Inglês", ErrorType.EMPTY, null);
+            return;
+        }
+        
+        if (statement_PT.text.IsNullEmptyOrWhitespace())
+        {
+            ShowError("Enunciado em Português", ErrorType.EMPTY, null);
+            return;
+        }
+        
+        if (audioStatement_PT.UploadedFile == null)
+        {
+            ShowError("Áudio do enunciado em Português", ErrorType.EMPTY, null);
+            return;
+        }
+        
+        if (backgroundImage.UploadedFile == null)
+        {
+            ShowError("Imagem de fundo", ErrorType.EMPTY, null);
+            return;
+        }
+
+        if (timer.isOn)
+        {
+            if (timeMin.text.IsNullEmptyOrWhitespace())
+            {
+                ShowError("Minutos do timer", ErrorType.EMPTY, null);
+                return;
+            }
+
+            int min, sec = -1;
+            int.TryParse(timeMin.text, out min);
+            int.TryParse(timeSec.text, out sec);
+            if (min + sec <= 0)
+            {
+                ShowError("Tempo do timer", ErrorType.GREATER_THAN, new int[]{0});
+                return;
+            }
+            if (min < 0)
+            {
+                ShowError("Minutos do timer", ErrorType.GREATER_OR_EQUAL, new int[]{0});
+                return;
+            }
+
+            if (sec < 0 || sec > 59)
+            {
+                ShowError("Segundos do timer", ErrorType.BETWEEN, new int[]{0,59});
+                return;
+            }
+
+            timeInSec = min * 60 + sec;
+        }
+        else
+        {
+            
+            timeInSec = 0;
+        }
+
+        bonusTimer = 0;
+        int.TryParse(timerBonus.text, out bonusTimer);
+        if (bonusTimer < 0 || bonusTimer > 100)
+        {
+            ShowError("Bônus do timer", ErrorType.BETWEEN, new int[]{0,100});
+        }
+        
+        CheckGameFields();
+
     }
     
-    private void SerializeFormData(string[] urls)
+    protected void SendBaseFormFiles()
     {
-        if (isbaseForm)
+        IsbaseForm = true;
+        List<File> files = new List<File>();
+        urlFiles.Clear();
+        if (titleImage.UploadedFile != null)
         {
-            for (int i = 0; i< fields.Count; i++)
+            urlFiles.Add(fields[0],titleImage.UploadedFile.fileInfo.name);
+            files.Add(titleImage.UploadedFile);
+        }
+        else
+        {
+            ShowError("Imagem de título do jogo", ErrorType.EMPTY, null);
+            return;
+        }
+
+        if (backgroundMusic.UploadedFile != null)
+        {
+            urlFiles.Add(fields[1], backgroundMusic.UploadedFile.fileInfo.name);
+            files.Add(backgroundMusic.UploadedFile);
+        }
+        else
+        {
+            ShowError("Música de fundo", ErrorType.EMPTY, null);
+            return;
+        }
+
+        if (backgroundImage.UploadedFile != null)
+        {
+            urlFiles.Add(fields[2], backgroundImage.UploadedFile.fileInfo.name);
+            files.Add(backgroundImage.UploadedFile);
+        }
+        else
+        {
+            ShowError("Imagem de fundo", ErrorType.EMPTY, null);
+            return;
+        }
+
+        if (audioStatement_PT.UploadedFile != null)
+        {
+            urlFiles.Add(fields[3], audioStatement_PT.UploadedFile.fileInfo.name);
+            files.Add(audioStatement_PT.UploadedFile);
+        }
+        else
+        {
+            ShowError("Áudio do enunciado em Português", ErrorType.EMPTY, null);
+            return;
+        }
+
+        if (audioStatement_EN.UploadedFile != null)
+        {
+            urlFiles.Add(fields[4], audioStatement_EN.UploadedFile.fileInfo.name);
+            files.Add(audioStatement_EN.UploadedFile);
+        }
+        else
+        {
+            ShowError("Áudio do enunciado em inglês", ErrorType.EMPTY, null);
+            return;
+        }
+
+        if (files.Count < 5)
+        {
+            ShowError("Por favor, preencha todos os campos de arquivos.", ErrorType.CUSTOM, null);
+        }
+        else
+        {
+            SendFilesToAPI.Instance.StartUploadFiles(files);
+        }
+
+    }
+
+    private void SerializeBaseFormData(string[] urls)
+    {
+        if (IsbaseForm)
+        {
+            if (urls != null)
             {
-                urlFiles[fields[i]] = urls[i];
+                for (int i = 0; i< fields.Count; i++)
+                {
+                    urlFiles[fields[i]] = urls[i];
+                }
             }
 
             game = new FormBase()
@@ -68,75 +240,89 @@ public class FormScreen : MonoBehaviour
                 gameTitle = title.text,
                 backgroundMusicUrl = urlFiles[Const.MUSIC_BACK],
                 backgroundUrl = urlFiles[Const.IMAGE_BACK],
-                bonusTimer = timerBonus.text,
+                bonustimer = bonusTimer,
                 gameTitleImageUrl = urlFiles[Const.IMAGE_TITLE],
                 //tratar
-                hasSupportMaterial = true,
+                hasSupportMaterial = false,
                 hasTimer = timer.isOn,
                 questionStatementEnglishAudioUrl = urlFiles[Const.AUDIO_EN],
                 questionStatementEnglishVersion = statement_EN.text,
                 questionStatementPortugueseAudioUrl = urlFiles[Const.AUDIO_PT],
                 //tratar
-                timer = timeMin.text,
+                timer = timeInSec,
                 questionStatementPortugueseVersion = statement_PT.text
             };
-            SetIsBaseForm(false);
-            SendFilesToAPI.Instance.StartUploadFiles(panel.GetImages());
+            IsbaseForm = false;
+            SendGameFiles();
         }
         else
         {
-            List<Sequence> listSeq = new List<Sequence>();
-            for (int i = 0; i < urls.Length; i++)
-            {
-                listSeq.Add(new Sequence(){ position = i, imageUrl = urls[i]});
-            }
-            
-            FormImageSequence completeForm = new FormImageSequence()
-            {
-                game = this.game,
-                gameData =  new ImageSequence()
-                {
-                    failsPenalty = failsPenalty.text,
-                    sequences = listSeq
-                }
-            };
-            
-            string json = JsonConvert.SerializeObject(completeForm);
-
-            if (FileIO.Exists(PATH))
-            {
-                FileIO.Delete(PATH);
-            }
-           
-            FileIO.WriteAllText(PATH, json);
+           SerializeGameData(urls);
         }
     }
 
-    public void SendFiles()
-    {
-        SetIsBaseForm(true);
-        List<File> files = new List<File>();
-        
-        urlFiles.Add(fields[0],titleImage.UploadedFile.fileInfo.name);
-        files.Add(titleImage.UploadedFile);
-        
-        urlFiles.Add(fields[1],backgroundMusic.UploadedFile.fileInfo.name);
-        files.Add(backgroundMusic.UploadedFile);
-        
-        urlFiles.Add(fields[2],backgroundImage.UploadedFile.fileInfo.name);
-        files.Add(backgroundImage.UploadedFile);
-        
-        urlFiles.Add(fields[3],audioStatement_PT.UploadedFile.fileInfo.name);
-        files.Add(audioStatement_PT.UploadedFile);
-        
-        urlFiles.Add(fields[4],audioStatement_PT.UploadedFile.fileInfo.name);
-        files.Add(audioStatement_EN.UploadedFile);
+    #endregion
 
-        SendFilesToAPI.Instance.StartUploadFiles(files);
-       
+
+    #region GAME_FORM
+
+    protected virtual void CheckGameFields()
+    {
+        
+    }
+    protected virtual void SendGameFiles()
+    {
+        
     }
 
+    protected virtual void SerializeGameData(string[] urls)
+    {
+        
+    }
+    
 
+    #endregion
+    
+    
+    protected void ShowError(string field, ErrorType type, int[] values)
+    {
+        string error = "error";
+        switch (type)
+        {
+            case ErrorType.EMPTY:
+                error = String.Format("O campo {0} deve ser preenchido.",field);
+                break;
+            case ErrorType.LESS_THAN:
+                error = String.Format("O campo {0} deve ser preenchido com um valor menor que {1}.",field, values[0]);
+                break;
+            case ErrorType.GREATER_THAN:
+                error = String.Format("O campo {0} deve ser preenchido com um valor maior que {1}.",field, values[0]);
+                break;
+            case ErrorType.GREATER_OR_EQUAL:
+                error = String.Format("O campo {0} deve ser preenchido com um valor maior  ou igual a {1}.",field, values[0]);
+                break;
+            case ErrorType.BETWEEN:
+                error = String.Format("O campo {0} deve ser preenchido com um valor maior que {1} e menor que {2}.",field, values[0], values[1]);
+                break;
+            case ErrorType.CUSTOM:
+                error = field;
+                break;
+        }
+
+        errorText.text = error;
+        errorPanel.gameObject.SetActive(true);
+    }
+
+}
+
+public enum ErrorType
+{
+    EMPTY,
+    GREATER_THAN,
+    LESS_THAN,
+    GREATER_OR_EQUAL,
+    BETWEEN, 
+    CUSTOM
 }
 
 [Serializable]
@@ -152,29 +338,8 @@ public class FormBase
     public string questionStatementEnglishAudioUrl;
     public bool hasSupportMaterial;
     public bool hasTimer;
-    public string timer;
-    public string bonusTimer;
-}
-
-[Serializable]
-public struct Sequence
-{
-    public int position;
-    public string imageUrl;
-}
-
-[Serializable]
-public class ImageSequence
-{
-    public string failsPenalty;
-    public List<Sequence> sequences;
-}
-
-[Serializable]
-public class FormImageSequence
-{
-    public FormBase game;
-    public ImageSequence gameData;
+    public int timer;
+    public int bonustimer;
 }
 
 public class Const 

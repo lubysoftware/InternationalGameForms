@@ -2892,7 +2892,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1451569731}
         m_TargetAssemblyTypeName: FormScreen, Assembly-CSharp
-        m_MethodName: SendFiles
+        m_MethodName: SendBaseFormFiles
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
