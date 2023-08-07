@@ -26,6 +26,7 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private Toggle timer;
     [SerializeField] private TMP_InputField timeMin, timeSec;
     [SerializeField] private Button openMaterialSupportPanel;
+    [FormerlySerializedAs("supprotMaterialPanel")] [SerializeField] private SupportMaterialCreation supportMaterialPanel;
     [SerializeField] private TMP_InputField timerBonus;
     [SerializeField] private UploadFileElement titleImage;
     [SerializeField] private Button sendForm;
@@ -41,6 +42,9 @@ public class FormScreen : MonoBehaviour
 
     private int timeInSec = 0;
     private int bonusTimer = 0;
+    private int supportMaterialImgsQtt = 0;
+
+    private List<Material> materials = new List<Material>();
 
     void Start()
     {
@@ -155,6 +159,7 @@ public class FormScreen : MonoBehaviour
     protected void SendBaseFormFiles()
     {
         IsbaseForm = true;
+        supportMaterialImgsQtt = 0;
         List<File> files = new List<File>();
         urlFiles.Clear();
         if (titleImage.UploadedFile != null)
@@ -212,6 +217,17 @@ public class FormScreen : MonoBehaviour
             return;
         }
 
+        materials = supportMaterialPanel.GetSupportMaterial();
+        
+        foreach (Material mat in materials)
+        {
+            if (!mat.isText)
+            {
+                files.Add(mat.file);
+                supportMaterialImgsQtt++;
+            }
+        }
+        
         if (files.Count < 5)
         {
             ShowError("Por favor, preencha todos os campos de arquivos.", ErrorType.CUSTOM, null);
@@ -227,11 +243,45 @@ public class FormScreen : MonoBehaviour
     {
         if (IsbaseForm)
         {
+            List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
             if (urls != null)
             {
-                for (int i = 0; i< fields.Count; i++)
+                
+                if (urls.Length == fields.Count + supportMaterialImgsQtt)
                 {
-                    urlFiles[fields[i]] = urls[i];
+                    for (int i = 0; i< fields.Count; i++)
+                    {
+                        urlFiles[fields[i]] = urls[i];
+                    }
+
+                    int urlsSupportMaterial = fields.Count;
+                    for (int i = 0; i< materials.Count; i++)
+                    {
+                        if (materials[i].isText)
+                        {
+                            supportMaterial.Add(new SupportMaterial()
+                            {
+                                position = i,
+                                material = materials[i].text,
+                                materialType = "TEXT"
+                            
+                            });
+                        }
+                        else
+                        {
+                            supportMaterial.Add(new SupportMaterial()
+                            {
+                                position = i,
+                                material = urls[urlsSupportMaterial],
+                                materialType = "IMAGE"
+                            });
+                            urlsSupportMaterial++;
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.LogError("error uploading images");
                 }
             }
 
@@ -242,13 +292,12 @@ public class FormScreen : MonoBehaviour
                 backgroundUrl = urlFiles[Const.IMAGE_BACK],
                 bonustimer = bonusTimer,
                 gameTitleImageUrl = urlFiles[Const.IMAGE_TITLE],
-                //tratar
-                hasSupportMaterial = false,
+                hasSupportMaterial =  supportMaterial.Count > 0,
+                supportMaterial = supportMaterial.Count > 0? supportMaterial : null,
                 hasTimer = timer.isOn,
                 questionStatementEnglishAudioUrl = urlFiles[Const.AUDIO_EN],
                 questionStatementEnglishVersion = statement_EN.text,
                 questionStatementPortugueseAudioUrl = urlFiles[Const.AUDIO_PT],
-                //tratar
                 timer = timeInSec,
                 questionStatementPortugueseVersion = statement_PT.text
             };
@@ -340,7 +389,9 @@ public class FormBase
     public bool hasTimer;
     public int timer;
     public int bonustimer;
+    public List<SupportMaterial> supportMaterial;
 }
+
 
 public class Const 
 {

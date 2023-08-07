@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using FrostweepGames.Plugins.WebGLFileBrowser;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MaterialInputARea : MonoBehaviour
+public class MaterialInputArea : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI text;
 
@@ -21,7 +22,9 @@ public class MaterialInputARea : MonoBehaviour
 
     public string Text => text.text;
 
-    public event Action<MaterialInputARea> OnDestroy;
+    public File Image => imageUploader.UploadedFile;
+
+    public event Action<MaterialInputArea> OnDestroy;
     void Start()
     {
         text.gameObject.SetActive(false);

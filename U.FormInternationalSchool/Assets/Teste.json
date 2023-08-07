@@ -1,1 +1,56 @@
-{"game":{"gameTitle":"titulo","gameTitleImageUrl":"arara-02777463-1e20-4b9a-9573-7d84db0b650d.jpg","backgroundUrl":"girafa-5ea9e8bf-075f-401d-bfb1-27c2dfc6ae4a.jpg","backgroundMusicUrl":"theme_song-e8ea96be-7d38-4961-a3d2-6fd5539fa32b.ogg","questionStatementPortugueseVersion":"en pt","questionStatementEnglishVersion":"en en","questionStatementPortugueseAudioUrl":"Dino_perde-c824daea-ce8e-476f-bc69-b194a9a970fb.ogg","questionStatementEnglishAudioUrl":"Slime_Surgindo-6101470b-0224-498d-b6ca-3b3040473e67.ogg","hasSupportMaterial":false,"hasTimer":true,"timer":600,"bonustimer":50},"gameData":{"failPenalty":3,"sequences":[{"position":0,"imageUrl":"arara-6766584f-61fe-4f26-abcd-e2c93d9198aa.jpg"},{"position":1,"imageUrl":"girafa-5b00952a-021f-4f22-aaf4-0ecfc8eca5b7.jpg"}]}}
+{
+  "game": {
+    "gameTitle": "titutltototto",
+    "gameTitleImageUrl": "cachorro-03178507-3766-4b6c-af79-e2f49c13ff87.jpg",
+    "backgroundUrl": "girafa-655e7129-7705-4acf-9a9d-f7eb493fc5f4.jpg",
+    "backgroundMusicUrl": "Dino_perde-d642a7c7-b85b-468b-94c7-77851c127bc8.ogg",
+    "questionStatementPortugueseVersion": "en em ptptptp",
+    "questionStatementEnglishVersion": "en em enennene",
+    "questionStatementPortugueseAudioUrl": "Slime_Surgindo-cb25e115-b992-4d66-b77d-1fd3c013c4ac.ogg",
+    "questionStatementEnglishAudioUrl": "theme_song-05fdc054-0266-4924-81ca-96b47af1d8e0.ogg",
+    "hasSupportMaterial": true,
+    "hasTimer": true,
+    "timer": 732,
+    "bonustimer": 12,
+    "supportMaterial": [
+      {
+        "position": 0,
+        "material": "Tucano e cachorros​",
+        "materialType": "TEXT"
+      },
+      {
+        "position": 1,
+        "material": "tucano-7e803220-0aa3-41df-8959-3982373a03eb.jpg",
+        "materialType": "IMAGE"
+      },
+      {
+        "position": 2,
+        "material": "cachorro-1c673766-23bc-49ec-b353-0c494e879e34.jpg",
+        "materialType": "IMAGE"
+      },
+      {
+        "position": 3,
+        "material": "Mico​",
+        "materialType": "TEXT"
+      },
+      {
+        "position": 4,
+        "material": "mico-181e5687-0941-4804-8ce5-d9e48d176297.jpg",
+        "materialType": "IMAGE"
+      }
+    ]
+  },
+  "gameData": {
+    "failPenalty": 12,
+    "sequences": [
+      {
+        "position": 0,
+        "imageUrl": "golfinho-e92aa703-ff1d-4235-ad24-9e46976b8b2f.jpg"
+      },
+      {
+        "position": 1,
+        "imageUrl": "puppy-cc76b0bd-cf22-465a-b801-18516d88c9d6.jpg"
+      }
+    ]
+  }
+}
