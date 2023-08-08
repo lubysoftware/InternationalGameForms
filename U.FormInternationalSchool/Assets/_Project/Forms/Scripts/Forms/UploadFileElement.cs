@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using FrostweepGames.Plugins.WebGLFileBrowser;
+using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +21,8 @@ public class UploadFileElement : MonoBehaviour
     private string types;
     private File[] _loadedFiles = null;
 
+    private string fileName;
+    private string extension;
     public File UploadedFile => _loadedFiles != null? _loadedFiles[0]: null;
 
     protected virtual void Start()
@@ -198,5 +202,36 @@ public class UploadFileElement : MonoBehaviour
         }
     }
 
+    public void FillData(string fileName, string path )
+    {
+        this.fileName = fileName;
+        this.extension = System.IO.Path.GetExtension(path);
+        SendFilesToAPI.Instance.StartDownloadImage(this, path);
+    }
 
+    public void FinishedDownloadFileData(string fileText)
+    {
+        FileData data = JsonConvert.DeserializeObject<FileData>(fileText);
+        File file = new File()
+        {
+            fileInfo = new FileInfo()
+            {
+                extension = this.extension,
+                name = System.IO.Path.GetFileNameWithoutExtension(fileName),
+                fullName = System.IO.Path.GetFileName(fileName + extension),
+                length = data.data.Length,
+                path = "",
+                size = data.data.Length
+            },
+            data = data.data
+        };
+    }
+
+
+}
+
+public class FileData
+{
+    public string type;
+    public byte[] data;
 }

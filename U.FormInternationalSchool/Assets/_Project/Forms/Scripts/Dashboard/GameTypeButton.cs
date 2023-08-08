@@ -1,0 +1,37 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using LubyLib.Core;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+public class GameTypeButton : MonoBehaviour
+{
+    [SerializeField] private TextMeshProUGUI description;
+    [SerializeField] private TextMeshProUGUI title;
+    [SerializeField] private Button button;
+    private Image image;
+
+    private GameTypeSO so;
+    
+    public void Init(GameTypeSO so)
+    {
+        description.text = so.description;
+        title.text = so.title;
+        GetComponent<Image>().sprite = so.sprite;
+        button.interactable = so.isActive;
+        this.so = so;
+        if (so.isActive)
+        {
+            button.onClick.AddListener(OnClick);
+        }
+    }
+
+    private void OnClick()
+    {
+        SceneDataCarrier.AddData("GAME_TYPE", so);
+        SceneManager.LoadScene("Library");
+    }
+}

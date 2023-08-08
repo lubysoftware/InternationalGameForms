@@ -14,7 +14,6 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 	private List<File> fileList;
 	private string json;
 	private string postURL;
-	private string getURL;
 
 	public event Action<string[]> OnUploadFiles; 
 
@@ -32,16 +31,10 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		StartCoroutine(UploadJson());
 	}
 
-	public void GetGameLibrary(string url)
-	{
-		getURL = url;
-		GetJsonData();
-	}
-
 	IEnumerator UploadJson()
 	{
 		//UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
-		UnityWebRequest www = UnityWebRequest.Post(postURL,json, "application/json");
+		UnityWebRequest www = UnityWebRequest.Post(Constants.URL_DATABASE + postURL,json, "application/json");
 		
 		www.SetRequestHeader("authorization","Bearer Luby2021");
 		yield return www.SendWebRequest();
@@ -50,25 +43,6 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		{
 			Debug.Log(www.error);
 		}
-		else
-		{
-			Debug.Log(www.downloadHandler.text);
-		}
-
-	}
-	
-	IEnumerator GetJsonData()
-	{
-		UnityWebRequest www = UnityWebRequest.Get(getURL);
-
-		www.SetRequestHeader("authorization","Bearer Luby2021");
-		yield return www.SendWebRequest();
-
-		if (www.result != UnityWebRequest.Result.Success)
-		{
-			Debug.Log(www.error);
-		}
-		
 		else
 		{
 			Debug.Log(www.downloadHandler.text);
@@ -103,7 +77,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		// Make my request object and add the raw body
 		UnityWebRequest wr = new UnityWebRequest();
 		UploadHandler uploader = new UploadHandlerRaw(body);
-		wr.url = "https://school.gamehub.api.oke.luby.me/file-upload";
+		wr.url = Constants.URL_UPLOAD_MEDIA;
 		uploader.contentType = contentType;
 		wr.uploadHandler = uploader;
 		wr.downloadHandler = new DownloadHandlerBuffer();
@@ -126,6 +100,29 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 			OnUploadFiles?.Invoke(result.Split("\",\""));
 		}
 		
+	}
+
+	public void StartDownloadImage(UploadFileElement element, string path)
+	{
+		StartCoroutine(DownloadImage(element, path));
+	}
+
+	IEnumerator DownloadImage(UploadFileElement element, string path)
+	{
+		UnityWebRequest www = UnityWebRequest.Get(Constants.URL_UPLOAD_MEDIA + path);
+		
+		www.SetRequestHeader("authorization","Bearer Luby2021");
+		yield return www.SendWebRequest();
+
+		if (www.result != UnityWebRequest.Result.Success)
+		{
+			Debug.Log(www.error);
+		}
+		else
+		{
+			Debug.Log(www.downloadHandler.text);
+			element.FinishedDownloadFileData(www.downloadHandler.text);
+		}
 	}
 	
 	

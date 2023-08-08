@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using LubyLib.Core;
 using LubyLib.Core.Extensions;
 using Newtonsoft.Json;
 using TMPro;
@@ -14,6 +15,35 @@ public class ImageSequencingForm : FormScreen
 
     private int failsPenaltyValue =0;
 
+    protected override void Start()
+    {
+        base.Start();
+        ImageSeqJsonClass json;
+        SceneDataCarrier.GetData(Constants.GAME_EDIT, out json);
+        Debug.LogError(json);
+        if (json != null)
+        {
+            Debug.LogError("fill");
+            FormBase form = new FormBase()
+            {
+                gameTitle = json.gameTitle,
+                backgroundMusicUrl = json.backgroundMusicUrl,
+                backgroundUrl = json.backgroundUrl,
+                bonustimer = json.bonusTimer,
+                gameTitleImageUrl = json.gameTitleImageUrl,
+                hasSupportMaterial = json.hasSupportMaterial,
+                hasTimer = json.hasTimer,
+                questionStatementEnglishVersion = json.questionStatementEnglishVersion,
+                questionStatementEnglishAudioUrl = json.questionStatementEnglishAudioUrl,
+                questionStatementPortugueseVersion = json.questionStatementPortugueseVersion,
+                questionStatementPortugueseAudioUrl = json.questionStatementPortugueseAudioUrl,
+                timer = json.timer,
+                supportMaterial = null,
+            };
+            FillGameData(form);
+        }
+    }
+    
     
     protected override void SendGameFiles()
     {
@@ -74,7 +104,7 @@ public class ImageSequencingForm : FormScreen
             
         string json = JsonConvert.SerializeObject(completeForm);
 
-        SendFilesToAPI.Instance.StartUploadJson(json, "https://school.gamehub.api.oke.luby.me/image-sequence");
+        SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence");
            
         FileIO.WriteAllText(PATH, json);
     }

@@ -80,6 +80,11 @@ public class SupportMaterialCreation : MonoBehaviour
     {
         return materials;
     }
+
+    public void FillSupportMaterial(List<SupportMaterial> materials)
+    {
+        
+    }
     
     
     

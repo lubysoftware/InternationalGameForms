@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FrostweepGames.Plugins.WebGLFileBrowser;
+using LubyLib.Core;
 using LubyLib.Core.Extensions;
 using LubyLib.Core.Singletons;
 using TMPro;
@@ -38,7 +39,7 @@ public class FormScreen : MonoBehaviour
     protected FormBase game = new FormBase();
     
     private Dictionary<string, string> urlFiles = new Dictionary<string, string>();
-    private List<string> fields = new() { Const.IMAGE_TITLE, Const.MUSIC_BACK, Const.IMAGE_BACK ,Const.AUDIO_PT,Const.AUDIO_EN };
+    private List<string> fields = new() { Constants.IMAGE_TITLE, Constants.MUSIC_BACK, Constants.IMAGE_BACK ,Constants.AUDIO_PT,Constants.AUDIO_EN };
 
     private int timeInSec = 0;
     private int bonusTimer = 0;
@@ -46,7 +47,7 @@ public class FormScreen : MonoBehaviour
 
     private List<Material> materials = new List<Material>();
 
-    void Start()
+    protected virtual void Start()
     {
         sendForm.onClick.AddListener(SendFormData);
         SendFilesToAPI.Instance.OnUploadFiles += SerializeBaseFormData;
@@ -153,6 +154,32 @@ public class FormScreen : MonoBehaviour
         }
         
         CheckGameFields();
+
+    }
+
+    protected void FillGameData(FormBase baseForm)
+    {
+        title.text = baseForm.gameTitle;
+        statement_EN.text = baseForm.questionStatementEnglishVersion;
+        statement_PT.text = baseForm.questionStatementPortugueseVersion;
+        if (baseForm.hasTimer)
+        {
+            timer.onValueChanged.Invoke(baseForm.hasTimer);
+            int min = baseForm.timer % 60;
+            int sec = baseForm.timer - min * 60;
+            timeMin.text = min.ToString();
+            timeSec.text = sec.ToString();
+            timerBonus.text = baseForm.bonustimer.ToString();
+        }
+
+        if (baseForm.hasSupportMaterial)
+        {
+            supportMaterialPanel.FillSupportMaterial(baseForm.supportMaterial);
+        }
+        
+        titleImage.FillData("gameTitleImg",baseForm.gameTitleImageUrl);
+        
+
 
     }
     
@@ -288,16 +315,16 @@ public class FormScreen : MonoBehaviour
             game = new FormBase()
             {
                 gameTitle = title.text,
-                backgroundMusicUrl = urlFiles[Const.MUSIC_BACK],
-                backgroundUrl = urlFiles[Const.IMAGE_BACK],
+                backgroundMusicUrl = urlFiles[Constants.MUSIC_BACK],
+                backgroundUrl = urlFiles[Constants.IMAGE_BACK],
                 bonustimer = bonusTimer,
-                gameTitleImageUrl = urlFiles[Const.IMAGE_TITLE],
+                gameTitleImageUrl = urlFiles[Constants.IMAGE_TITLE],
                 hasSupportMaterial =  supportMaterial.Count > 0,
                 supportMaterial = supportMaterial.Count > 0? supportMaterial : null,
                 hasTimer = timer.isOn,
-                questionStatementEnglishAudioUrl = urlFiles[Const.AUDIO_EN],
+                questionStatementEnglishAudioUrl = urlFiles[Constants.AUDIO_EN],
                 questionStatementEnglishVersion = statement_EN.text,
-                questionStatementPortugueseAudioUrl = urlFiles[Const.AUDIO_PT],
+                questionStatementPortugueseAudioUrl = urlFiles[Constants.AUDIO_PT],
                 timer = timeInSec,
                 questionStatementPortugueseVersion = statement_PT.text
             };
@@ -390,14 +417,4 @@ public class FormBase
     public int timer;
     public int bonustimer;
     public List<SupportMaterial> supportMaterial;
-}
-
-
-public class Const 
-{
-    public const string IMAGE_TITLE = "gameTitleImageUrl";
-    public const string IMAGE_BACK = "backgroundUrl";
-    public const string MUSIC_BACK = "backgroundMusicUrl";
-    public const string AUDIO_PT = "questionStatementPortugueseAudioUrl";
-    public const string AUDIO_EN = "questionStatementEnglishAudioUrl";
 }
