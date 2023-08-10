@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using LubyLib.Core;
 using LubyLib.Core.Extensions;
 using Newtonsoft.Json;
@@ -12,6 +13,9 @@ public class ImageSequencingForm : FormScreen
     [SerializeField] private ImageSequencingPanel panel;
     [SerializeField] private TMP_InputField failsPenalty;
     private readonly string PATH = Application.dataPath + "/Teste.json";
+
+    private int imageSeqQtt;
+    private Dictionary<int, string> filledImages;
 
     private string url = "image-sequence";
 
@@ -51,13 +55,21 @@ public class ImageSequencingForm : FormScreen
     
     protected override void SendGameFiles()
     {
-        if (panel.GetImages() != null)
+        filledImages = panel.FilledImages();
+        imageSeqQtt = panel.ImageQtt();
+        if (imageSeqQtt < 2)
         {
-            SendFilesToAPI.Instance.StartUploadFiles(this, panel.GetImages(), false);
+            ShowError("O sequenciamento de imagens deve conter no mínimo duas imagens.", ErrorType.CUSTOM, null);
         }
         else
         {
-            ShowError("O sequenciamento de imagens deve conter no mínimo duas imagens.", ErrorType.CUSTOM, null);
+            if (panel.GetImages() != null && panel.GetImages().Count > 0)
+            {
+                SendFilesToAPI.Instance.StartUploadFiles(this, panel.GetImages(), false);
+            }else
+            {
+                SerializeGameData(filledImages.Values.ToArray());
+            }
         }
     }
     
@@ -76,7 +88,7 @@ public class ImageSequencingForm : FormScreen
             return;
         }
 
-        if (panel.GetImages() == null || panel.GetImages().Count < 2)
+        if (panel.ImageQtt() < 2)
         {
             ShowError("O sequenciamento de imagens deve conter no mínimo duas imagens.", ErrorType.CUSTOM, null);
             return;
@@ -88,14 +100,38 @@ public class ImageSequencingForm : FormScreen
     public override void SerializeGameData(string[] urls)
     {
         Debug.LogError("serialize game" + urls);
+
         List<Sequence> listSeq = new List<Sequence>();
-        if (urls != null)
+        if (filledImages.Count == imageSeqQtt)
         {
-            for (int i = 0; i < urls.Length; i++)
+            if (urls != null)
             {
-                listSeq.Add(new Sequence(){ position = i, imageUrl = urls[i]});
+                for (int i = 0; i < urls.Length; i++)
+                {
+                    listSeq.Add(new Sequence() { position = i, imageUrl = urls[i] });
+                }
             }
         }
+        else
+        {
+            int urlIndex = 0;
+            for (int i = 0; i < imageSeqQtt; i++)
+            {
+                if (filledImages.ContainsKey(i))
+                {
+                    listSeq.Add(new Sequence(){ position = i, imageUrl = filledImages[i]});
+                }
+                else
+                {
+                    if (urls.Length > urlIndex)
+                    {
+                        listSeq.Add(new Sequence(){ position = i, imageUrl = urls[urlIndex]});
+                        urlIndex++;
+                    }
+                }
+            }
+        }
+       
 
         FormImageSequence completeForm = new FormImageSequence()
         {

@@ -44,6 +44,39 @@ public class ImageSequencingPanel : MonoBehaviour
         }
         return listImages;
     }
+    
+    public Dictionary<int,string> FilledImages()
+    {
+        Dictionary<int, string> listFilledImages = new Dictionary<int, string>();
+        foreach (Transform child in transform)
+        {
+            ImageSequenceElement el = child.GetComponent<ImageSequenceFrame>().Image;
+            if (el.IsActive && el.UploadedFile == null)
+            {
+                if (el.IsFilled)
+                {
+                    listFilledImages.Add(el.Index, el.url);
+                }
+            }
+        }
+
+        return listFilledImages;
+    }
+
+    public int ImageQtt()
+    {
+        int count = 0;
+        foreach (Transform child in transform)
+        {
+            ImageSequenceElement el = child.GetComponent<ImageSequenceFrame>().Image;
+            if (el.IsActive && (el.UploadedFile != null || el.IsFilled))
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
 
     public void FillImages(List<SequenceGet> sequences, Action<UploadFileElement, string, string> action)
     {

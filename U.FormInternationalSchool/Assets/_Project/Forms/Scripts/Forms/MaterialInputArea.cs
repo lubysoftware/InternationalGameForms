@@ -25,6 +25,8 @@ public class MaterialInputArea : MonoBehaviour
 
     public File Image => imageUploader.UploadedFile;
 
+    public UploadFileElement fileUploadEl => imageUploader;
+
     public event Action<MaterialInputArea> OnDestroy;
     void Start()
     {

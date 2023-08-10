@@ -108,6 +108,7 @@ public class UploadFileElement : MonoBehaviour
             pauseAudio.gameObject.SetActive(false);
         }
 
+        IsFilled = false;
         WebGLFileBrowser.FreeMemory(); // free used memory and destroy created content
     }
 
@@ -261,6 +262,7 @@ public class UploadFileElement : MonoBehaviour
         fileData.text = $"{fileName}";
         _audioSource.clip = clip;
         playAudio.gameObject.SetActive(true);
+        pauseAudio.gameObject.SetActive(true);
         if (deleteFile != null)
             deleteFile.gameObject.SetActive(true);
         OnFill?.Invoke(this);

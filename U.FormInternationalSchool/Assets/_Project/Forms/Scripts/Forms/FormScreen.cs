@@ -246,6 +246,8 @@ public class FormScreen : MonoBehaviour
         supportMaterialImgsQtt = 0;
         List<File> files = new List<File>();
         newUrlFiles.Clear();
+        filledUrlFiles.Clear();
+        urlDict.Clear();
         if (titleImage.UploadedFile != null)
         {
             newUrlFiles.TryAdd(fields[0],titleImage.UploadedFile.fileInfo.name);
@@ -344,8 +346,14 @@ public class FormScreen : MonoBehaviour
             {
                 if (!mat.isText)
                 {
-                    files.Add(mat.file);
-                    supportMaterialImgsQtt++;
+                    if (mat.text == null)
+                    {
+                        if (mat.file != null)
+                        {
+                            files.Add(mat.file);
+                            supportMaterialImgsQtt++;
+                        }
+                    }
                 }
             }
         }
@@ -378,9 +386,14 @@ public class FormScreen : MonoBehaviour
         {
             if (urls.Length == newUrlFiles.Count + supportMaterialImgsQtt)
             {
-                for (int i = 0; i< newUrlFiles.Count; i++)
+                int urlCount = 0;
+                for (int i = 0; i< fields.Count; i++)
                 {
-                    newUrlFiles[fields[i]] = urls[i];
+                    if (!filledUrlFiles.ContainsKey(fields[i]))
+                    {
+                        newUrlFiles[fields[i]] = urls[urlCount];
+                        urlCount++;
+                    }
                 }
                 
                 urlDict = newUrlFiles;
@@ -390,7 +403,6 @@ public class FormScreen : MonoBehaviour
                     Debug.LogError(str.Key + " " + str.Value);
                 }
                 
-                int urlsSupportMaterial = fields.Count;
                 for (int i = 0; i< materials.Count; i++)
                 {
                     if (materials[i].isText)
@@ -405,19 +417,60 @@ public class FormScreen : MonoBehaviour
                     }
                     else
                     {
-                        supportMaterial.Add(new SupportMaterial()
+                        if (materials[i].text != null)
                         {
-                            position = i,
-                            material = urls[urlsSupportMaterial],
-                            materialType = "IMAGE"
-                        });
-                        urlsSupportMaterial++;
+                            supportMaterial.Add(new SupportMaterial()
+                            {
+                                position = i,
+                                material = materials[i].text,
+                                materialType = "IMAGE"
+                            });
+                        }
+                        else
+                        {
+                            supportMaterial.Add(new SupportMaterial()
+                            {
+                                position = i,
+                                material = urls[urlCount],
+                                materialType = "IMAGE"
+                            });
+                            urlCount++;
+                        }
                     }
                 }
             }
             else
             {
                 Debug.LogError("error uploading images");
+            }
+        }
+        else
+        {
+            urlDict = filledUrlFiles;
+            for (int i = 0; i< materials.Count; i++)
+            {
+                if (materials[i].isText)
+                {
+                    supportMaterial.Add(new SupportMaterial()
+                    {
+                        position = i,
+                        material = materials[i].text,
+                        materialType = "TEXT"
+                        
+                    });
+                }
+                else
+                {
+                    if (materials[i].text != null)
+                    {
+                        supportMaterial.Add(new SupportMaterial()
+                        {
+                            position = i,
+                            material = materials[i].text,
+                            materialType = "IMAGE"
+                        });
+                    }
+                }
             }
         }
 

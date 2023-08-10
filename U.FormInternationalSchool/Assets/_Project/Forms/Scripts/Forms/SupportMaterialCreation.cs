@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using LubyLib.Core.Extensions;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,9 +21,8 @@ public class SupportMaterialCreation : MonoBehaviour
     {
         close.onClick.AddListener(CloseButton);
         newInputArea.onClick.AddListener(() => AddInputArea());
-        materialInputs = new List<MaterialInputArea>();
         materials = new List<Material>();
-        AddInputArea();
+       // AddInputArea();
     }
 
     private MaterialInputArea AddInputArea()
@@ -40,40 +40,45 @@ public class SupportMaterialCreation : MonoBehaviour
     }
 
 
-    private void SaveMaterial()
+    private List<Material> SaveMaterial()
     {
         if (materials.Count > 0)
         {
             materials.Clear();
         }
+
+        int index = 0;
         for (int i = 0; i < materialInputs.Count; i++)
         {
             if (materialInputs[i].IsText && !materialInputs[i].Text.IsNullEmptyOrWhitespace())
             {
                 materials.Add(new Material()
                 {
-                    index = i,
-                    file = materialInputs[i].Image,
-                    isText = materialInputs[i].IsText,
+                    index = index,
+                    file = null,
+                    isText = true,
                     text = materialInputs[i].Text
                 });
-                
-            }else if (!materialInputs[i].IsText && materialInputs[i].Image != null)
+                index++;
+
+            }else if (!materialInputs[i].IsText)
             {
                 materials.Add(new Material()
                 {
-                    index = i,
-                    file = materialInputs[i].Image,
-                    isText = materialInputs[i].IsText,
-                    text = materialInputs[i].Text
+                    index = index,
+                    file = materialInputs[i].Image != null? materialInputs[i].Image : null,
+                    isText = false,
+                    text = materialInputs[i].fileUploadEl.IsFilled? materialInputs[i].fileUploadEl.url : null
                 });
+                index++;
             }
         }
+
+        return materials;
     }
 
     private void CloseButton()
     {
-        SaveMaterial();
         this.gameObject.SetActive(false);
     }
 
@@ -85,7 +90,7 @@ public class SupportMaterialCreation : MonoBehaviour
 
     public List<Material> GetSupportMaterial()
     {
-        return materials;
+        return SaveMaterial();
     }
 
     public void FillSupportMaterial(List<SupportMaterialGet> materials)
