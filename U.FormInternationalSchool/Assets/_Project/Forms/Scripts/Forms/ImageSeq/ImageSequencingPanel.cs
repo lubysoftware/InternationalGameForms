@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -44,7 +45,7 @@ public class ImageSequencingPanel : MonoBehaviour
         return listImages;
     }
 
-    public void FillImages(List<SequenceGet> sequences)
+    public void FillImages(List<SequenceGet> sequences, Action<UploadFileElement, string, string> action)
     {
         int i = 0;
         int limit = sequences.Count;
@@ -53,7 +54,7 @@ public class ImageSequencingPanel : MonoBehaviour
             ImageSequenceElement el = child.GetComponent<ImageSequenceFrame>().Image;
             if (i < limit)
             {
-                el.FillData("seq", sequences[i].imageUrl);
+                action.Invoke(el,"seq",sequences[i].imageUrl);
                 OnAddImage(false);
             }
             i++;

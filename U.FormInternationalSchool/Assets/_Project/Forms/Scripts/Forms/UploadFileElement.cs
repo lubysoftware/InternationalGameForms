@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using Newtonsoft.Json;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,6 +32,8 @@ public class UploadFileElement : MonoBehaviour
     private string fileName;
     private string extension;
     public File UploadedFile => _loadedFiles != null? _loadedFiles[0]: null;
+
+    public event Action<UploadFileElement> OnFill;
 
     protected virtual void Start()
     {
@@ -250,7 +254,7 @@ public class UploadFileElement : MonoBehaviour
         showImage.gameObject.SetActive(true);
         if (deleteFile != null)
             deleteFile.gameObject.SetActive(true);
-       
+        OnFill?.Invoke(this);
     }
     
     public void FinishedDownloadFileData(AudioClip clip)
@@ -262,6 +266,7 @@ public class UploadFileElement : MonoBehaviour
         playAudio.gameObject.SetActive(true);
         if (deleteFile != null)
             deleteFile.gameObject.SetActive(true);
+        OnFill?.Invoke(this);
     }
 
 

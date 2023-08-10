@@ -11,6 +11,7 @@ using TMPro;
 using Newtonsoft.Json;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
@@ -34,6 +35,8 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private Button sendForm;
     [SerializeField] private Transform errorPanel;
     [SerializeField] private TextMeshProUGUI errorText;
+    [SerializeField] private LoadingDots loading;
+    [SerializeField] private Button backButton;
 
     protected FormBase game = new FormBase();
     
@@ -48,14 +51,30 @@ public class FormScreen : MonoBehaviour
 
     private List<Material> materials = new List<Material>();
 
+    protected int loadFileQtt = 0;
+    protected int currentLoad = 0;
+    protected bool isLoading;
+
     protected virtual void Start()
     {
         sendForm.onClick.AddListener(SendFormData);
+        backButton.onClick.AddListener(BackButton);
     }
 
     public virtual void FinishDownloadingGame(string text)
     {
-        
+         
+    }
+
+    private void BackButton()
+    {
+        SceneManager.LoadScene("Library");
+    }
+
+    protected void StopLoading()
+    {   
+        Debug.LogError("finish");
+        loading.gameObject.SetActive(false);  
     }
 
     public void SendFormData()
@@ -182,13 +201,44 @@ public class FormScreen : MonoBehaviour
             supportMaterialPanel.FillSupportMaterial(baseForm.SupportMaterial);
         }
         
-        titleImage.FillData("gameTitleImg",baseForm.gameTitleImageUrl);
-        backgroundImage.FillData("background",baseForm.backgroundUrl);
-        backgroundMusic.FillData("music_theme",baseForm.backgroundMusicUrl);
-        audioStatement_EN.FillData("statement_en",baseForm.questionStatementEnglishAudioUrl);
-        audioStatement_PT.FillData("statement_pt",baseForm.questionStatementPortugueseAudioUrl);
+        FillUploadFiles(titleImage,"gameTitleImg",baseForm.gameTitleImageUrl);
+        FillUploadFiles(backgroundImage,"background",baseForm.backgroundUrl);
+        FillUploadFiles( backgroundMusic,"music_theme",baseForm.backgroundMusicUrl);
+        FillUploadFiles( audioStatement_EN,"statement_en",baseForm.questionStatementEnglishAudioUrl);
+        FillUploadFiles( audioStatement_PT,"statement_pt",baseForm.questionStatementPortugueseAudioUrl);
+        loadFileQtt = 5 + baseForm.sequenceUnits.Count;
+       
         
-        
+    }
+
+    public void FillUploadFiles(UploadFileElement element, string name, string value)
+    {
+        element.FillData(name,value);
+        element.OnFill += OnLoadFile;
+        currentLoad++;
+        if (currentLoad == loadFileQtt)
+        {
+            isLoading = true;
+        }
+    }
+
+    protected void Update()
+    {
+        if (isLoading)
+        {
+            if (loadFileQtt == 0)
+            {
+                StopLoading();
+                isLoading = false;
+            }
+        }
+    }
+
+    private void OnLoadFile(UploadFileElement el)
+    {
+        loadFileQtt--;
+        currentLoad--;
+        el.OnFill -= OnLoadFile;
     }
     
     protected void SendBaseFormFiles()

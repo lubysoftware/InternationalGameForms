@@ -28,6 +28,10 @@ public class ImageSequencingForm : FormScreen
         {
             SendFilesToAPI.Instance.StartDownloadGame(this, url, id);
         }
+        else
+        {
+            StopLoading();
+        }
     }
     
     public override void FinishDownloadingGame(string text)
@@ -41,6 +45,7 @@ public class ImageSequencingForm : FormScreen
             FillBaseData(json);
             FillGameData(json);
         }
+        
     }
     
     
@@ -119,7 +124,7 @@ public class ImageSequencingForm : FormScreen
     protected override void FillGameData(ImageSeqJsonGet json)
     {
         failsPenalty.text = json.failPenalty.ToString();
-        panel.FillImages(json.sequenceUnits);
+        panel.FillImages(json.sequenceUnits, FillUploadFiles);
     }
 }
 
