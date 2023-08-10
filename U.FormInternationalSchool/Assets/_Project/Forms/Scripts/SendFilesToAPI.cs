@@ -12,27 +12,16 @@ using AudioType = UnityEngine.AudioType;
 
 public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 {
-	private List<File> fileList;
-	private string json;
-	private string postURL;
 
-	public event Action<string[]> OnUploadFiles; 
-
-
-	public void StartUploadFiles(List<File> files)
-	{
-		fileList = files;
-		StartCoroutine(SendFiles());
-	}
+	//public event Action<string[]> OnUploadFiles; 
+	
 
 	public void StartUploadJson(string json, string url)
 	{
-		this.json = json;
-		postURL = url;
-		StartCoroutine(UploadJson());
+		StartCoroutine(UploadJson(url,json));
 	}
 
-	IEnumerator UploadJson()
+	IEnumerator UploadJson(string postURL, string json)
 	{
 		//UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
 		UnityWebRequest www = UnityWebRequest.Post(Constants.URL_DATABASE + postURL,json, "application/json");
@@ -52,12 +41,10 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 	
 	public void StartUploadJsonUpdate(string json, string url, int id)
 	{
-		this.json = json;
-		postURL = url;
-		StartCoroutine(UploadJsonUpdate(id));
+		StartCoroutine(UploadJsonUpdate(id, url, json));
 	}
 
-	IEnumerator UploadJsonUpdate(int id)
+	IEnumerator UploadJsonUpdate(int id, string postURL, string json)
 	{
 		//UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
 		Debug.LogError(Constants.URL_DATABASE + postURL + "/"+id);
@@ -77,8 +64,13 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 			Debug.Log(www.downloadHandler.text);
 		}
 	}
+	
+	public void StartUploadFiles(FormScreen screen, List<File> files)
+	{
+		StartCoroutine(SendFiles(screen, files));
+	}
 
-	IEnumerator SendFiles()
+	IEnumerator SendFiles(FormScreen screen, List<File> fileList)
 	{
 		// read a file and add it to the form
 		List<IMultipartFormSection> form = new List<IMultipartFormSection>();
@@ -125,7 +117,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 			result = result.Remove(0,2);
 			result = result.Remove(result.Length-2,2);
 			Debug.Log(result);
-			OnUploadFiles?.Invoke(result.Split("\",\""));
+			screen.SerializeFormData(result.Split("\",\""));
 		}
 		
 	}

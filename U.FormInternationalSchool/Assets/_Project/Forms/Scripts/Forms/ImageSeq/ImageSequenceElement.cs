@@ -61,7 +61,8 @@ public class ImageSequenceElement : UploadFileElement, IEndDragHandler,IDragHand
     
     public void OnEndDrag(PointerEventData eventData)
     {
-        OnEndDragElement?.Invoke(this, eventData, false);
+        if(IsActive)
+            OnEndDragElement?.Invoke(this, eventData, false);
     }
 
     public void OnDrag(PointerEventData eventData)

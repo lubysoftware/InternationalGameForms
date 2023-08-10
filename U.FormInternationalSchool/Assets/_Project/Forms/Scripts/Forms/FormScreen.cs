@@ -53,7 +53,6 @@ public class FormScreen : MonoBehaviour
     protected virtual void Start()
     {
         sendForm.onClick.AddListener(SendFormData);
-        SendFilesToAPI.Instance.OnUploadFiles += SerializeBaseFormData;
     }
 
     public virtual void FinishDownloadingGame(string text)
@@ -173,7 +172,7 @@ public class FormScreen : MonoBehaviour
         if (baseForm.hasTimer)
         {
             timer.onValueChanged.Invoke(baseForm.hasTimer);
-            int min = baseForm.timer % 60;
+            int min = baseForm.timer / 60;
             int sec = baseForm.timer - min * 60;
             timeMin.text = min.ToString();
             timeSec.text = sec.ToString();
@@ -307,18 +306,18 @@ public class FormScreen : MonoBehaviour
         {
             if (files.Count > 0)
             {
-                SendFilesToAPI.Instance.StartUploadFiles(files);
+                SendFilesToAPI.Instance.StartUploadFiles(this,files);
             }
             else
             {
-                SerializeBaseFormData(null);
+                SerializeFormData(null);
             }
             
         }
 
     }
 
-    private void SerializeBaseFormData(string[] urls)
+    public virtual void SerializeFormData(string[] urls)
     {
         if (IsbaseForm)
         {
@@ -406,7 +405,7 @@ public class FormScreen : MonoBehaviour
         
     }
 
-    protected virtual void SerializeGameData(string[] urls)
+    public virtual void SerializeGameData(string[] urls)
     {
         
     }
