@@ -38,6 +38,7 @@ public class ImageSequencingForm : FormScreen
         if (json != null)
         {
             Debug.LogError("fill");
+            FillBaseData(json);
             FillGameData(json);
         }
     }
@@ -113,6 +114,12 @@ public class ImageSequencingForm : FormScreen
         }
 
         FileIO.WriteAllText(PATH, json);
+    }
+
+    protected override void FillGameData(ImageSeqJsonGet json)
+    {
+        failsPenalty.text = json.failPenalty.ToString();
+        panel.FillImages(json.sequenceUnits);
     }
 }
 

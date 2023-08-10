@@ -54,7 +54,7 @@ public class ImageSequenceElement : UploadFileElement, IEndDragHandler,IDragHand
     
     public void Delete()
     {
-        showImage.gameObject.SetActive(false);
+        showImage.sprite = previewImage;
         IsActive = false;
         OnDelete?.Invoke(this);
     }

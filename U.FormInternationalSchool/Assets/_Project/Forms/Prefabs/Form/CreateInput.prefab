@@ -1453,6 +1453,7 @@ MonoBehaviour:
   textButton: {fileID: 4261814474034497508}
   delete: {fileID: 8375430312810252005}
   imageUploader: {fileID: 4571193974115858442}
+  inputField: {fileID: 7479526397450563108}
   IsText: 0
 --- !u!1001 &7398276681269725619
 PrefabInstance:

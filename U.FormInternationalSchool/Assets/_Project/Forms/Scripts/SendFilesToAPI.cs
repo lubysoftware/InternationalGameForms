@@ -168,7 +168,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 	IEnumerator DownloadAudio(UploadFileElement element, string path)
 	{
 		Debug.LogError(path);
-		UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("https://stg1atividades.blob.core.windows.net/arquivos/cd3b6cc2-76e1-4266-b4c7-4ac6ea94010a.ogg"
+		UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path
 			, AudioType.OGGVORBIS);
 
 		yield return www.SendWebRequest();

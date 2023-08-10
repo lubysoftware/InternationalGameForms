@@ -162,7 +162,7 @@ public class FormScreen : MonoBehaviour
 
     }
 
-    protected void FillGameData(ImageSeqJsonGet baseForm)
+    protected void FillBaseData(ImageSeqJsonGet baseForm)
     {
         title.text = baseForm.gameTitle;
         statement_EN.text = baseForm.questionStatementEnglishVersion;
@@ -179,7 +179,7 @@ public class FormScreen : MonoBehaviour
 
         if (baseForm.hasSupportMaterial)
         {
-            //supportMaterialPanel.FillSupportMaterial(baseForm.SupportMaterial);
+            supportMaterialPanel.FillSupportMaterial(baseForm.SupportMaterial);
         }
         
         titleImage.FillData("gameTitleImg",baseForm.gameTitleImageUrl);
@@ -187,6 +187,8 @@ public class FormScreen : MonoBehaviour
         backgroundMusic.FillData("music_theme",baseForm.backgroundMusicUrl);
         audioStatement_EN.FillData("statement_en",baseForm.questionStatementEnglishAudioUrl);
         audioStatement_PT.FillData("statement_pt",baseForm.questionStatementPortugueseAudioUrl);
+        
+        
     }
     
     protected void SendBaseFormFiles()
@@ -196,14 +198,14 @@ public class FormScreen : MonoBehaviour
         newUrlFiles.Clear();
         if (titleImage.UploadedFile != null)
         {
-            newUrlFiles.Add(fields[0],titleImage.UploadedFile.fileInfo.name);
+            newUrlFiles.TryAdd(fields[0],titleImage.UploadedFile.fileInfo.name);
             files.Add(titleImage.UploadedFile);
         }
         else
         {
             if (titleImage.IsFilled)
             {
-                filledUrlFiles.Add(fields[0],titleImage.url);
+                filledUrlFiles.TryAdd(fields[0],titleImage.url);
             }
             else
             {
@@ -214,14 +216,14 @@ public class FormScreen : MonoBehaviour
 
         if (backgroundMusic.UploadedFile != null)
         {
-            newUrlFiles.Add(fields[1], backgroundMusic.UploadedFile.fileInfo.name);
+            newUrlFiles.TryAdd(fields[1], backgroundMusic.UploadedFile.fileInfo.name);
             files.Add(backgroundMusic.UploadedFile);
         }
         else
         {
             if (backgroundMusic.IsFilled)
             {
-                filledUrlFiles.Add(fields[1],backgroundMusic.url);
+                filledUrlFiles.TryAdd(fields[1],backgroundMusic.url);
             }
             else
             {
@@ -232,14 +234,14 @@ public class FormScreen : MonoBehaviour
 
         if (backgroundImage.UploadedFile != null)
         {
-            newUrlFiles.Add(fields[2], backgroundImage.UploadedFile.fileInfo.name);
+            newUrlFiles.TryAdd(fields[2], backgroundImage.UploadedFile.fileInfo.name);
             files.Add(backgroundImage.UploadedFile);
         }
         else
         {
             if (backgroundImage.IsFilled)
             {
-                filledUrlFiles.Add(fields[2],backgroundImage.url);
+                filledUrlFiles.TryAdd(fields[2],backgroundImage.url);
             }
             else
             {
@@ -250,14 +252,14 @@ public class FormScreen : MonoBehaviour
 
         if (audioStatement_PT.UploadedFile != null)
         {
-            newUrlFiles.Add(fields[3], audioStatement_PT.UploadedFile.fileInfo.name);
+            newUrlFiles.TryAdd(fields[3], audioStatement_PT.UploadedFile.fileInfo.name);
             files.Add(audioStatement_PT.UploadedFile);
         }
         else
         {
             if (audioStatement_PT.IsFilled)
             {
-                filledUrlFiles.Add(fields[3],audioStatement_PT.url);
+                filledUrlFiles.TryAdd(fields[3],audioStatement_PT.url);
             }
             else
             {
@@ -268,14 +270,14 @@ public class FormScreen : MonoBehaviour
 
         if (audioStatement_EN.UploadedFile != null)
         {
-            newUrlFiles.Add(fields[4], audioStatement_EN.UploadedFile.fileInfo.name);
+            newUrlFiles.TryAdd(fields[4], audioStatement_EN.UploadedFile.fileInfo.name);
             files.Add(audioStatement_EN.UploadedFile);
         }
         else
         {
             if (audioStatement_EN.IsFilled)
             {
-                filledUrlFiles.Add(fields[4],audioStatement_EN.url);
+                filledUrlFiles.TryAdd(fields[4],audioStatement_EN.url);
             }
             else
             {
@@ -330,10 +332,13 @@ public class FormScreen : MonoBehaviour
                 {
                     newUrlFiles[fields[i]] = urls[i];
                 }
-
-
+                
                 urlDict = newUrlFiles;
                 urlDict.AddRange(filledUrlFiles);
+                foreach (var str in urlDict)
+                {
+                    Debug.LogError(str.Key + " " + str.Value);
+                }
                 
                 int urlsSupportMaterial = fields.Count;
                 for (int i = 0; i< materials.Count; i++)
@@ -401,6 +406,11 @@ public class FormScreen : MonoBehaviour
     }
 
     public virtual void SerializeGameData(string[] urls)
+    {
+        
+    }
+
+    protected virtual void FillGameData(ImageSeqJsonGet json)
     {
         
     }

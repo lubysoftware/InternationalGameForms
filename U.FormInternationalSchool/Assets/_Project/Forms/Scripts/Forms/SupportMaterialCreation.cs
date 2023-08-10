@@ -13,23 +13,24 @@ public class SupportMaterialCreation : MonoBehaviour
     [SerializeField] private Transform content;
     [SerializeField] private Button close;
 
-    private List<MaterialInputArea> materialInputs;
-    private List<Material> materials;
+    private List<MaterialInputArea> materialInputs =  new List<MaterialInputArea>();
+    private List<Material> materials = new List<Material>();
     void Start()
     {
         close.onClick.AddListener(CloseButton);
-        newInputArea.onClick.AddListener(AddInputArea);
+        newInputArea.onClick.AddListener(() => AddInputArea());
         materialInputs = new List<MaterialInputArea>();
         materials = new List<Material>();
         AddInputArea();
     }
 
-    private void AddInputArea()
+    private MaterialInputArea AddInputArea()
     {
         MaterialInputArea newInput = Instantiate(inputAreaPrefab, content);
         materialInputs.Add(newInput);
         newInput.OnDestroy += RemoveFromList;
         newInputArea.transform.SetAsLastSibling();
+        return newInput;
     }
     
     
@@ -81,9 +82,20 @@ public class SupportMaterialCreation : MonoBehaviour
         return materials;
     }
 
-    public void FillSupportMaterial(List<SupportMaterial> materials)
+    public void FillSupportMaterial(List<SupportMaterialGet> materials)
     {
-        
+        foreach (SupportMaterialGet mat in materials)
+        {
+            MaterialInputArea area = AddInputArea();
+            if (mat.materialType == "TEXT")
+            {
+                area.SetText(mat.material);
+            }
+            else
+            {
+                area.SetImage("support",mat.material);
+            }
+        }
     }
     
     

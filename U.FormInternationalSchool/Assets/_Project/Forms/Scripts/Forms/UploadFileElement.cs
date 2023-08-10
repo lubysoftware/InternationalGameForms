@@ -19,7 +19,7 @@ public class UploadFileElement : MonoBehaviour
     [SerializeField] protected bool isImage;
     [SerializeField] private Button playAudio;
     [SerializeField] private Button pauseAudio;
-    [SerializeField] private Sprite previewImage;
+    [SerializeField] protected Sprite previewImage;
 
     public string url;
     public bool IsFilled;
@@ -174,7 +174,7 @@ public class UploadFileElement : MonoBehaviour
 
                         WebGLFileBrowser.RegisterFileObject(clip);
                         // add audio clip to cache list. should be used with  fileBrowserFreeMemory() when its no need anymore
-                        fileData.text = $"{file.fileInfo.name}    "+"{file.fileInfo.extension}";
+                        fileData.text = $"{file.fileInfo.name}{file.fileInfo.extension}";
                         _audioSource.clip = clip;
                         playAudio.gameObject.SetActive(true);
                         pauseAudio.gameObject.SetActive(true);

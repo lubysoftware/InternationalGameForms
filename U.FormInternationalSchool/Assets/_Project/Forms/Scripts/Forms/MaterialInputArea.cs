@@ -18,6 +18,8 @@ public class MaterialInputArea : MonoBehaviour
 
     [SerializeField] private UploadFileElement imageUploader;
 
+    [SerializeField] private TMP_InputField inputField;
+
     public bool IsText;
 
     public string Text => text.text;
@@ -53,5 +55,19 @@ public class MaterialInputArea : MonoBehaviour
     {
         OnDestroy?.Invoke(this);
         Destroy(this.gameObject);
+    }
+
+    public void SetImage(string name, string url)
+    {
+        OnClickImage();
+        imageUploader.FillData(name,url);
+    }
+
+    public void SetText(string data)
+    {
+        OnClickText();
+        inputField.gameObject.SetActive(true);
+        inputField.text = data;
+        inputField.DeactivateInputField();
     }
 }

@@ -11,7 +11,7 @@ public class ImageSequencingPanel : MonoBehaviour
     [SerializeField] private ImageSequenceElement[] images;
     [SerializeField] private Button newImage;
     public int counter = 0;
-
+    
     void Start()
     {
         for(int i = 0;i < transform.childCount; i++)
@@ -42,6 +42,22 @@ public class ImageSequencingPanel : MonoBehaviour
             }
         }
         return listImages;
+    }
+
+    public void FillImages(List<SequenceGet> sequences)
+    {
+        int i = 0;
+        int limit = sequences.Count;
+        foreach (Transform child in transform)
+        {
+            ImageSequenceElement el = child.GetComponent<ImageSequenceFrame>().Image;
+            if (i < limit)
+            {
+                el.FillData("seq", sequences[i].imageUrl);
+                OnAddImage(false);
+            }
+            i++;
+        }
     }
 
     private void OnAddImage(bool isUpdate)
