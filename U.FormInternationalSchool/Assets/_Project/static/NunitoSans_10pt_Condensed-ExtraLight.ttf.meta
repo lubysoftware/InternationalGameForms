@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 71aa32a4ce5ac004bb2d5cb4972bb5f7
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Nunito Sans 10pt Condensed
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 002ccff8ee1ea7d4c9259a431b1c3905, type: 3}
+  - {fileID: 12800000, guid: 401376d0e3c35924b8a0350fee7b4c1b, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

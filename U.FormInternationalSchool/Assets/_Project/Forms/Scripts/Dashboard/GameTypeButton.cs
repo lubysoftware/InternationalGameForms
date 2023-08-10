@@ -25,6 +25,8 @@ public class GameTypeButton : MonoBehaviour
         this.so = so;
         if (so.isActive)
         {
+            title.color = new Color(0, 0.2f, 0.3f, 1);
+            description.color = new Color(0, 0.2f, 0.3f, 1);
             button.onClick.AddListener(OnClick);
         }
     }

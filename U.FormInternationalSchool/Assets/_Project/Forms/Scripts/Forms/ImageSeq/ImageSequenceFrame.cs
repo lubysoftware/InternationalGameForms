@@ -13,6 +13,8 @@ public class ImageSequenceFrame : MonoBehaviour
 
     [SerializeField] private Button delete;
 
+    [SerializeField] private Transform indexField;
+
     [SerializeField] private bool isActive;
 
     private int index;

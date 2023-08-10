@@ -8,6 +8,7 @@ using UnityEngine.Networking;
 using LubyLib.Core.Singletons;
 using Newtonsoft.Json;
 using Unity.VisualScripting;
+using AudioType = UnityEngine.AudioType;
 
 public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 {
@@ -47,7 +48,34 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		{
 			Debug.Log(www.downloadHandler.text);
 		}
+	}
+	
+	public void StartUploadJsonUpdate(string json, string url, int id)
+	{
+		this.json = json;
+		postURL = url;
+		StartCoroutine(UploadJsonUpdate(id));
+	}
 
+	IEnumerator UploadJsonUpdate(int id)
+	{
+		//UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
+		Debug.LogError(Constants.URL_DATABASE + postURL + "/"+id);
+		Debug.LogError(json);
+		UnityWebRequest www = UnityWebRequest.Put(Constants.URL_DATABASE + postURL + "/"+id, json);
+
+		www.SetRequestHeader("authorization","Bearer Luby2021");
+		www.SetRequestHeader("content-type","application/json");
+		yield return www.SendWebRequest();
+
+		if (www.result != UnityWebRequest.Result.Success)
+		{
+			Debug.Log(www.error);
+		}
+		else
+		{
+			Debug.Log(www.downloadHandler.text);
+		}
 	}
 
 	IEnumerator SendFiles()
@@ -109,7 +137,56 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
 	IEnumerator DownloadImage(UploadFileElement element, string path)
 	{
-		UnityWebRequest www = UnityWebRequest.Get(Constants.URL_UPLOAD_MEDIA + path);
+		Debug.LogError(path);
+		UnityWebRequest www = UnityWebRequestTexture.GetTexture(path);
+
+		yield return www.SendWebRequest();
+
+		if (www.result is UnityWebRequest.Result.ProtocolError or UnityWebRequest.Result.ConnectionError)
+		{
+			Debug.Log(www.error);
+		}
+		else
+		{
+			Debug.Log(www.downloadHandler.text);
+			DownloadHandlerTexture.GetContent(www);
+			element.FinishedDownloadFileData(DownloadHandlerTexture.GetContent(www));
+		}
+	}
+	
+	public void StartDownloadAudio(UploadFileElement element, string path)
+	{
+		StartCoroutine(DownloadAudio(element, path));
+	}
+
+	IEnumerator DownloadAudio(UploadFileElement element, string path)
+	{
+		Debug.LogError(path);
+		UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip("https://stg1atividades.blob.core.windows.net/arquivos/cd3b6cc2-76e1-4266-b4c7-4ac6ea94010a.ogg"
+			, AudioType.OGGVORBIS);
+
+		yield return www.SendWebRequest();
+
+		if (www.error != null)
+		{
+			Debug.Log(www.error);
+		}
+		else
+		{
+			element.FinishedDownloadFileData(DownloadHandlerAudioClip.GetContent(www));
+		}
+	}
+
+
+	public void StartDownloadGame(FormScreen element, string path, int id)
+	{
+		StartCoroutine(DownloadGame(element, path, id));
+	}
+
+	IEnumerator DownloadGame(FormScreen element, string path, int id)
+	{
+		Debug.LogError(Constants.URL_DATABASE + path +"/"+ id);
+		UnityWebRequest www = UnityWebRequest.Get(Constants.URL_DATABASE + path +"/"+ id);
 		
 		www.SetRequestHeader("authorization","Bearer Luby2021");
 		yield return www.SendWebRequest();
@@ -121,7 +198,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		else
 		{
 			Debug.Log(www.downloadHandler.text);
-			element.FinishedDownloadFileData(www.downloadHandler.text);
+			element.FinishDownloadingGame(www.downloadHandler.text);
 		}
 	}
 	

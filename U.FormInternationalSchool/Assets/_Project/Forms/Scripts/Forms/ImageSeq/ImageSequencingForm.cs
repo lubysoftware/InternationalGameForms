@@ -13,34 +13,32 @@ public class ImageSequencingForm : FormScreen
     [SerializeField] private TMP_InputField failsPenalty;
     private readonly string PATH = Application.dataPath + "/Teste.json";
 
+    private string url = "image-sequence";
+
     private int failsPenaltyValue =0;
+
+    private int id;
 
     protected override void Start()
     {
         base.Start();
-        ImageSeqJsonClass json;
-        SceneDataCarrier.GetData(Constants.GAME_EDIT, out json);
+        SceneDataCarrier.GetData(Constants.GAME_EDIT, out id);
+        Debug.LogError(id);
+        if (id > 0)
+        {
+            SendFilesToAPI.Instance.StartDownloadGame(this, url, id);
+        }
+    }
+    
+    public override void FinishDownloadingGame(string text)
+    {
+        Debug.LogError("finish");
+        ImageSeqJsonGet json = JsonConvert.DeserializeObject<ImageSeqJsonGet>(text);
         Debug.LogError(json);
         if (json != null)
         {
             Debug.LogError("fill");
-            FormBase form = new FormBase()
-            {
-                gameTitle = json.gameTitle,
-                backgroundMusicUrl = json.backgroundMusicUrl,
-                backgroundUrl = json.backgroundUrl,
-                bonustimer = json.bonusTimer,
-                gameTitleImageUrl = json.gameTitleImageUrl,
-                hasSupportMaterial = json.hasSupportMaterial,
-                hasTimer = json.hasTimer,
-                questionStatementEnglishVersion = json.questionStatementEnglishVersion,
-                questionStatementEnglishAudioUrl = json.questionStatementEnglishAudioUrl,
-                questionStatementPortugueseVersion = json.questionStatementPortugueseVersion,
-                questionStatementPortugueseAudioUrl = json.questionStatementPortugueseAudioUrl,
-                timer = json.timer,
-                supportMaterial = null,
-            };
-            FillGameData(form);
+            FillGameData(json);
         }
     }
     
@@ -101,11 +99,18 @@ public class ImageSequencingForm : FormScreen
                 sequences = listSeq
             }
         };
-            
-        string json = JsonConvert.SerializeObject(completeForm);
 
-        SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence");
-           
+       
+        string json = JsonConvert.SerializeObject(completeForm);
+        if (id > 0)
+        {
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, "image-sequence", id);
+        }
+        else
+        {
+            SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence");
+        }
+
         FileIO.WriteAllText(PATH, json);
     }
 }

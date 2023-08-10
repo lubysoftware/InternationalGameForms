@@ -9,6 +9,7 @@ using LubyLib.Core.Extensions;
 using LubyLib.Core.Singletons;
 using TMPro;
 using Newtonsoft.Json;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
@@ -38,7 +39,9 @@ public class FormScreen : MonoBehaviour
 
     protected FormBase game = new FormBase();
     
-    private Dictionary<string, string> urlFiles = new Dictionary<string, string>();
+    private Dictionary<string, string> newUrlFiles = new Dictionary<string, string>();
+    private Dictionary<string, string> filledUrlFiles = new Dictionary<string, string>();
+    private Dictionary<string, string> urlDict = new Dictionary<string, string>();
     private List<string> fields = new() { Constants.IMAGE_TITLE, Constants.MUSIC_BACK, Constants.IMAGE_BACK ,Constants.AUDIO_PT,Constants.AUDIO_EN };
 
     private int timeInSec = 0;
@@ -51,6 +54,11 @@ public class FormScreen : MonoBehaviour
     {
         sendForm.onClick.AddListener(SendFormData);
         SendFilesToAPI.Instance.OnUploadFiles += SerializeBaseFormData;
+    }
+
+    public virtual void FinishDownloadingGame(string text)
+    {
+        
     }
 
     public void SendFormData()
@@ -68,13 +76,13 @@ public class FormScreen : MonoBehaviour
             return;
         }
 
-        if (titleImage.UploadedFile == null)
+        if (titleImage.UploadedFile == null && titleImage.IsFilled == false)
         {
             ShowError("Imagem de título do jogo", ErrorType.EMPTY, null);
             return;
         }
 
-        if (backgroundMusic.UploadedFile == null)
+        if (backgroundMusic.UploadedFile == null && backgroundMusic.IsFilled == false)
         {
             ShowError("Música de fundo", ErrorType.EMPTY, null);
             return;
@@ -86,25 +94,25 @@ public class FormScreen : MonoBehaviour
             return;
         }
         
-        if (audioStatement_EN.UploadedFile == null)
+        if (audioStatement_EN.UploadedFile == null && audioStatement_PT.IsFilled == false)
         {
             ShowError("Áudio do enunciado em Inglês", ErrorType.EMPTY, null);
             return;
         }
         
-        if (statement_PT.text.IsNullEmptyOrWhitespace())
+        if (statement_PT.text.IsNullEmptyOrWhitespace() )
         {
             ShowError("Enunciado em Português", ErrorType.EMPTY, null);
             return;
         }
         
-        if (audioStatement_PT.UploadedFile == null)
+        if (audioStatement_PT.UploadedFile == null && audioStatement_PT.IsFilled == false)
         {
             ShowError("Áudio do enunciado em Português", ErrorType.EMPTY, null);
             return;
         }
         
-        if (backgroundImage.UploadedFile == null)
+        if (backgroundImage.UploadedFile == null && backgroundImage.IsFilled == false)
         {
             ShowError("Imagem de fundo", ErrorType.EMPTY, null);
             return;
@@ -157,7 +165,7 @@ public class FormScreen : MonoBehaviour
 
     }
 
-    protected void FillGameData(FormBase baseForm)
+    protected void FillGameData(ImageSeqJsonGet baseForm)
     {
         title.text = baseForm.gameTitle;
         statement_EN.text = baseForm.questionStatementEnglishVersion;
@@ -174,13 +182,14 @@ public class FormScreen : MonoBehaviour
 
         if (baseForm.hasSupportMaterial)
         {
-            supportMaterialPanel.FillSupportMaterial(baseForm.supportMaterial);
+           // supportMaterialPanel.FillSupportMaterial(baseForm.SupportMaterial);
         }
         
         titleImage.FillData("gameTitleImg",baseForm.gameTitleImageUrl);
-        
-
-
+        backgroundImage.FillData("background",baseForm.backgroundUrl);
+        backgroundMusic.FillData("music_theme",baseForm.backgroundMusicUrl);
+        audioStatement_EN.FillData("statement_en",baseForm.questionStatementEnglishAudioUrl);
+        audioStatement_PT.FillData("statement_pt",baseForm.questionStatementPortugueseAudioUrl);
     }
     
     protected void SendBaseFormFiles()
@@ -188,60 +197,95 @@ public class FormScreen : MonoBehaviour
         IsbaseForm = true;
         supportMaterialImgsQtt = 0;
         List<File> files = new List<File>();
-        urlFiles.Clear();
+        newUrlFiles.Clear();
         if (titleImage.UploadedFile != null)
         {
-            urlFiles.Add(fields[0],titleImage.UploadedFile.fileInfo.name);
+            newUrlFiles.Add(fields[0],titleImage.UploadedFile.fileInfo.name);
             files.Add(titleImage.UploadedFile);
         }
         else
         {
-            ShowError("Imagem de título do jogo", ErrorType.EMPTY, null);
-            return;
+            if (titleImage.IsFilled)
+            {
+                filledUrlFiles.Add(fields[0],titleImage.url);
+            }
+            else
+            {
+                ShowError("Imagem de título do jogo", ErrorType.EMPTY, null);
+                return;
+            }
         }
 
         if (backgroundMusic.UploadedFile != null)
         {
-            urlFiles.Add(fields[1], backgroundMusic.UploadedFile.fileInfo.name);
+            newUrlFiles.Add(fields[1], backgroundMusic.UploadedFile.fileInfo.name);
             files.Add(backgroundMusic.UploadedFile);
         }
         else
         {
-            ShowError("Música de fundo", ErrorType.EMPTY, null);
-            return;
+            if (backgroundMusic.IsFilled)
+            {
+                filledUrlFiles.Add(fields[1],backgroundMusic.url);
+            }
+            else
+            {
+                ShowError("Música de fundo", ErrorType.EMPTY, null);
+                return;
+            }
         }
 
         if (backgroundImage.UploadedFile != null)
         {
-            urlFiles.Add(fields[2], backgroundImage.UploadedFile.fileInfo.name);
+            newUrlFiles.Add(fields[2], backgroundImage.UploadedFile.fileInfo.name);
             files.Add(backgroundImage.UploadedFile);
         }
         else
         {
-            ShowError("Imagem de fundo", ErrorType.EMPTY, null);
-            return;
+            if (backgroundImage.IsFilled)
+            {
+                filledUrlFiles.Add(fields[2],backgroundImage.url);
+            }
+            else
+            {
+                ShowError("Imagem de fundo", ErrorType.EMPTY, null);
+                return;
+            }
         }
 
         if (audioStatement_PT.UploadedFile != null)
         {
-            urlFiles.Add(fields[3], audioStatement_PT.UploadedFile.fileInfo.name);
+            newUrlFiles.Add(fields[3], audioStatement_PT.UploadedFile.fileInfo.name);
             files.Add(audioStatement_PT.UploadedFile);
         }
         else
         {
-            ShowError("Áudio do enunciado em Português", ErrorType.EMPTY, null);
-            return;
+            if (audioStatement_PT.IsFilled)
+            {
+                filledUrlFiles.Add(fields[3],audioStatement_PT.url);
+            }
+            else
+            {
+                ShowError("Áudio do enunciado em Português", ErrorType.EMPTY, null);
+                return;
+            }
         }
 
         if (audioStatement_EN.UploadedFile != null)
         {
-            urlFiles.Add(fields[4], audioStatement_EN.UploadedFile.fileInfo.name);
+            newUrlFiles.Add(fields[4], audioStatement_EN.UploadedFile.fileInfo.name);
             files.Add(audioStatement_EN.UploadedFile);
         }
         else
         {
-            ShowError("Áudio do enunciado em inglês", ErrorType.EMPTY, null);
-            return;
+            if (audioStatement_EN.IsFilled)
+            {
+                filledUrlFiles.Add(fields[4],audioStatement_EN.url);
+            }
+            else
+            {
+                ShowError("Áudio do enunciado em inglês", ErrorType.EMPTY, null);
+                return;
+            }
         }
 
         materials = supportMaterialPanel.GetSupportMaterial();
@@ -255,13 +299,21 @@ public class FormScreen : MonoBehaviour
             }
         }
         
-        if (files.Count < 5)
+        if (files.Count < newUrlFiles.Count)
         {
             ShowError("Por favor, preencha todos os campos de arquivos.", ErrorType.CUSTOM, null);
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadFiles(files);
+            if (files.Count > 0)
+            {
+                SendFilesToAPI.Instance.StartUploadFiles(files);
+            }
+            else
+            {
+                SerializeBaseFormData(null);
+            }
+            
         }
 
     }
@@ -273,14 +325,17 @@ public class FormScreen : MonoBehaviour
             List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
             if (urls != null)
             {
-                
-                if (urls.Length == fields.Count + supportMaterialImgsQtt)
+                if (urls.Length == newUrlFiles.Count + supportMaterialImgsQtt)
                 {
-                    for (int i = 0; i< fields.Count; i++)
+                    for (int i = 0; i< newUrlFiles.Count; i++)
                     {
-                        urlFiles[fields[i]] = urls[i];
+                        newUrlFiles[fields[i]] = urls[i];
                     }
 
+
+                    urlDict = newUrlFiles;
+                    urlDict.AddRange(filledUrlFiles);
+                    
                     int urlsSupportMaterial = fields.Count;
                     for (int i = 0; i< materials.Count; i++)
                     {
@@ -315,16 +370,16 @@ public class FormScreen : MonoBehaviour
             game = new FormBase()
             {
                 gameTitle = title.text,
-                backgroundMusicUrl = urlFiles[Constants.MUSIC_BACK],
-                backgroundUrl = urlFiles[Constants.IMAGE_BACK],
+                backgroundMusicUrl = urlDict[Constants.MUSIC_BACK],
+                backgroundUrl = urlDict[Constants.IMAGE_BACK],
                 bonustimer = bonusTimer,
-                gameTitleImageUrl = urlFiles[Constants.IMAGE_TITLE],
+                gameTitleImageUrl = urlDict[Constants.IMAGE_TITLE],
                 hasSupportMaterial =  supportMaterial.Count > 0,
                 supportMaterial = supportMaterial.Count > 0? supportMaterial : null,
                 hasTimer = timer.isOn,
-                questionStatementEnglishAudioUrl = urlFiles[Constants.AUDIO_EN],
+                questionStatementEnglishAudioUrl = urlDict[Constants.AUDIO_EN],
                 questionStatementEnglishVersion = statement_EN.text,
-                questionStatementPortugueseAudioUrl = urlFiles[Constants.AUDIO_PT],
+                questionStatementPortugueseAudioUrl = urlDict[Constants.AUDIO_PT],
                 timer = timeInSec,
                 questionStatementPortugueseVersion = statement_PT.text
             };

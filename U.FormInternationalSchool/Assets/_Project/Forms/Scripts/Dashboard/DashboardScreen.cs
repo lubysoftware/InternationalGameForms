@@ -12,16 +12,13 @@ public class DashboardScreen : MonoBehaviour
     {
         foreach (GameTypeSO game in gameSOs)
         {
+
             GameTypeButton button = Instantiate(gameButton, this.transform);
             button.Init(game);
+            
         } 
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }
 
 public enum GameType

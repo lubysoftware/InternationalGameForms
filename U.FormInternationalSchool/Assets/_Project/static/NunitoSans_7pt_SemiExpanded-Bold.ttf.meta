@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: c9bb4e12a2836f04c8de20812de0a33b
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Nunito Sans 7pt SemiExpanded
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 769ff4126e243f3479cb09d71ca53d67, type: 3}
+  - {fileID: 12800000, guid: 248179d38b5d5eb409bd825201453328, type: 3}
+  - {fileID: 12800000, guid: 4418c0960bc1d8b45802c20ccb818fa4, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -11,12 +11,18 @@ public class UploadFileElement : MonoBehaviour
 {
     [SerializeField] protected Button uploadFileButton;
     [SerializeField] protected TextMeshProUGUI fileData;
+    [SerializeField] protected Transform fileField;
     [SerializeField] protected Button deleteFile;
     [SerializeField] protected Image showImage;
     [SerializeField] private bool isMultipleFiles = false;
     private AudioSource _audioSource;
     [SerializeField] protected bool isImage;
     [SerializeField] private Button playAudio;
+    [SerializeField] private Button pauseAudio;
+    [SerializeField] private Sprite previewImage;
+
+    public string url;
+    public bool IsFilled;
 
     private string types;
     private File[] _loadedFiles = null;
@@ -43,7 +49,8 @@ public class UploadFileElement : MonoBehaviour
         }
         else
         {
-            playAudio.onClick.AddListener(PlayAudio);
+            playAudio.onClick.AddListener(()=>PlayAudio(true));
+            playAudio.onClick.AddListener(()=>PlayAudio(false));
             _audioSource = GetComponent<AudioSource>();
             types = ".ogg";
         }
@@ -86,12 +93,17 @@ public class UploadFileElement : MonoBehaviour
         fileData.text = string.Empty;
         if (isImage)
         {
-            showImage.color = new Color(1, 1, 1, 0);
-            showImage.sprite = null;
+            showImage.sprite = previewImage;
+            fileField.gameObject.SetActive(false);
+            playAudio.gameObject.SetActive(false);
+            pauseAudio.gameObject.SetActive(false);
         }
         else
         {
+            showImage.gameObject.SetActive(false);
+            deleteFile.gameObject.SetActive(false);
             playAudio.gameObject.SetActive(false);
+            pauseAudio.gameObject.SetActive(false);
         }
 
         WebGLFileBrowser.FreeMemory(); // free used memory and destroy created content
@@ -102,7 +114,6 @@ public class UploadFileElement : MonoBehaviour
     {
         UnsubscribeEvents();
         _loadedFiles = files;
-
         if (_loadedFiles != null && _loadedFiles.Length > 0)
         {
             var file = _loadedFiles[0];
@@ -128,12 +139,12 @@ public class UploadFileElement : MonoBehaviour
             {
                 if (isImage)
                 {
-                    if (file.IsImage())
+                   if (file.IsImage())
                     {
                         if (showImage != null)
                         {
+                            IsFilled = false;
                             showImage.gameObject.SetActive(true);
-                            showImage.color = new Color(1, 1, 1, 1);
                             showImage.sprite = file.ToSprite(); // dont forget to delete unused objects to free memory!
                         }
                         else
@@ -167,6 +178,8 @@ public class UploadFileElement : MonoBehaviour
                         fileData.text = $"{file.fileInfo.name}.{file.fileInfo.extension}";
                         _audioSource.clip = clip;
                         playAudio.gameObject.SetActive(true);
+                        pauseAudio.gameObject.SetActive(true);
+                        fileField.gameObject.SetActive(true);
                     }
                 }
             }
@@ -194,37 +207,57 @@ public class UploadFileElement : MonoBehaviour
         Debug.LogError(error);
     }
 
-    private void PlayAudio()
+    private void PlayAudio(bool status)
     {
         if (_audioSource.clip != null)
         {
-            _audioSource.Play();
+            if (status)
+            {
+                _audioSource.Play(); 
+            }
+            else
+            {
+                _audioSource.Stop();
+            }
         }
     }
 
     public void FillData(string fileName, string path )
     {
         this.fileName = fileName;
-        this.extension = System.IO.Path.GetExtension(path);
-        SendFilesToAPI.Instance.StartDownloadImage(this, path);
+        url = path;
+        IsFilled = true;
+       //this.extension = System.IO.Path.GetExtension(path);
+       if (isImage)
+       {
+           SendFilesToAPI.Instance.StartDownloadImage(this, path);
+       }
+       else
+       {
+           SendFilesToAPI.Instance.StartDownloadAudio(this, path);
+       }
     }
 
-    public void FinishedDownloadFileData(string fileText)
+    public void FinishedDownloadFileData(Texture2D texture)
     {
-        FileData data = JsonConvert.DeserializeObject<FileData>(fileText);
-        File file = new File()
-        {
-            fileInfo = new FileInfo()
-            {
-                extension = this.extension,
-                name = System.IO.Path.GetFileNameWithoutExtension(fileName),
-                fullName = System.IO.Path.GetFileName(fileName + extension),
-                length = data.data.Length,
-                path = "",
-                size = data.data.Length
-            },
-            data = data.data
-        };
+        Sprite s = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height),
+            new Vector2(0.5f, 0.5f));
+        showImage.sprite = s;
+        showImage.gameObject.SetActive(true);
+        if (deleteFile != null)
+            deleteFile.gameObject.SetActive(true);
+       
+    }
+    
+    public void FinishedDownloadFileData(AudioClip clip)
+    {
+        Debug.LogError("entrei");
+        fileData.gameObject.SetActive(true);
+        fileData.text = $"{fileName}";
+        _audioSource.clip = clip;
+        playAudio.gameObject.SetActive(true);
+        if (deleteFile != null)
+            deleteFile.gameObject.SetActive(true);
     }
 
 

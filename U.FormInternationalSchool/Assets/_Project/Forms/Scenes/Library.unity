@@ -894,8 +894,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 25, y: -100}
-  m_SizeDelta: {x: -50, y: -200}
+  m_AnchoredPosition: {x: 25, y: -117.26999}
+  m_SizeDelta: {x: -50, y: -234.54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &529968793
 MonoBehaviour:
@@ -1171,8 +1171,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -599.33984, y: -20}
-  m_SizeDelta: {x: -1298.6797, y: 150.2549}
+  m_AnchoredPosition: {x: -497.9461, y: -20}
+  m_SizeDelta: {x: -1095.8933, y: 180}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &979311723
 GameObject:
@@ -1287,7 +1287,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 500, y: 50}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1166809005
 MonoBehaviour:
@@ -1355,7 +1355,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 2c9e4012f41f1b349b4d5f49affe1a8d, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -2072,11 +2072,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de73fc7608461ec4d8e93537ef651352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newGame: {fileID: 0}
-  backButton: {fileID: 0}
+  newGame: {fileID: 1166809005}
+  backButton: {fileID: 1354701856}
   searchTitle: {fileID: 0}
   component: {fileID: 2890734139658620694, guid: cc762aab0fcd3da46bf4adfe99f11445, type: 3}
-  getFiles: {fileID: 118655071}
 --- !u!1 &1736054549
 GameObject:
   m_ObjectHideFlags: 0
@@ -2390,11 +2389,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2080294540724150222, guid: 0bc96d60dfd3bf54595f688570cbd28e, type: 3}
       propertyPath: m_VerticalAlignment
-      value: 512
+      value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 2080294540724150222, guid: 0bc96d60dfd3bf54595f688570cbd28e, type: 3}
       propertyPath: m_HorizontalAlignment
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4834459100917261529, guid: 0bc96d60dfd3bf54595f688570cbd28e, type: 3}
       propertyPath: m_Pivot.x
@@ -2426,7 +2425,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4834459100917261529, guid: 0bc96d60dfd3bf54595f688570cbd28e, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 80.3409
       objectReference: {fileID: 0}
     - target: {fileID: 4834459100917261529, guid: 0bc96d60dfd3bf54595f688570cbd28e, type: 3}
       propertyPath: m_LocalPosition.x

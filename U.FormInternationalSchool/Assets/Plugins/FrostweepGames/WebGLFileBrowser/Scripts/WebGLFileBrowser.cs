@@ -617,7 +617,11 @@ namespace FrostweepGames.Plugins.WebGLFileBrowser
             var texture = file.ToTexture2D();
 
             if (texture == null)
+            {
+                Debug.LogError("null img");
                 return null;
+            }
+                
 
             var sprite = Sprite.Create(texture,
                                         new Rect(Vector2.zero, new Vector2(texture.width, texture.height)),
