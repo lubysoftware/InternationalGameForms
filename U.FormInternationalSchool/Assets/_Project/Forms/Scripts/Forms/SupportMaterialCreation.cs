@@ -12,6 +12,7 @@ public class SupportMaterialCreation : MonoBehaviour
     [SerializeField] private Button newInputArea;
     [SerializeField] private Transform content;
     [SerializeField] private Button close;
+    [SerializeField] private Transform blocker;
 
     private List<MaterialInputArea> materialInputs =  new List<MaterialInputArea>();
     private List<Material> materials = new List<Material>();
@@ -32,8 +33,13 @@ public class SupportMaterialCreation : MonoBehaviour
         newInputArea.transform.SetAsLastSibling();
         return newInput;
     }
-    
-    
+
+    private void OnEnable()
+    {
+        blocker.gameObject.SetActive(true);
+    }
+
+
     private void SaveMaterial()
     {
         if (materials.Count > 0)

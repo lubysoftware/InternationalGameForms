@@ -99,9 +99,6 @@ public class UploadFileElement : MonoBehaviour
         if (isImage)
         {
             showImage.sprite = previewImage;
-            fileField.gameObject.SetActive(false);
-            playAudio.gameObject.SetActive(false);
-            pauseAudio.gameObject.SetActive(false);
         }
         else
         {

@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class MaterialInputArea : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI text;
 
     [SerializeField] private Button imageButton;
 
@@ -22,14 +21,13 @@ public class MaterialInputArea : MonoBehaviour
 
     public bool IsText;
 
-    public string Text => text.text;
+    public string Text => inputField.text;
 
     public File Image => imageUploader.UploadedFile;
 
     public event Action<MaterialInputArea> OnDestroy;
     void Start()
     {
-        text.gameObject.SetActive(false);
         imageButton.onClick.AddListener(OnClickImage);
         textButton.onClick.AddListener(OnClickText);
         delete.onClick.AddListener(OnDeleteButton);
@@ -40,7 +38,6 @@ public class MaterialInputArea : MonoBehaviour
         IsText = true;
         textButton.gameObject.SetActive(false);
         imageButton.gameObject.SetActive(false);
-        text.gameObject.SetActive(true);
     }
     
     private void OnClickImage()
@@ -68,6 +65,5 @@ public class MaterialInputArea : MonoBehaviour
         OnClickText();
         inputField.gameObject.SetActive(true);
         inputField.text = data;
-        inputField.DeactivateInputField();
     }
 }
