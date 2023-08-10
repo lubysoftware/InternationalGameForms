@@ -56,11 +56,11 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
 		if (www.result != UnityWebRequest.Result.Success)
 		{
-			Debug.Log(www.error);
+			Debug.LogError(www.error);
 		}
 		else
 		{
-			Debug.Log(www.downloadHandler.text);
+			Debug.LogError(www.downloadHandler.text);
 		}
 	}
 	
@@ -149,11 +149,11 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
 		if (www.result is UnityWebRequest.Result.ProtocolError or UnityWebRequest.Result.ConnectionError)
 		{
-			Debug.Log(www.error);
+			Debug.LogError(www.error);
 		}
 		else
 		{
-			Debug.Log(www.downloadHandler.text);
+			Debug.LogError(www.downloadHandler.text);
 			DownloadHandlerTexture.GetContent(www);
 			element.FinishedDownloadFileData(DownloadHandlerTexture.GetContent(www));
 		}
@@ -174,7 +174,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
 		if (www.error != null)
 		{
-			Debug.Log(www.error);
+			Debug.LogError(www.error);
 		}
 		else
 		{
@@ -198,11 +198,11 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
 		if (www.result != UnityWebRequest.Result.Success)
 		{
-			Debug.Log(www.error);
+			Debug.LogError(www.error);
 		}
 		else
 		{
-			Debug.Log(www.downloadHandler.text);
+			Debug.LogError(www.downloadHandler.text);
 			element.FinishDownloadingGame(www.downloadHandler.text);
 		}
 	}
