@@ -169,8 +169,6 @@ public class UploadFileElement : MonoBehaviour
       */
                     if (file.IsAudio(FrostweepGames.Plugins.WebGLFileBrowser.AudioType.OGG))
                     {
-                        Debug.LogError("Its audio. try play it");
-
                         AudioClip clip = file.ToAudioClip();
 
                         WebGLFileBrowser.RegisterFileObject(clip);

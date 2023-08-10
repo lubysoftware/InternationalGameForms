@@ -13,6 +13,6 @@ public class Constants : MonoBehaviour
     public const string GAME_TYPE_KEY = "GAME_TYPE";
     public const string GAME_EDIT = "GAME_EDIT";
 
-    public const string URL_DATABASE = "https://7c9c-138-99-195-218.ngrok.io/";
-    public const string URL_UPLOAD_MEDIA = "https://7c9c-138-99-195-218.ngrok.io/file-upload";
+    public const string URL_DATABASE = "https://school.gamehub.api.oke.luby.me/";
+    public const string URL_UPLOAD_MEDIA = "https://school.gamehub.api.oke.luby.me/file-upload";
 }
