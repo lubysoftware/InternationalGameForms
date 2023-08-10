@@ -110,7 +110,7 @@ namespace FrostweepGames.Plugins.WebGLFileBrowser
             _filesWereLoaded = 0;
             _filesToBeLoaded = 0;
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR 
 
             if(isMultipleSelection)
             {

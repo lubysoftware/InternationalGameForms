@@ -16,6 +16,7 @@ public class DashboardScreen : MonoBehaviour
             GameTypeButton button = Instantiate(gameButton, this.transform);
             button.Init(game);
             
+            
         } 
     }
     

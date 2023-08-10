@@ -21,27 +21,64 @@ public class APICommunication : SimpleSingleton<APICommunication>
 	public void StartDownloadFiles(string url)
 	{
 		getURL = url;
-		StartCoroutine(GetJsonData());
+		StartCoroutine(GetJsonData(url));
 	}
 
-	IEnumerator GetJsonData()
+	IEnumerator GetJsonData(string url)
 	{
-		UnityWebRequest www = UnityWebRequest.Get(Constants.URL_DATABASE + getURL + "?page=1&take=100");
 
-		www.SetRequestHeader("authorization","Bearer Luby2021");
+		UnityWebRequest www = UnityWebRequest.Get(Constants.URL_DATABASE + url + "?page=1&take=100");
+
+		www.SetRequestHeader("authorization", "Bearer Luby2021");
 		yield return www.SendWebRequest();
 
 		if (www.result != UnityWebRequest.Result.Success)
 		{
-			Debug.Log(www.error);
+			Debug.LogError("request error:");
+			Debug.LogError(www);
+			Debug.LogError(www.error);
 		}
-		
+
 		else
 		{
-			Debug.Log(www.downloadHandler.text);
+			Debug.LogError(www.downloadHandler.text);
+			Debug.LogError(www);
 			ImageSeqList seqList = JsonConvert.DeserializeObject<ImageSeqList>(www.downloadHandler.text);
+			//ImageSeqList seqList = JsonUtility.FromJson<ImageSeqList>(www.downloadHandler.text);
 			library.InstantiateGamesList(seqList);
 		}
+
+	}
+	
+	public void StartHealthChecker(string url)
+	{
+		getURL = url;
+		StartCoroutine(GetHealthChecker(url));
+	}
+	
+	IEnumerator GetHealthChecker(string url)
+	{
+		Debug.LogError("health - checker");
+
+		UnityWebRequest www = UnityWebRequest.Get("https://0b12-138-99-195-218.ngrok.io/health-check");
+		www.SetRequestHeader("Access-Control-Allow-Origin", "*");
+		www.SetRequestHeader("authorization", "Bearer Luby2021");
+		yield return www.SendWebRequest();
+
+		if (www.result != UnityWebRequest.Result.Success)
+		{
+			Debug.LogError("request error: " + www.error);
+		}
+
+		else
+		{
+			Debug.LogError(www.downloadHandler.text);
+			Debug.LogError(www);
+			//ImageSeqList seqList = JsonConvert.DeserializeObject<ImageSeqList>(www.downloadHandler.text);
+			//ImageSeqList seqList = JsonUtility.FromJson<ImageSeqList>(www.downloadHandler.text);
+			//library.InstantiateGamesList(seqList);
+		}
+
 	}
 
 	public void StartDeleteData(int id, GameComponent component)

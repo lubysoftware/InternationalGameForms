@@ -12,7 +12,6 @@ public class ImageSequencingForm : FormScreen
 {
     [SerializeField] private ImageSequencingPanel panel;
     [SerializeField] private TMP_InputField failsPenalty;
-    private readonly string PATH = Application.dataPath + "/Teste.json";
 
     private int imageSeqQtt;
     private Dictionary<int, string> filledImages;
@@ -153,8 +152,6 @@ public class ImageSequencingForm : FormScreen
         {
             SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence");
         }
-
-        FileIO.WriteAllText(PATH, json);
     }
 
     protected override void FillGameData(ImageSeqJsonGet json)

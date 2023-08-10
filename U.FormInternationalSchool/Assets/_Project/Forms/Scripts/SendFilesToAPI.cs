@@ -46,7 +46,6 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
 	IEnumerator UploadJsonUpdate(int id, string postURL, string json)
 	{
-		//UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
 		Debug.LogError(Constants.URL_DATABASE + postURL + "/"+id);
 		Debug.LogError(json);
 		UnityWebRequest www = UnityWebRequest.Put(Constants.URL_DATABASE + postURL + "/"+id, json);
