@@ -1,1 +1,36 @@
-{"game":{"gameTitle":"Identificador do jogo","gameTitleImageUrl":"https://stg1atividades.blob.core.windows.net/arquivos/429e0581-20eb-40af-a98d-b8be509eca94.jpg","backgroundUrl":"https://stg1atividades.blob.core.windows.net/arquivos/429e0581-20eb-40af-a98d-b8be509eca94.jpg","backgroundMusicUrl":"https://stg1atividades.blob.core.windows.net/arquivos/429e0581-20eb-40af-a98d-b8be509eca94.jpg","questionStatementPortugueseVersion":"Enunciado em Ptttt","questionStatementEnglishVersion":"Enunciado em Inglesss","questionStatementPortugueseAudioUrl":"https://stg1atividades.blob.core.windows.net/arquivos/429e0581-20eb-40af-a98d-b8be509eca94.jpg","questionStatementEnglishAudioUrl":"https://stg1atividades.blob.core.windows.net/arquivos/429e0581-20eb-40af-a98d-b8be509eca94.jpg","hasSupportMaterial":true,"hasTimer":true,"timer":740,"bonustimer":120,"supportMaterial":[{"position":0,"material":"Teste​","materialType":"TEXT"}]},"gameData":{"failPenalty":125,"sequences":[{"position":0,"imageUrl":"https://stg1atividades.blob.core.windows.net/arquivos/429e0581-20eb-40af-a98d-b8be509eca94.jpg"},{"position":1,"imageUrl":"https://stg1atividades.blob.core.windows.net/arquivos/429e0581-20eb-40af-a98d-b8be509eca94.jpg"}]}}
+{
+  "game": {
+    "gameTitle": "teste ogg",
+    "gameTitleImageUrl": "https://stg1atividades.blob.core.windows.net/arquivos/429e0581-20eb-40af-a98d-b8be509eca94.jpg",
+    "backgroundUrl": "https://stg1atividades.blob.core.windows.net/arquivos/429e0581-20eb-40af-a98d-b8be509eca94.jpg",
+    "backgroundMusicUrl": "https://stg1atividades.blob.core.windows.net/arquivos/cd3b6cc2-76e1-4266-b4c7-4ac6ea94010a.ogg",
+    "questionStatementPortugueseVersion": "ddsdf",
+    "questionStatementEnglishVersion": "dfds",
+    "questionStatementPortugueseAudioUrl": "https://stg1atividades.blob.core.windows.net/arquivos/cd3b6cc2-76e1-4266-b4c7-4ac6ea94010a.ogg",
+    "questionStatementEnglishAudioUrl": "https://stg1atividades.blob.core.windows.net/arquivos/cd3b6cc2-76e1-4266-b4c7-4ac6ea94010a.ogg",
+    "hasSupportMaterial": true,
+    "hasTimer": false,
+    "timer": 0,
+    "bonustimer": 0,
+    "supportMaterial": [
+      {
+        "position": 0,
+        "material": "sdds​",
+        "materialType": "TEXT"
+      }
+    ]
+  },
+  "gameData": {
+    "failPenalty": 344,
+    "sequences": [
+      {
+        "position": 0,
+        "imageUrl": "https://stg1atividades.blob.core.windows.net/arquivos/429e0581-20eb-40af-a98d-b8be509eca94.jpg"
+      },
+      {
+        "position": 1,
+        "imageUrl": "https://stg1atividades.blob.core.windows.net/arquivos/429e0581-20eb-40af-a98d-b8be509eca94.jpg"
+      }
+    ]
+  }
+}

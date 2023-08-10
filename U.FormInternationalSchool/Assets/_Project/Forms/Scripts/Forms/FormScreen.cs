@@ -35,8 +35,6 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private Transform errorPanel;
     [SerializeField] private TextMeshProUGUI errorText;
 
-    private bool IsbaseForm { get; set; }
-
     protected FormBase game = new FormBase();
     
     private Dictionary<string, string> newUrlFiles = new Dictionary<string, string>();
@@ -181,7 +179,7 @@ public class FormScreen : MonoBehaviour
 
         if (baseForm.hasSupportMaterial)
         {
-           // supportMaterialPanel.FillSupportMaterial(baseForm.SupportMaterial);
+            //supportMaterialPanel.FillSupportMaterial(baseForm.SupportMaterial);
         }
         
         titleImage.FillData("gameTitleImg",baseForm.gameTitleImageUrl);
@@ -193,7 +191,6 @@ public class FormScreen : MonoBehaviour
     
     protected void SendBaseFormFiles()
     {
-        IsbaseForm = true;
         supportMaterialImgsQtt = 0;
         List<File> files = new List<File>();
         newUrlFiles.Clear();
@@ -288,15 +285,19 @@ public class FormScreen : MonoBehaviour
         }
 
         materials = supportMaterialPanel.GetSupportMaterial();
-        
-        foreach (Material mat in materials)
+
+        if (materials != null && materials.Count > 0)
         {
-            if (!mat.isText)
+            foreach (Material mat in materials)
             {
-                files.Add(mat.file);
-                supportMaterialImgsQtt++;
+                if (!mat.isText)
+                {
+                    files.Add(mat.file);
+                    supportMaterialImgsQtt++;
+                }
             }
         }
+        
         
         if (files.Count < newUrlFiles.Count)
         {
@@ -306,89 +307,83 @@ public class FormScreen : MonoBehaviour
         {
             if (files.Count > 0)
             {
-                SendFilesToAPI.Instance.StartUploadFiles(this,files);
+                SendFilesToAPI.Instance.StartUploadFiles(this,files, true);
             }
             else
             {
-                SerializeFormData(null);
+                SerializeBaseFormData(null);
             }
             
         }
 
     }
 
-    public virtual void SerializeFormData(string[] urls)
+    public virtual void SerializeBaseFormData(string[] urls)
     {
-        if (IsbaseForm)
+        Debug.LogError("serialize base" + urls);
+        List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
+        if (urls != null)
         {
-            List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
-            if (urls != null)
+            if (urls.Length == newUrlFiles.Count + supportMaterialImgsQtt)
             {
-                if (urls.Length == newUrlFiles.Count + supportMaterialImgsQtt)
+                for (int i = 0; i< newUrlFiles.Count; i++)
                 {
-                    for (int i = 0; i< newUrlFiles.Count; i++)
-                    {
-                        newUrlFiles[fields[i]] = urls[i];
-                    }
-
-
-                    urlDict = newUrlFiles;
-                    urlDict.AddRange(filledUrlFiles);
-                    
-                    int urlsSupportMaterial = fields.Count;
-                    for (int i = 0; i< materials.Count; i++)
-                    {
-                        if (materials[i].isText)
-                        {
-                            supportMaterial.Add(new SupportMaterial()
-                            {
-                                position = i,
-                                material = materials[i].text,
-                                materialType = "TEXT"
-                            
-                            });
-                        }
-                        else
-                        {
-                            supportMaterial.Add(new SupportMaterial()
-                            {
-                                position = i,
-                                material = urls[urlsSupportMaterial],
-                                materialType = "IMAGE"
-                            });
-                            urlsSupportMaterial++;
-                        }
-                    }
+                    newUrlFiles[fields[i]] = urls[i];
                 }
-                else
+
+
+                urlDict = newUrlFiles;
+                urlDict.AddRange(filledUrlFiles);
+                
+                int urlsSupportMaterial = fields.Count;
+                for (int i = 0; i< materials.Count; i++)
                 {
-                    Debug.LogError("error uploading images");
+                    if (materials[i].isText)
+                    {
+                        supportMaterial.Add(new SupportMaterial()
+                        {
+                            position = i,
+                            material = materials[i].text,
+                            materialType = "TEXT"
+                        
+                        });
+                    }
+                    else
+                    {
+                        supportMaterial.Add(new SupportMaterial()
+                        {
+                            position = i,
+                            material = urls[urlsSupportMaterial],
+                            materialType = "IMAGE"
+                        });
+                        urlsSupportMaterial++;
+                    }
                 }
             }
-
-            game = new FormBase()
+            else
             {
-                gameTitle = title.text,
-                backgroundMusicUrl = urlDict[Constants.MUSIC_BACK],
-                backgroundUrl = urlDict[Constants.IMAGE_BACK],
-                bonustimer = bonusTimer,
-                gameTitleImageUrl = urlDict[Constants.IMAGE_TITLE],
-                hasSupportMaterial =  supportMaterial.Count > 0,
-                supportMaterial = supportMaterial.Count > 0? supportMaterial : null,
-                hasTimer = timer.isOn,
-                questionStatementEnglishAudioUrl = urlDict[Constants.AUDIO_EN],
-                questionStatementEnglishVersion = statement_EN.text,
-                questionStatementPortugueseAudioUrl = urlDict[Constants.AUDIO_PT],
-                timer = timeInSec,
-                questionStatementPortugueseVersion = statement_PT.text
-            };
-            IsbaseForm = false;
-            SendGameFiles();
+                Debug.LogError("error uploading images");
+            }
         }
-        else
+
+        game = new FormBase()
         {
-           SerializeGameData(urls);
-        }
+            gameTitle = title.text,
+            backgroundMusicUrl = urlDict[Constants.MUSIC_BACK],
+            backgroundUrl = urlDict[Constants.IMAGE_BACK],
+            bonustimer = bonusTimer,
+            gameTitleImageUrl = urlDict[Constants.IMAGE_TITLE],
+            hasSupportMaterial =  supportMaterial.Count > 0,
+            supportMaterial = supportMaterial.Count > 0? supportMaterial : null,
+            hasTimer = timer.isOn,
+            questionStatementEnglishAudioUrl = urlDict[Constants.AUDIO_EN],
+            questionStatementEnglishVersion = statement_EN.text,
+            questionStatementPortugueseAudioUrl = urlDict[Constants.AUDIO_PT],
+            timer = timeInSec,
+            questionStatementPortugueseVersion = statement_PT.text
+        };
+        SendGameFiles();
+
     }
 
     #endregion

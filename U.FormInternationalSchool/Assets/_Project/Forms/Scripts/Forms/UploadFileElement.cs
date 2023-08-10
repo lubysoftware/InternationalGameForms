@@ -49,11 +49,12 @@ public class UploadFileElement : MonoBehaviour
         }
         else
         {
-            playAudio.onClick.AddListener(()=>PlayAudio(true));
-            playAudio.onClick.AddListener(()=>PlayAudio(false));
+            playAudio.onClick.AddListener(PlayAudio);
+            pauseAudio.onClick.AddListener(PauseAudio);
             _audioSource = GetComponent<AudioSource>();
             types = ".ogg";
         }
+        _audioSource = GetComponent<AudioSource>();
         
         // if you want to set custom localization for file browser popup -> use that function:
         // fileBrowserSetLocalization(LocalizationKey.DESCRIPTION_TEXT, "Select file for loading:");
@@ -173,7 +174,7 @@ public class UploadFileElement : MonoBehaviour
 
                         WebGLFileBrowser.RegisterFileObject(clip);
                         // add audio clip to cache list. should be used with  fileBrowserFreeMemory() when its no need anymore
-                        fileData.text = $"{file.fileInfo.name}.{file.fileInfo.extension}";
+                        fileData.text = $"{file.fileInfo.name}    "+"{file.fileInfo.extension}";
                         _audioSource.clip = clip;
                         playAudio.gameObject.SetActive(true);
                         pauseAudio.gameObject.SetActive(true);
@@ -205,18 +206,23 @@ public class UploadFileElement : MonoBehaviour
         Debug.LogError(error);
     }
 
-    private void PlayAudio(bool status)
+    private void PlayAudio()
     {
         if (_audioSource.clip != null)
         {
-            if (status)
-            {
+
                 _audioSource.Play(); 
-            }
-            else
-            {
-                _audioSource.Stop();
-            }
+            
+        }
+    }
+    
+    private void PauseAudio()
+    {
+        if (_audioSource.clip != null)
+        {
+
+            _audioSource.Pause(); 
+            
         }
     }
 

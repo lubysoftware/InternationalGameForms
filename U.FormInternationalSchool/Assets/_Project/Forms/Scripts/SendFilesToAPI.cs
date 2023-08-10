@@ -65,18 +65,25 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		}
 	}
 	
-	public void StartUploadFiles(FormScreen screen, List<File> files)
+	public void StartUploadFiles(FormScreen screen, List<File> files, bool isBaseForm)
 	{
-		StartCoroutine(SendFiles(screen, files));
+		StartCoroutine(SendFiles(screen, files, isBaseForm));
 	}
 
-	IEnumerator SendFiles(FormScreen screen, List<File> fileList)
+	IEnumerator SendFiles(FormScreen screen, List<File> fileList, bool isBaseform)
 	{
 		// read a file and add it to the form
 		List<IMultipartFormSection> form = new List<IMultipartFormSection>();
 		foreach (var file in fileList)
 		{
-			form.Add(new MultipartFormFileSection("arquivos", file.data, file.fileInfo.fullName, "image/jpg"));
+			if (file.fileInfo.extension == ".ogg")
+			{
+				form.Add(new MultipartFormFileSection("arquivos", file.data, file.fileInfo.fullName, "audio/ogg"));
+			}
+			else
+			{
+				form.Add(new MultipartFormFileSection("arquivos", file.data, file.fileInfo.fullName, "image/jpg"));
+			}
 		}
 
 		// generate a boundary then convert the form to byte[]
@@ -117,7 +124,14 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 			result = result.Remove(0,2);
 			result = result.Remove(result.Length-2,2);
 			Debug.Log(result);
-			screen.SerializeFormData(result.Split("\",\""));
+			if (isBaseform)
+			{
+				screen.SerializeBaseFormData(result.Split("\",\""));
+			}
+			else
+			{
+				screen.SerializeGameData(result.Split("\",\""));
+			}
 		}
 		
 	}

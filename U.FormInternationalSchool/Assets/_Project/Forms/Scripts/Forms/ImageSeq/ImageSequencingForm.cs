@@ -47,7 +47,7 @@ public class ImageSequencingForm : FormScreen
     {
         if (panel.GetImages() != null)
         {
-            SendFilesToAPI.Instance.StartUploadFiles(this, panel.GetImages());
+            SendFilesToAPI.Instance.StartUploadFiles(this, panel.GetImages(), false);
         }
         else
         {
@@ -79,8 +79,9 @@ public class ImageSequencingForm : FormScreen
         SendBaseFormFiles();
     }
 
-    public override void SerializeFormData(string[] urls)
+    public override void SerializeGameData(string[] urls)
     {
+        Debug.LogError("serialize game" + urls);
         List<Sequence> listSeq = new List<Sequence>();
         if (urls != null)
         {
