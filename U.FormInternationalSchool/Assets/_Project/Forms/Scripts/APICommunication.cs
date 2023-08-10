@@ -35,14 +35,12 @@ public class APICommunication : SimpleSingleton<APICommunication>
 		if (www.result != UnityWebRequest.Result.Success)
 		{
 			Debug.LogError("request error:");
-			Debug.LogError(www);
 			Debug.LogError(www.error);
 		}
 
 		else
 		{
 			Debug.LogError(www.downloadHandler.text);
-			Debug.LogError(www);
 			ImageSeqList seqList = JsonConvert.DeserializeObject<ImageSeqList>(www.downloadHandler.text);
 			//ImageSeqList seqList = JsonUtility.FromJson<ImageSeqList>(www.downloadHandler.text);
 			library.InstantiateGamesList(seqList);
@@ -60,7 +58,11 @@ public class APICommunication : SimpleSingleton<APICommunication>
 	{
 		Debug.LogError("health - checker");
 
-		UnityWebRequest www = UnityWebRequest.Get("https://0b12-138-99-195-218.ngrok.io/health-check");
+		UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
+		www.SetRequestHeader("Access-Control-Allow-Credentials", "true");
+		www.SetRequestHeader("Access-Control-Allow-Headers",
+			"Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time");
+		www.SetRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
 		www.SetRequestHeader("Access-Control-Allow-Origin", "*");
 		www.SetRequestHeader("authorization", "Bearer Luby2021");
 		yield return www.SendWebRequest();
@@ -74,9 +76,6 @@ public class APICommunication : SimpleSingleton<APICommunication>
 		{
 			Debug.LogError(www.downloadHandler.text);
 			Debug.LogError(www);
-			//ImageSeqList seqList = JsonConvert.DeserializeObject<ImageSeqList>(www.downloadHandler.text);
-			//ImageSeqList seqList = JsonUtility.FromJson<ImageSeqList>(www.downloadHandler.text);
-			//library.InstantiateGamesList(seqList);
 		}
 
 	}
