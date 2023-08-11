@@ -16,12 +16,12 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 	//public event Action<string[]> OnUploadFiles; 
 	
 
-	public void StartUploadJson(string json, string url)
+	public void StartUploadJson(string json, string url, FormScreen screen)
 	{
-		StartCoroutine(UploadJson(url,json));
+		StartCoroutine(UploadJson(url,json, screen));
 	}
 
-	IEnumerator UploadJson(string postURL, string json)
+	IEnumerator UploadJson(string postURL, string json, FormScreen screen)
 	{
 		//UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
 		UnityWebRequest www = UnityWebRequest.Post(Constants.URL_DATABASE + postURL,json, "application/json");
@@ -36,15 +36,16 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		else
 		{
 			Debug.Log(www.downloadHandler.text);
+			screen.ShowSucessMessage();
 		}
 	}
 	
-	public void StartUploadJsonUpdate(string json, string url, int id)
+	public void StartUploadJsonUpdate(string json, string url, int id, FormScreen screen)
 	{
-		StartCoroutine(UploadJsonUpdate(id, url, json));
+		StartCoroutine(UploadJsonUpdate(id, url, json, screen));
 	}
 
-	IEnumerator UploadJsonUpdate(int id, string postURL, string json)
+	IEnumerator UploadJsonUpdate(int id, string postURL, string json, FormScreen screen)
 	{
 		Debug.LogError(Constants.URL_DATABASE + postURL + "/"+id);
 		Debug.LogError(json);
@@ -61,6 +62,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		else
 		{
 			Debug.LogError(www.downloadHandler.text);
+			screen.ShowSucessMessage();
 		}
 	}
 	

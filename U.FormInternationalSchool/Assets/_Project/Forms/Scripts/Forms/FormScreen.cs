@@ -34,6 +34,8 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private UploadFileElement titleImage;
     [SerializeField] private Button sendForm;
     [SerializeField] private Transform errorPanel;
+    [SerializeField] private Transform sucessPanel;
+    [SerializeField] private Button sucessButton;
     [SerializeField] private TextMeshProUGUI errorText;
     [SerializeField] private LoadingDots loading;
     [SerializeField] private Button backButton;
@@ -59,6 +61,7 @@ public class FormScreen : MonoBehaviour
     {
         sendForm.onClick.AddListener(SendFormData);
         backButton.onClick.AddListener(BackButton);
+        sucessButton.onClick.AddListener(BackButton);
     }
 
     public virtual void FinishDownloadingGame(string text)
@@ -80,8 +83,14 @@ public class FormScreen : MonoBehaviour
     public void SendFormData()
     {
         CheckBaseFormFields();
+        backButton.gameObject.SetActive(false);
     }
 
+    public void ShowSucessMessage()
+    {
+        sucessPanel.gameObject.SetActive(true);
+    }
+    
     #region BASE_FORM
 
     private void CheckBaseFormFields()

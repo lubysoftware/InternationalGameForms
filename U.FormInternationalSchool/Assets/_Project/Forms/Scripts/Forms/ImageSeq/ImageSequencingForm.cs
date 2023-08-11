@@ -149,11 +149,11 @@ public class ImageSequencingForm : FormScreen
         string json = JsonConvert.SerializeObject(completeForm);
         if (isEdit)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, "image-sequence", id);
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, "image-sequence", id, this);
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence");
+            SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence", this);
         }
     }
 
