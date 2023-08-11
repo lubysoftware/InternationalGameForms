@@ -26,7 +26,7 @@ public class ImageSequencingForm : FormScreen
     {
         base.Start();
         SceneDataCarrier.GetData(Constants.GAME_EDIT, out id);
-        Debug.LogError(id);
+        Debug.Log(id);
         if (id > 0)
         {
             SendFilesToAPI.Instance.StartDownloadGame(this, url, id);
@@ -39,12 +39,12 @@ public class ImageSequencingForm : FormScreen
     
     public override void FinishDownloadingGame(string text)
     {
-        Debug.LogError("finish");
+        Debug.Log("finish");
         ImageSeqJsonGet json = JsonConvert.DeserializeObject<ImageSeqJsonGet>(text);
-        Debug.LogError(json);
+        Debug.Log(json);
         if (json != null)
         {
-            Debug.LogError("fill");
+            Debug.Log("fill");
             FillBaseData(json);
             FillGameData(json);
         }
@@ -98,7 +98,7 @@ public class ImageSequencingForm : FormScreen
 
     public override void SerializeGameData(string[] urls)
     {
-        Debug.LogError("serialize game" + urls);
+        Debug.Log("serialize game" + urls);
 
         List<Sequence> listSeq = new List<Sequence>();
         if (filledImages.Count == imageSeqQtt)

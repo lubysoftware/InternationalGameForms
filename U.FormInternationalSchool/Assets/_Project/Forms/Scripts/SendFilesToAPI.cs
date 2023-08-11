@@ -46,8 +46,8 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
 	IEnumerator UploadJsonUpdate(int id, string postURL, string json)
 	{
-		Debug.LogError(Constants.URL_DATABASE + postURL + "/"+id);
-		Debug.LogError(json);
+		Debug.Log(Constants.URL_DATABASE + postURL + "/"+id);
+		Debug.Log(json);
 		UnityWebRequest www = UnityWebRequest.Put(Constants.URL_DATABASE + postURL + "/"+id, json);
 
 		www.SetRequestHeader("authorization","Bearer Luby2021");
@@ -60,7 +60,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		}
 		else
 		{
-			Debug.LogError(www.downloadHandler.text);
+			Debug.Log(www.downloadHandler.text);
 		}
 	}
 	
@@ -110,7 +110,13 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		wr.method = "POST";
 		wr.redirectLimit =-1;
 		wr.SetRequestHeader("authorization","Bearer Luby2021");
-		yield return wr.Send();
+		wr.SetRequestHeader("Access-Control-Allow-Credentials", "true");
+		wr.SetRequestHeader("Access-Control-Allow-Headers",
+			"Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time");
+		wr.SetRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+		wr.SetRequestHeader("Access-Control-Allow-Origin", "*");
+
+		yield return wr.SendWebRequest();
 		
 		if (wr.result != UnityWebRequest.Result.Success)
 		{
@@ -142,8 +148,15 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
 	IEnumerator DownloadImage(UploadFileElement element, string path)
 	{
-		Debug.LogError(path);
+		Debug.Log(path);
 		UnityWebRequest www = UnityWebRequestTexture.GetTexture(path);
+		
+		www.SetRequestHeader("Access-Control-Allow-Credentials", "true");
+		www.SetRequestHeader("Access-Control-Allow-Headers",
+			"Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time");
+		www.SetRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+		www.SetRequestHeader("Access-Control-Allow-Origin", "*");
+		//www.SetRequestHeader("authorization", "Bearer Luby2021");
 
 		yield return www.SendWebRequest();
 
@@ -153,7 +166,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		}
 		else
 		{
-			Debug.LogError(www.downloadHandler.text);
+			Debug.Log(www.downloadHandler.text);
 			DownloadHandlerTexture.GetContent(www);
 			element.FinishedDownloadFileData(DownloadHandlerTexture.GetContent(www));
 		}
@@ -166,9 +179,15 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
 	IEnumerator DownloadAudio(UploadFileElement element, string path)
 	{
-		Debug.LogError(path);
+		Debug.Log(path);
 		UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path
 			, AudioType.OGGVORBIS);
+		
+		www.SetRequestHeader("Access-Control-Allow-Credentials", "true");
+		www.SetRequestHeader("Access-Control-Allow-Headers",
+			"Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time");
+		www.SetRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+		www.SetRequestHeader("Access-Control-Allow-Origin", "*");
 
 		yield return www.SendWebRequest();
 
@@ -190,7 +209,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
 	IEnumerator DownloadGame(FormScreen element, string path, int id)
 	{
-		Debug.LogError(Constants.URL_DATABASE + path +"/"+ id);
+		Debug.Log(Constants.URL_DATABASE + path +"/"+ id);
 		UnityWebRequest www = UnityWebRequest.Get(Constants.URL_DATABASE + path +"/"+ id);
 		
 		www.SetRequestHeader("authorization","Bearer Luby2021");
@@ -202,10 +221,8 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		}
 		else
 		{
-			Debug.LogError(www.downloadHandler.text);
+			Debug.Log(www.downloadHandler.text);
 			element.FinishDownloadingGame(www.downloadHandler.text);
 		}
 	}
-	
-	
 }

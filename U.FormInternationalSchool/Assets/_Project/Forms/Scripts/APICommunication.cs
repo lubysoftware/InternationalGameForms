@@ -40,7 +40,7 @@ public class APICommunication : SimpleSingleton<APICommunication>
 
 		else
 		{
-			Debug.LogError(www.downloadHandler.text);
+			Debug.Log(www.downloadHandler.text);
 			ImageSeqList seqList = JsonConvert.DeserializeObject<ImageSeqList>(www.downloadHandler.text);
 			//ImageSeqList seqList = JsonUtility.FromJson<ImageSeqList>(www.downloadHandler.text);
 			library.InstantiateGamesList(seqList);
@@ -56,9 +56,9 @@ public class APICommunication : SimpleSingleton<APICommunication>
 	
 	IEnumerator GetHealthChecker(string url)
 	{
-		Debug.LogError("health - checker");
+		Debug.Log("health - checker");
 
-		UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
+		UnityWebRequest www = UnityWebRequest.Get($"{Constants.URL_DATABASE}health-check");
 		www.SetRequestHeader("Access-Control-Allow-Credentials", "true");
 		www.SetRequestHeader("Access-Control-Allow-Headers",
 			"Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time");
@@ -74,10 +74,9 @@ public class APICommunication : SimpleSingleton<APICommunication>
 
 		else
 		{
-			Debug.LogError(www.downloadHandler.text);
-			Debug.LogError(www);
+			Debug.Log(www.downloadHandler.text);
+			Debug.Log(www);
 		}
-
 	}
 
 	public void StartDeleteData(int id, GameComponent component)
@@ -104,6 +103,4 @@ public class APICommunication : SimpleSingleton<APICommunication>
 			component.Deactivate();
 		}
 	}
-
-
 }

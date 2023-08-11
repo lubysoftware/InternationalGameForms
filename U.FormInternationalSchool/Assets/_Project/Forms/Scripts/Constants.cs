@@ -14,5 +14,6 @@ public class Constants : MonoBehaviour
     public const string GAME_EDIT = "GAME_EDIT";
 
     public const string URL_DATABASE = "https://school.gamehub.api.oke.luby.me/";
+    //public const string URL_DATABASE = "http://atividades.internationalschool.global:3000/";
     public const string URL_UPLOAD_MEDIA = "https://school.gamehub.api.oke.luby.me/file-upload";
 }

@@ -1,19 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using FrostweepGames.Plugins.WebGLFileBrowser;
-using LubyLib.Core;
 using LubyLib.Core.Extensions;
-using LubyLib.Core.Singletons;
 using TMPro;
-using Newtonsoft.Json;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
-using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
 using File = FrostweepGames.Plugins.WebGLFileBrowser.File;
 using FileIO = System.IO.File;
@@ -73,7 +65,7 @@ public class FormScreen : MonoBehaviour
 
     protected void StopLoading()
     {   
-        Debug.LogError("finish");
+        Debug.Log("finish");
         loading.gameObject.SetActive(false);  
     }
 
@@ -380,7 +372,7 @@ public class FormScreen : MonoBehaviour
 
     public virtual void SerializeBaseFormData(string[] urls)
     {
-        Debug.LogError("serialize base" + urls);
+        Debug.Log("serialize base" + urls);
         List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
         if (urls != null)
         {
@@ -400,7 +392,7 @@ public class FormScreen : MonoBehaviour
                 urlDict.AddRange(filledUrlFiles);
                 foreach (var str in urlDict)
                 {
-                    Debug.LogError(str.Key + " " + str.Value);
+                    Debug.Log(str.Key + " " + str.Value);
                 }
                 
                 for (int i = 0; i< materials.Count; i++)
