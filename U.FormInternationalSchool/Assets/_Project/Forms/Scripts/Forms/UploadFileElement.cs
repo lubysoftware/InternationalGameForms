@@ -33,8 +33,16 @@ public class UploadFileElement : MonoBehaviour
 
     public event Action<UploadFileElement> OnFill;
 
+    private IFileBrowser _fileBrowser;
+
     protected virtual void Start()
     {
+#if UNITY_WEBGL
+        _fileBrowser = new WebFileBrowser();
+#else
+        _fileBrowser = new WindowsFileBrowser();
+#endif
+
         if (uploadFileButton != null)
         {
             uploadFileButton.onClick.AddListener(OpenFileDialogButtonOnClickHandler);
@@ -63,48 +71,16 @@ public class UploadFileElement : MonoBehaviour
         // fileBrowserSetLocalization(LocalizationKey.DESCRIPTION_TEXT, "Select file for loading:");
     }
 
-    private void UnsubscribeEvents()
-    {
-        WebGLFileBrowser.FilesWereOpenedEvent -= FilesWereOpenedEventHandler;
-        WebGLFileBrowser.FilePopupWasClosedEvent -= FilePopupWasClosedEventHandler;
-        WebGLFileBrowser.FileOpenFailedEvent -= FileOpenFailedEventHandler;
-    }
-
-    private void SubscribeEvents()
-    {
-        WebGLFileBrowser.FilesWereOpenedEvent += FilesWereOpenedEventHandler;
-        WebGLFileBrowser.FilePopupWasClosedEvent += FilePopupWasClosedEventHandler;
-        WebGLFileBrowser.FileOpenFailedEvent += FileOpenFailedEventHandler;
-    }
-
     protected void OpenFileDialogButtonOnClickHandler()
     {
-        SubscribeEvents();
-        WebGLFileBrowser.SetLocalization(LocalizationKey.DESCRIPTION_TEXT, "Select file to load or use drag & drop");
-
-        // you could paste types like: ".png,.jpg,.pdf,.txt,.json"
-        
-        FileBrowserUtil.Instance.LoadImage((file) =>
+        if (isImage)
         {
-            File[] files = new File[1];
-            files[0] = new File
-            {
-                data = file.bytes,
-                fileInfo = new FileInfo
-                {
-                    path = file.path,
-                    fullName = Path.Combine(file.path, file.name + file.extension),
-                    name = file.name,
-                    extension = file.extension
-                }
-            };
+            _fileBrowser.LoadImage(FilesWereOpenedEventHandler, Debug.LogError);
+        }
 
-            FilesWereOpenedEventHandler(files);
-        }, string.Empty);
-
-
-        //WebGLFileBrowser.OpenFilePanelWithFilters(types, isMultipleFiles);
-        // fileBrowserOpenFilePanelWithFilters(fileBrowserGetFilteredFileExtensions(_enteredFileExtensions), isMultipleFiles);
+        {
+            _fileBrowser.LoadAudio(FilesWereOpenedEventHandler, Debug.LogError);
+        }
     }
 
     protected virtual void CleanupButtonOnClickHandler()
@@ -134,7 +110,6 @@ public class UploadFileElement : MonoBehaviour
 
     protected virtual void FilesWereOpenedEventHandler(File[] files)
     {
-        UnsubscribeEvents();
         _loadedFiles = files;
         if (_loadedFiles != null && _loadedFiles.Length > 0)
         {
@@ -173,7 +148,9 @@ public class UploadFileElement : MonoBehaviour
                             fileData.text = $"{file.fileInfo.name}{file.fileInfo.extension}";
                         }
 
-                        WebGLFileBrowser.RegisterFileObject(file.ToSprite()); // add sprite with texture to cache list. should be used with  fileBrowserFreeMemory() when its no need anymore
+                        WebGLFileBrowser
+                            .RegisterFileObject(file
+                                .ToSprite()); // add sprite with texture to cache list. should be used with  fileBrowserFreeMemory() when its no need anymore
                     }
                 }
                 else
@@ -185,7 +162,7 @@ public class UploadFileElement : MonoBehaviour
                           fileData.text += $"\nFile content: {content.Substring(0, Mathf.Min(30, content.Length))}...";
                       }
       */
-                    if (file.IsAudio(FrostweepGames.Plugins.WebGLFileBrowser.AudioType.OGG))
+                    if (file.IsAudio())
                     {
                         AudioClip clip = file.ToAudioClip();
 
@@ -208,18 +185,6 @@ public class UploadFileElement : MonoBehaviour
         {
             Debug.LogError("loaded files = null ou = 0");
         }
-    }
-
-    private void FilePopupWasClosedEventHandler()
-    {
-        UnsubscribeEvents();
-        if (_loadedFiles == null)
-            Debug.LogError("failed to load files");
-    }
-
-    private void FileOpenFailedEventHandler(string error)
-    {
-        Debug.LogError(error);
     }
 
     private void PlayAudio()

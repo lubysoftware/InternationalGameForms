@@ -4,7 +4,6 @@ using System.IO;
 using LubyLib.Core.Singletons;
 using SimpleFileBrowser;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class FileBrowserUtil : SimpleSingleton<FileBrowserUtil>
 {
@@ -16,8 +15,7 @@ public class FileBrowserUtil : SimpleSingleton<FileBrowserUtil>
     public void OpenBrowseFile(Action<string> loadSuccess, string title, string buttonText, bool isExport = false, string extension = ".jpg")
     {
         //SimpleFileBrowser.FileBrowser.AddQuickLink("Users", "C:\\Users", null);
-        FileBrowser.SetFilters(false,
-            new FileBrowser.Filter("File", extension));
+        FileBrowser.SetFilters(false, new FileBrowser.Filter("File", extension));
         FileBrowser.SetDefaultFilter(extension);
 
         StartCoroutine(ShowLoadDialogCoroutine(loadSuccess, isExport, title, buttonText));
@@ -44,7 +42,7 @@ public class FileBrowserUtil : SimpleSingleton<FileBrowserUtil>
         }
     }
 
-    public void LoadImage(Action<SelectedFileData> loadSuccess, string type)
+    public void LoadImage(Action<SelectedFileInfo> loadSuccess, string type)
     {
         FileBrowser.SetFilters( true, new FileBrowser.Filter( "Images", ".jpg", ".png" ) );
         FileBrowser.SetDefaultFilter( "Images" );
@@ -54,9 +52,9 @@ public class FileBrowserUtil : SimpleSingleton<FileBrowserUtil>
         StartCoroutine(ShowLoadDialogCoroutine(loadSuccess, type));
     }
     
-    IEnumerator ShowLoadDialogCoroutine(Action<SelectedFileData> loadSuccess, string type)
+    IEnumerator ShowLoadDialogCoroutine(Action<SelectedFileInfo> loadSuccess, string type)
     {
-        SelectedFileData file = new SelectedFileData();
+        SelectedFileInfo file = new SelectedFileInfo();
         
         yield return FileBrowser.WaitForLoadDialog( FileBrowser.PickMode.FilesAndFolders, false, null, null, "Load Image", "Load" );
         if (FileBrowser.Success)
@@ -74,14 +72,4 @@ public class FileBrowserUtil : SimpleSingleton<FileBrowserUtil>
             loadSuccess.Invoke(file);
         }
     }
-}
-
-[Serializable]
-public class SelectedFileData
-{
-    public byte[] bytes;
-    public string path;
-    public string extension;
-    public string name;
-    public string fullPath;
 }
