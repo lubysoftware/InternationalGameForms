@@ -13,15 +13,16 @@ using AudioType = UnityEngine.AudioType;
 public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 {
 
+	protected override bool DestroyOnLoad => false;
+	
 	//public event Action<string[]> OnUploadFiles; 
 	
-
-	public void StartUploadJson(string json, string url, FormScreen screen)
+	public void StartUploadJson(string json, string url, string title)
 	{
-		StartCoroutine(UploadJson(url,json, screen));
+		StartCoroutine(UploadJson(url,json, title));
 	}
 
-	IEnumerator UploadJson(string postURL, string json, FormScreen screen)
+	IEnumerator UploadJson(string postURL, string json, string title)
 	{
 		//UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
 		UnityWebRequest www = UnityWebRequest.Post(Constants.URL_DATABASE + postURL,json, "application/json");
@@ -36,16 +37,16 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		else
 		{
 			Debug.Log(www.downloadHandler.text);
-			screen.ShowSucessMessage();
+			SucessPanel.Instance.SetText("O jogo "+title +" foi salvo com sucesso.");
 		}
 	}
 	
-	public void StartUploadJsonUpdate(string json, string url, int id, FormScreen screen)
+	public void StartUploadJsonUpdate(string json, string url, int id, string titulo)
 	{
-		StartCoroutine(UploadJsonUpdate(id, url, json, screen));
+		StartCoroutine(UploadJsonUpdate(id, url, json, titulo));
 	}
 
-	IEnumerator UploadJsonUpdate(int id, string postURL, string json, FormScreen screen)
+	IEnumerator UploadJsonUpdate(int id, string postURL, string json, string titulo)
 	{
 		Debug.LogError(Constants.URL_DATABASE + postURL + "/"+id);
 		Debug.LogError(json);
@@ -62,7 +63,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		else
 		{
 			Debug.LogError(www.downloadHandler.text);
-			screen.ShowSucessMessage();
+			SucessPanel.Instance.SetText("O jogo "+ titulo +" foi alterado com sucesso");
 		}
 	}
 	

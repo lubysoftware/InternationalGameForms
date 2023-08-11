@@ -21,7 +21,7 @@ using Toggle = UnityEngine.UI.Toggle;
 
 public class FormScreen : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField title;
+    [SerializeField] protected TMP_InputField title;
     [SerializeField] private TMP_InputField statement_PT, statement_EN;
     [SerializeField] private UploadFileElement audioStatement_PT, audioStatement_EN;
     [SerializeField] private UploadFileElement backgroundImage;
@@ -62,6 +62,7 @@ public class FormScreen : MonoBehaviour
         sendForm.onClick.AddListener(SendFormData);
         backButton.onClick.AddListener(BackButton);
         sucessButton.onClick.AddListener(BackButton);
+        FillUploadFiles( backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/cd3b6cc2-76e1-4266-b4c7-4ac6ea94010a.ogg");
     }
 
     public virtual void FinishDownloadingGame(string text)
@@ -77,13 +78,14 @@ public class FormScreen : MonoBehaviour
     protected void StopLoading()
     {   
         Debug.LogError("finish");
-        loading.gameObject.SetActive(false);  
+        loading.gameObject.SetActive(false);
     }
 
     public void SendFormData()
     {
         CheckBaseFormFields();
         backButton.gameObject.SetActive(false);
+        Invoke(nameof(BackButton), 1f);
     }
 
     public void ShowSucessMessage()
