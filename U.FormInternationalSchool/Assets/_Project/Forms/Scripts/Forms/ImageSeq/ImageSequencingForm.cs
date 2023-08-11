@@ -22,13 +22,16 @@ public class ImageSequencingForm : FormScreen
 
     private int id;
 
+    private bool isEdit;
+
     protected override void Start()
     {
         base.Start();
-        SceneDataCarrier.GetData(Constants.GAME_EDIT, out id);
-        Debug.Log(id);
-        if (id > 0)
+        isEdit = false;
+        SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
+        if (isEdit)
         {
+            SceneDataCarrier.GetData(Constants.GAME_EDIT, out id);
             SendFilesToAPI.Instance.StartDownloadGame(this, url, id);
         }
         else
@@ -39,12 +42,12 @@ public class ImageSequencingForm : FormScreen
     
     public override void FinishDownloadingGame(string text)
     {
-        Debug.Log("finish");
+        Debug.LogError("finish");
         ImageSeqJsonGet json = JsonConvert.DeserializeObject<ImageSeqJsonGet>(text);
-        Debug.Log(json);
+        Debug.LogError(json);
         if (json != null)
         {
-            Debug.Log("fill");
+            Debug.LogError("fill");
             FillBaseData(json);
             FillGameData(json);
         }
@@ -98,7 +101,7 @@ public class ImageSequencingForm : FormScreen
 
     public override void SerializeGameData(string[] urls)
     {
-        Debug.Log("serialize game" + urls);
+        Debug.LogError("serialize game" + urls);
 
         List<Sequence> listSeq = new List<Sequence>();
         if (filledImages.Count == imageSeqQtt)
@@ -144,13 +147,13 @@ public class ImageSequencingForm : FormScreen
 
        
         string json = JsonConvert.SerializeObject(completeForm);
-        if (id > 0)
+        if (isEdit)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, "image-sequence", id);
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, "image-sequence", id, this);
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence");
+            SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence", this);
         }
     }
 

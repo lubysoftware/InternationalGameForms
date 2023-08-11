@@ -37,14 +37,15 @@ public class GameComponent : MonoBehaviour
 
     private void OnEditButton()
     {
-        Debug.Log(game);
+        Debug.LogError(game);
+        SceneDataCarrier.AddData(Constants.IS_EDIT, true);
         SceneDataCarrier.AddData(Constants.GAME_EDIT, game.id);
         SceneManager.LoadScene("Form");
     }
 
     private void OnDeleteButton()
     {
-        Debug.Log("delete");
+        Debug.LogError("delete");
         OnDelete?.Invoke(id, this);
     }
 

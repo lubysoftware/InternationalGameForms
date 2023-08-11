@@ -78,6 +78,7 @@ public class LibraryScreen : MonoBehaviour
     
     private void OnClickNewGame()
     {
+        SceneDataCarrier.AddData(Constants.IS_EDIT, false);
         SceneManager.LoadScene("Form");
         /*ImageSeqJsonGet teste = new ImageSeqJsonGet()
         {
