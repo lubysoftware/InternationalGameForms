@@ -1,11 +1,19 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using FrostweepGames.Plugins.WebGLFileBrowser;
+using LubyLib.Core;
 using LubyLib.Core.Extensions;
+using LubyLib.Core.Singletons;
 using TMPro;
+using Newtonsoft.Json;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
 using File = FrostweepGames.Plugins.WebGLFileBrowser.File;
 using FileIO = System.IO.File;
@@ -13,11 +21,11 @@ using Toggle = UnityEngine.UI.Toggle;
 
 public class FormScreen : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField title;
+    [SerializeField] protected TMP_InputField title;
     [SerializeField] private TMP_InputField statement_PT, statement_EN;
     [SerializeField] private UploadFileElement audioStatement_PT, audioStatement_EN;
     [SerializeField] private UploadFileElement backgroundImage;
-    [SerializeField] private UploadFileElement backgroundMusic;
+    [SerializeField] protected UploadFileElement backgroundMusic;
     [SerializeField] private Toggle timer;
     [SerializeField] private TMP_InputField timeMin, timeSec;
     [SerializeField] private Button openMaterialSupportPanel;
@@ -26,8 +34,6 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private UploadFileElement titleImage;
     [SerializeField] private Button sendForm;
     [SerializeField] private Transform errorPanel;
-    [SerializeField] private Transform sucessPanel;
-    [SerializeField] private Button sucessButton;
     [SerializeField] private TextMeshProUGUI errorText;
     [SerializeField] private LoadingDots loading;
     [SerializeField] private Button backButton;
@@ -53,7 +59,6 @@ public class FormScreen : MonoBehaviour
     {
         sendForm.onClick.AddListener(SendFormData);
         backButton.onClick.AddListener(BackButton);
-        sucessButton.onClick.AddListener(BackButton);
     }
 
     public virtual void FinishDownloadingGame(string text)
@@ -61,15 +66,14 @@ public class FormScreen : MonoBehaviour
          
     }
 
-    private void BackButton()
+    protected void BackButton()
     {
         SceneManager.LoadScene("Library");
     }
 
     protected void StopLoading()
-    {   
-        Debug.Log("finish");
-        loading.gameObject.SetActive(false);  
+    {
+        loading.gameObject.SetActive(false);
     }
 
     public void SendFormData()
@@ -78,11 +82,6 @@ public class FormScreen : MonoBehaviour
         backButton.gameObject.SetActive(false);
     }
 
-    public void ShowSucessMessage()
-    {
-        sucessPanel.gameObject.SetActive(true);
-    }
-    
     #region BASE_FORM
 
     private void CheckBaseFormFields()
@@ -381,7 +380,7 @@ public class FormScreen : MonoBehaviour
 
     public virtual void SerializeBaseFormData(string[] urls)
     {
-        Debug.Log("serialize base" + urls);
+        Debug.LogError("serialize base" + urls);
         List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
         if (urls != null)
         {
@@ -401,7 +400,7 @@ public class FormScreen : MonoBehaviour
                 urlDict.AddRange(filledUrlFiles);
                 foreach (var str in urlDict)
                 {
-                    Debug.Log(str.Key + " " + str.Value);
+                    Debug.LogError(str.Key + " " + str.Value);
                 }
                 
                 for (int i = 0; i< materials.Count; i++)
@@ -551,6 +550,7 @@ public class FormScreen : MonoBehaviour
         errorText.text = error;
         errorPanel.gameObject.SetActive(true);
     }
+    
 
 }
 

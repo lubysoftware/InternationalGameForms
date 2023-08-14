@@ -36,18 +36,17 @@ public class ImageSequencingForm : FormScreen
         }
         else
         {
-            StopLoading();
+            loadFileQtt = 1;
+            FillUploadFiles( backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/8cda25d0-167c-48dc-8cfb-606a0511823d.ogg");
+           // StopLoading();
         }
     }
     
     public override void FinishDownloadingGame(string text)
     {
-        Debug.LogError("finish");
         ImageSeqJsonGet json = JsonConvert.DeserializeObject<ImageSeqJsonGet>(text);
-        Debug.LogError(json);
         if (json != null)
         {
-            Debug.LogError("fill");
             FillBaseData(json);
             FillGameData(json);
         }
@@ -149,12 +148,13 @@ public class ImageSequencingForm : FormScreen
         string json = JsonConvert.SerializeObject(completeForm);
         if (isEdit)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, "image-sequence", id, this);
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, "image-sequence", id, title.text);
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence", this);
+            SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence", title.text);
         }
+        Invoke(nameof(BackButton), 1f);
     }
 
     protected override void FillGameData(ImageSeqJsonGet json)

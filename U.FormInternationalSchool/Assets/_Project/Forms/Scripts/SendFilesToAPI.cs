@@ -13,15 +13,16 @@ using AudioType = UnityEngine.AudioType;
 public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 {
 
+	protected override bool DestroyOnLoad => false;
+	
 	//public event Action<string[]> OnUploadFiles; 
 	
-
-	public void StartUploadJson(string json, string url, FormScreen screen)
+	public void StartUploadJson(string json, string url, string title)
 	{
-		StartCoroutine(UploadJson(url,json, screen));
+		StartCoroutine(UploadJson(url,json, title));
 	}
 
-	IEnumerator UploadJson(string postURL, string json, FormScreen screen)
+	IEnumerator UploadJson(string postURL, string json, string title)
 	{
 		//UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
 		UnityWebRequest www = UnityWebRequest.Post(Constants.URL_DATABASE + postURL,json, "application/json");
@@ -32,23 +33,22 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		if (www.result != UnityWebRequest.Result.Success)
 		{
 			Debug.Log(www.error);
+			SucessPanel.Instance.SetText("Erro ao salvar o jogo "+ title +".", SucessPanel.MessageType.ERROR);
 		}
 		else
 		{
 			Debug.Log(www.downloadHandler.text);
-			screen.ShowSucessMessage();
+			SucessPanel.Instance.SetText("O jogo "+title +" foi salvo com sucesso.", SucessPanel.MessageType.SUCCESS);
 		}
 	}
 	
-	public void StartUploadJsonUpdate(string json, string url, int id, FormScreen screen)
+	public void StartUploadJsonUpdate(string json, string url, int id, string titulo)
 	{
-		StartCoroutine(UploadJsonUpdate(id, url, json, screen));
+		StartCoroutine(UploadJsonUpdate(id, url, json, titulo));
 	}
 
-	IEnumerator UploadJsonUpdate(int id, string postURL, string json, FormScreen screen)
+	IEnumerator UploadJsonUpdate(int id, string postURL, string json, string titulo)
 	{
-		Debug.LogError(Constants.URL_DATABASE + postURL + "/"+id);
-		Debug.LogError(json);
 		UnityWebRequest www = UnityWebRequest.Put(Constants.URL_DATABASE + postURL + "/"+id, json);
 
 		www.SetRequestHeader("authorization","Bearer Luby2021");
@@ -58,11 +58,11 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		if (www.result != UnityWebRequest.Result.Success)
 		{
 			Debug.LogError(www.error);
+			SucessPanel.Instance.SetText("Erro ao alterar o jogo "+ titulo +".", SucessPanel.MessageType.ERROR);
 		}
 		else
 		{
-			Debug.LogError(www.downloadHandler.text);
-			screen.ShowSucessMessage();
+			SucessPanel.Instance.SetText("O jogo "+ titulo +" foi alterado com sucesso", SucessPanel.MessageType.SUCCESS);
 		}
 	}
 	
@@ -77,7 +77,8 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		List<IMultipartFormSection> form = new List<IMultipartFormSection>();
 		foreach (var file in fileList)
 		{
-			if (file.fileInfo.extension == ".ogg")
+			Debug.LogError("Send files: file name " + file.fileInfo.fullName+". extension: " + file.fileInfo.extension);
+			if (file.fileInfo.extension == "ogg" || file.fileInfo.extension == ".ogg")
 			{
 				form.Add(new MultipartFormFileSection("arquivos", file.data, file.fileInfo.fullName, "audio/ogg"));
 			}
@@ -144,7 +145,6 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
 	IEnumerator DownloadImage(UploadFileElement element, string path)
 	{
-		Debug.LogError(path);
 		UnityWebRequest www = UnityWebRequestTexture.GetTexture(path);
 
 		yield return www.SendWebRequest();
@@ -152,10 +152,10 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		if (www.result is UnityWebRequest.Result.ProtocolError or UnityWebRequest.Result.ConnectionError)
 		{
 			Debug.LogError(www.error);
+			element.DownloadError();
 		}
 		else
 		{
-			Debug.LogError(www.downloadHandler.text);
 			DownloadHandlerTexture.GetContent(www);
 			element.FinishedDownloadFileData(DownloadHandlerTexture.GetContent(www));
 		}
@@ -169,14 +169,20 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 	IEnumerator DownloadAudio(UploadFileElement element, string path)
 	{
 		Debug.LogError(path);
+#if (UNITY_WEBGL || FG_FB_WEBGL) && !UNITY_EDITOR		
+		UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path
+			, AudioType.AUDIOQUEUE);
+#endif
+#if UNITY_EDITOR 		
 		UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path
 			, AudioType.OGGVORBIS);
-
+#endif
 		yield return www.SendWebRequest();
 
 		if (www.error != null)
 		{
 			Debug.LogError(www.error);
+			element.DownloadError();
 		}
 		else
 		{
@@ -192,7 +198,6 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
 	IEnumerator DownloadGame(FormScreen element, string path, int id)
 	{
-		Debug.LogError(Constants.URL_DATABASE + path +"/"+ id);
 		UnityWebRequest www = UnityWebRequest.Get(Constants.URL_DATABASE + path +"/"+ id);
 		
 		www.SetRequestHeader("authorization","Bearer Luby2021");
@@ -204,7 +209,6 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		}
 		else
 		{
-			Debug.LogError(www.downloadHandler.text);
 			element.FinishDownloadingGame(www.downloadHandler.text);
 		}
 	}

@@ -34,13 +34,10 @@ public class APICommunication : SimpleSingleton<APICommunication>
 
 		if (www.result != UnityWebRequest.Result.Success)
 		{
-			Debug.LogError("request error:");
 			Debug.LogError(www.error);
 		}
-
 		else
 		{
-			Debug.Log(www.downloadHandler.text);
 			ImageSeqList seqList = JsonConvert.DeserializeObject<ImageSeqList>(www.downloadHandler.text);
 			//ImageSeqList seqList = JsonUtility.FromJson<ImageSeqList>(www.downloadHandler.text);
 			library.InstantiateGamesList(seqList);
@@ -56,9 +53,7 @@ public class APICommunication : SimpleSingleton<APICommunication>
 	
 	IEnumerator GetHealthChecker(string url)
 	{
-		Debug.Log("health - checker");
-
-		UnityWebRequest www = UnityWebRequest.Get($"{Constants.URL_DATABASE}health-check");
+		UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
 		www.SetRequestHeader("Access-Control-Allow-Credentials", "true");
 		www.SetRequestHeader("Access-Control-Allow-Headers",
 			"Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time");
@@ -72,11 +67,6 @@ public class APICommunication : SimpleSingleton<APICommunication>
 			Debug.LogError("request error: " + www.error);
 		}
 
-		else
-		{
-			Debug.Log(www.downloadHandler.text);
-			Debug.Log(www);
-		}
 	}
 
 	public void StartDeleteData(int id, GameComponent component)
@@ -86,7 +76,6 @@ public class APICommunication : SimpleSingleton<APICommunication>
 	
 	IEnumerator DeleteData(int id, GameComponent component)
 	{
-		Debug.LogError(Constants.URL_DATABASE + getURL+"/"+id);
 		UnityWebRequest www = UnityWebRequest.Delete(Constants.URL_DATABASE + getURL+"/"+id);
 
 		www.SetRequestHeader("authorization","Bearer Luby2021");
@@ -103,4 +92,6 @@ public class APICommunication : SimpleSingleton<APICommunication>
 			component.Deactivate();
 		}
 	}
+
+
 }
