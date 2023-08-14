@@ -150,8 +150,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279715096
-  m_fontColor: {r: 0.09411765, g: 0.27058825, b: 0.09019608, a: 1}
+    rgba: 4279769432
+  m_fontColor: {r: 0.34509805, g: 0.09803922, b: 0.09411765, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -260,3 +260,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textMessage: {fileID: 144664876475547646}
+  panel: {fileID: 0}
+  backgrounds:
+  - {fileID: 21300000, guid: f1a7ad9bc3253c64babcc364a5c8b1d9, type: 3}
+  - {fileID: 21300000, guid: c2806332d05a86d41a6be685d64331b4, type: 3}
+  image: {fileID: 3139861846875683129}

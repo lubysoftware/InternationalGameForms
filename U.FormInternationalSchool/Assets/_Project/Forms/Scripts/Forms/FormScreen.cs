@@ -25,7 +25,7 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private TMP_InputField statement_PT, statement_EN;
     [SerializeField] private UploadFileElement audioStatement_PT, audioStatement_EN;
     [SerializeField] private UploadFileElement backgroundImage;
-    [SerializeField] private UploadFileElement backgroundMusic;
+    [SerializeField] protected UploadFileElement backgroundMusic;
     [SerializeField] private Toggle timer;
     [SerializeField] private TMP_InputField timeMin, timeSec;
     [SerializeField] private Button openMaterialSupportPanel;
@@ -34,8 +34,6 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private UploadFileElement titleImage;
     [SerializeField] private Button sendForm;
     [SerializeField] private Transform errorPanel;
-    [SerializeField] private Transform sucessPanel;
-    [SerializeField] private Button sucessButton;
     [SerializeField] private TextMeshProUGUI errorText;
     [SerializeField] private LoadingDots loading;
     [SerializeField] private Button backButton;
@@ -61,8 +59,6 @@ public class FormScreen : MonoBehaviour
     {
         sendForm.onClick.AddListener(SendFormData);
         backButton.onClick.AddListener(BackButton);
-        sucessButton.onClick.AddListener(BackButton);
-        FillUploadFiles( backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/cd3b6cc2-76e1-4266-b4c7-4ac6ea94010a.ogg");
     }
 
     public virtual void FinishDownloadingGame(string text)
@@ -70,14 +66,13 @@ public class FormScreen : MonoBehaviour
          
     }
 
-    private void BackButton()
+    protected void BackButton()
     {
         SceneManager.LoadScene("Library");
     }
 
     protected void StopLoading()
-    {   
-        Debug.LogError("finish");
+    {
         loading.gameObject.SetActive(false);
     }
 
@@ -85,14 +80,8 @@ public class FormScreen : MonoBehaviour
     {
         CheckBaseFormFields();
         backButton.gameObject.SetActive(false);
-        Invoke(nameof(BackButton), 1f);
     }
 
-    public void ShowSucessMessage()
-    {
-        sucessPanel.gameObject.SetActive(true);
-    }
-    
     #region BASE_FORM
 
     private void CheckBaseFormFields()
@@ -561,6 +550,7 @@ public class FormScreen : MonoBehaviour
         errorText.text = error;
         errorPanel.gameObject.SetActive(true);
     }
+    
 
 }
 

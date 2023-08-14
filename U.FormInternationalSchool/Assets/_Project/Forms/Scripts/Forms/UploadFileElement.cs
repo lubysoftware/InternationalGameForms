@@ -8,6 +8,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using AudioType = FrostweepGames.Plugins.WebGLFileBrowser.AudioType;
 
 public class UploadFileElement : MonoBehaviour
 {
@@ -48,6 +49,7 @@ public class UploadFileElement : MonoBehaviour
         }
         
         if (isImage)
+            
         {
             types = ".png,.jpg";
         }
@@ -176,12 +178,12 @@ public class UploadFileElement : MonoBehaviour
 
                         WebGLFileBrowser.RegisterFileObject(clip);
                         // add audio clip to cache list. should be used with  fileBrowserFreeMemory() when its no need anymore
-                        fileData.text = $"{file.fileInfo.name}{file.fileInfo.extension}";
+                        fileData.text = $"{file.fileInfo.fullName}";
                         _audioSource.clip = clip;
                         playAudio.gameObject.SetActive(true);
                         pauseAudio.gameObject.SetActive(true);
                         fileField.gameObject.SetActive(true);
-                    }
+                   }
                 }
             }
             else
@@ -232,8 +234,7 @@ public class UploadFileElement : MonoBehaviour
     {
         this.fileName = fileName;
         url = path;
-        IsFilled = true;
-       //this.extension = System.IO.Path.GetExtension(path);
+        //this.extension = System.IO.Path.GetExtension(path);
        if (isImage)
        {
            SendFilesToAPI.Instance.StartDownloadImage(this, path);
@@ -250,6 +251,7 @@ public class UploadFileElement : MonoBehaviour
             new Vector2(0.5f, 0.5f));
         showImage.sprite = s;
         showImage.gameObject.SetActive(true);
+        IsFilled = true;
         if (deleteFile != null)
             deleteFile.gameObject.SetActive(true);
         OnFill?.Invoke(this);
@@ -257,14 +259,20 @@ public class UploadFileElement : MonoBehaviour
     
     public void FinishedDownloadFileData(AudioClip clip)
     {
-        Debug.LogError("entrei");
         fileData.gameObject.SetActive(true);
         fileData.text = $"{fileName}";
         _audioSource.clip = clip;
         playAudio.gameObject.SetActive(true);
         pauseAudio.gameObject.SetActive(true);
+        IsFilled = true;
         if (deleteFile != null)
             deleteFile.gameObject.SetActive(true);
+        OnFill?.Invoke(this);
+    }
+
+    public void DownloadError()
+    {
+        SucessPanel.Instance.SetText($"Erro ao baixar {fileName}.", SucessPanel.MessageType.ERROR);
         OnFill?.Invoke(this);
     }
 
