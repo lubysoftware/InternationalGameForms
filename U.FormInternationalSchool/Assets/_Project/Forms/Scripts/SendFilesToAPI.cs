@@ -78,7 +78,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		foreach (var file in fileList)
 		{
 			Debug.LogError("Send files: file name " + file.fileInfo.fullName+". extension: " + file.fileInfo.extension);
-			if (file.fileInfo.extension == "oggg")// || file.fileInfo.extension == ".ogg")
+			if (file.fileInfo.extension == "ogg" || file.fileInfo.extension == ".ogg")
 			{
 				form.Add(new MultipartFormFileSection("arquivos", file.data, file.fileInfo.fullName, "audio/ogg"));
 			}
