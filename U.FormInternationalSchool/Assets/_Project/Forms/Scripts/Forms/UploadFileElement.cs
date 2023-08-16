@@ -132,7 +132,7 @@ public class UploadFileElement : MonoBehaviour
 
                 foreach (var loadedFile in _loadedFiles)
                 {
-                    Debug.LogError($"Name: {loadedFile.fileInfo.name}.{loadedFile.fileInfo.extension}");
+                    Debug.LogError($"Name: {loadedFile.fileInfo.name}{loadedFile.fileInfo.extension}");
                 }
 
             }

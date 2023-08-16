@@ -458,7 +458,6 @@ public class FormScreen : MonoBehaviour
                         position = i,
                         material = materials[i].text,
                         materialType = "TEXT"
-                        
                     });
                 }
                 else

@@ -52,7 +52,7 @@ public class APICommunication : SimpleSingleton<APICommunication>
 	
 	IEnumerator GetHealthChecker(string url)
 	{
-		UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
+		UnityWebRequest www = UnityWebRequest.Get($"{Constants.URL_DATABASE}health-check");
 		www.SetRequestHeader("Access-Control-Allow-Credentials", "true");
 		www.SetRequestHeader("Access-Control-Allow-Headers",
 			"Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time");
@@ -91,6 +91,4 @@ public class APICommunication : SimpleSingleton<APICommunication>
 			screen.OnDeletedGame();
 		}
 	}
-
-
 }
