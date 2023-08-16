@@ -1,0 +1,16 @@
+{
+    "name": "LigaAPI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:1eac9b04f4a5f724c9c06be7020cdcdc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

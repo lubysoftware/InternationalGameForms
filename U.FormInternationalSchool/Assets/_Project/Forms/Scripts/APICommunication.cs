@@ -91,6 +91,4 @@ public class APICommunication : SimpleSingleton<APICommunication>
 			screen.OnDeletedGame();
 		}
 	}
-
-
 }
