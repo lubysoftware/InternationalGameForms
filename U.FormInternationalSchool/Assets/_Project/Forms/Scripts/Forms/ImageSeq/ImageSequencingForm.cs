@@ -154,7 +154,7 @@ public class ImageSequencingForm : FormScreen
         {
             SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence", title.text);
         }
-        Invoke(nameof(BackButton), 1f);
+        Invoke(nameof(BackButton), 0.4f);
     }
 
     protected override void FillGameData(ImageSeqJsonGet json)

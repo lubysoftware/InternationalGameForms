@@ -28,6 +28,8 @@ public class MaterialInputArea : MonoBehaviour
     public UploadFileElement fileUploadEl => imageUploader;
 
     public event Action<MaterialInputArea> OnDestroy;
+
+    public bool IsEdited = false;
     void Start()
     {
         imageButton.onClick.AddListener(OnClickImage);
@@ -37,6 +39,7 @@ public class MaterialInputArea : MonoBehaviour
 
     private void OnClickText()
     {
+        IsEdited = true;
         IsText = true;
         textButton.gameObject.SetActive(false);
         imageButton.gameObject.SetActive(false);
@@ -44,6 +47,7 @@ public class MaterialInputArea : MonoBehaviour
     
     private void OnClickImage()
     {
+        IsEdited = true;
         IsText = false;
         textButton.gameObject.SetActive(false);
         imageButton.gameObject.SetActive(false);
