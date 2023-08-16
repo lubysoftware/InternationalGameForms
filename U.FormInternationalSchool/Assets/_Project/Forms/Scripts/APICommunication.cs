@@ -68,12 +68,12 @@ public class APICommunication : SimpleSingleton<APICommunication>
 
 	}
 
-	public void StartDeleteData(int id, LibraryScreen screen)
+	public void StartDeleteData(int id, LibraryScreen screen, string title)
 	{
-		StartCoroutine(DeleteData(id,screen));
+		StartCoroutine(DeleteData(id,screen, title));
 	}
 	
-	IEnumerator DeleteData(int id, LibraryScreen screen)
+	IEnumerator DeleteData(int id, LibraryScreen screen, string title)
 	{
 		UnityWebRequest www = UnityWebRequest.Delete(Constants.URL_DATABASE + getURL+"/"+id);
 
@@ -82,11 +82,11 @@ public class APICommunication : SimpleSingleton<APICommunication>
 
 		if (www.result != UnityWebRequest.Result.Success)
 		{
-			SucessPanel.Instance.SetText("Erro ao deletar jogo.", SucessPanel.MessageType.ERROR);
+			SucessPanel.Instance.SetText("Erro ao deletar \""+title+"\".", SucessPanel.MessageType.ERROR);
 		}
 		else
 		{
-			SucessPanel.Instance.SetText("Deletado com sucesso.", SucessPanel.MessageType.SUCCESS);
+			SucessPanel.Instance.SetText("\""+ title+ "\" deletado com sucesso.", SucessPanel.MessageType.SUCCESS);
 			Debug.Log(www.isDone);
 			screen.OnDeletedGame();
 		}

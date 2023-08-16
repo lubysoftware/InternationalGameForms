@@ -30,7 +30,8 @@ public class LibraryScreen : MonoBehaviour
     private GameComponent comp;
 
     private int page = 1;
-    
+
+    private string gameTitle;
 
     void Start()
     {
@@ -74,14 +75,16 @@ public class LibraryScreen : MonoBehaviour
         confirmDialog.gameObject.SetActive(true);
         gameId = id;
         this.comp = comp;
+        gameTitle = title;
     }
 
     public void ConfirmDeleteGame()
     {
         confirmDialog.gameObject.SetActive(false);
-        APICommunication.Instance.StartDeleteData(gameId, this);
+        APICommunication.Instance.StartDeleteData(gameId, this, gameTitle);
         gameId = -1;
         comp = null;
+        gameTitle = "";
     }
     
     public void DontDeleteGame()

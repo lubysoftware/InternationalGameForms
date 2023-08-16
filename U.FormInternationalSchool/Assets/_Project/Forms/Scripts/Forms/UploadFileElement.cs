@@ -272,7 +272,7 @@ public class UploadFileElement : MonoBehaviour
 
     public void DownloadError()
     {
-        SucessPanel.Instance.SetText($"Erro ao baixar {fileName}.", SucessPanel.MessageType.ERROR);
+        SucessPanel.Instance.SetText($"Erro ao baixar \"{fileName}\".", SucessPanel.MessageType.ERROR);
         OnFill?.Invoke(this);
     }
 
