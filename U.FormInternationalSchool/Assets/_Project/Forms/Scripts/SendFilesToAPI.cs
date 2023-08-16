@@ -114,10 +114,18 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		wr.redirectLimit =-1;
 		wr.SetRequestHeader("authorization","Bearer Luby2021");
 		yield return wr.Send();
-		
+
 		if (wr.result != UnityWebRequest.Result.Success)
 		{
-			Debug.Log(wr.error + " uploaded bytes" + wr.uploadedBytes);
+			if (isBaseform)
+			{
+				SucessPanel.Instance.SetText("Erro ao fazer upload de arquivos. \n" + wr.error,
+					SucessPanel.MessageType.ERROR);
+			}
+			else
+			{
+				SucessPanel.Instance.SetText("Erro ao fazer upload de arquivos da seção de sequenciamento de imagens. \n" + wr.error, SucessPanel.MessageType.ERROR);
+			}
 		}
 		else
 		{

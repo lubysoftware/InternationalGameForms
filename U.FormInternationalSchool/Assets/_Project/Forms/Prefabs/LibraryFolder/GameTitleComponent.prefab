@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1150, y: 52}
+  m_SizeDelta: {x: 1364.9482, y: 52}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3134942887333433690
 CanvasRenderer:
@@ -114,7 +114,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1572.8428, y: 115.0233}
+  m_SizeDelta: {x: 1819.51, y: 115.0233}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4302461282126458295
 MonoBehaviour:
@@ -157,6 +157,7 @@ MonoBehaviour:
   editButton: {fileID: 6582497905305494950}
   deleteButton: {fileID: 4306648350672067216}
   gameTitle: {fileID: 7640124223235965150}
+  library: {fileID: 0}
 --- !u!1 &4226417806162761978
 GameObject:
   m_ObjectHideFlags: 0
