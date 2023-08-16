@@ -33,12 +33,12 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		if (www.result != UnityWebRequest.Result.Success)
 		{
 			Debug.Log(www.error);
-			SucessPanel.Instance.SetText("Erro ao salvar o jogo "+ title +".", SucessPanel.MessageType.ERROR);
+			SucessPanel.Instance.SetText("Erro ao salvar o jogo \""+ title +"\".", SucessPanel.MessageType.ERROR);
 		}
 		else
 		{
 			Debug.Log(www.downloadHandler.text);
-			SucessPanel.Instance.SetText("O jogo "+title +" foi salvo com sucesso.", SucessPanel.MessageType.SUCCESS);
+			SucessPanel.Instance.SetText("O jogo \""+title +"\" foi salvo com sucesso.", SucessPanel.MessageType.SUCCESS);
 		}
 	}
 	
@@ -58,11 +58,11 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 		if (www.result != UnityWebRequest.Result.Success)
 		{
 			Debug.LogError(www.error);
-			SucessPanel.Instance.SetText("Erro ao alterar o jogo "+ titulo +".", SucessPanel.MessageType.ERROR);
+			SucessPanel.Instance.SetText("Erro ao alterar o jogo \""+ titulo +"\".", SucessPanel.MessageType.ERROR);
 		}
 		else
 		{
-			SucessPanel.Instance.SetText("O jogo "+ titulo +" foi alterado com sucesso", SucessPanel.MessageType.SUCCESS);
+			SucessPanel.Instance.SetText("O jogo \""+ titulo +"\" foi alterado com sucesso", SucessPanel.MessageType.SUCCESS);
 		}
 	}
 	

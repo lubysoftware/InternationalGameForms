@@ -192,8 +192,9 @@ public class FormScreen : MonoBehaviour
             timer.onValueChanged.Invoke(baseForm.hasTimer);
             int min = baseForm.timer / 60;
             int sec = baseForm.timer - min * 60;
-            timeMin.text = min.ToString();
-            timeSec.text = sec.ToString();
+            timeMin.text =  String.Format("{0:00}", min);
+            timeSec.text = String.Format("{0:00}", sec);
+
             timerBonus.text = baseForm.bonustimer.ToString();
         }
 

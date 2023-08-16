@@ -596,6 +596,10 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 896807428271025274, guid: fd6fe7d4bdd6df24f934be43fabf0680, type: 3}
+      propertyPath: m_overflowMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1048510279396774748, guid: fd6fe7d4bdd6df24f934be43fabf0680, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -714,11 +718,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7204225670431525126, guid: fd6fe7d4bdd6df24f934be43fabf0680, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -10.000015
+      value: -33.2286
       objectReference: {fileID: 0}
     - target: {fileID: 7204225670431525126, guid: fd6fe7d4bdd6df24f934be43fabf0680, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 4.9999924
+      value: -6.6143
       objectReference: {fileID: 0}
     - target: {fileID: 7204225670431525126, guid: fd6fe7d4bdd6df24f934be43fabf0680, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -921,6 +925,7 @@ MonoBehaviour:
   isImage: 1
   playAudio: {fileID: 7952336123252084828}
   pauseAudio: {fileID: 2572322909180090767}
+  previewImage: {fileID: 0}
   url: 
   IsFilled: 0
 --- !u!82 &51255377250592182

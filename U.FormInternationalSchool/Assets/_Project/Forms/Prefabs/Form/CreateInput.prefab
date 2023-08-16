@@ -671,7 +671,7 @@ MonoBehaviour:
   isImage: 1
   playAudio: {fileID: 0}
   pauseAudio: {fileID: 0}
-  previewImage: {fileID: 0}
+  previewImage: {fileID: 21300000, guid: 269517a8ae7e5b84fb7238b679ce3f33, type: 3}
   url: 
   IsFilled: 0
 --- !u!82 &7358298018513873925
@@ -2116,3 +2116,4 @@ MonoBehaviour:
   imageUploader: {fileID: 4571193974115858442}
   inputField: {fileID: 3423844924122969742}
   IsText: 0
+  IsEdited: 0

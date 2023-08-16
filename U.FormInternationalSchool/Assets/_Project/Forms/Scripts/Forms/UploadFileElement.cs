@@ -207,6 +207,7 @@ public class UploadFileElement : MonoBehaviour
 
     private void FileOpenFailedEventHandler(string error)
     {
+        UnsubscribeEvents();
         Debug.LogError(error);
     }
 
@@ -272,7 +273,7 @@ public class UploadFileElement : MonoBehaviour
 
     public void DownloadError()
     {
-        SucessPanel.Instance.SetText($"Erro ao baixar {fileName}.", SucessPanel.MessageType.ERROR);
+        SucessPanel.Instance.SetText($"Erro ao baixar \"{fileName}\".", SucessPanel.MessageType.ERROR);
         OnFill?.Invoke(this);
     }
 
