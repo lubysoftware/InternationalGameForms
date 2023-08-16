@@ -207,6 +207,7 @@ public class UploadFileElement : MonoBehaviour
 
     private void FileOpenFailedEventHandler(string error)
     {
+        UnsubscribeEvents();
         Debug.LogError(error);
     }
 
