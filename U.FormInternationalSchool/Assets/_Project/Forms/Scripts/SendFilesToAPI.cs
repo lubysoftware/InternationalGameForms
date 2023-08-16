@@ -168,7 +168,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
 	IEnumerator DownloadAudio(UploadFileElement element, string path)
 	{
-		Debug.LogError(path);
+		Debug.Log(path);
 #if (UNITY_WEBGL || FG_FB_WEBGL) && !UNITY_EDITOR		
 		UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path
 			, AudioType.AUDIOQUEUE);
