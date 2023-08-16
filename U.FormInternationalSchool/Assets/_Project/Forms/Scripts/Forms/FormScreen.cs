@@ -79,7 +79,6 @@ public class FormScreen : MonoBehaviour
     public void SendFormData()
     {
         CheckBaseFormFields();
-        backButton.gameObject.SetActive(false);
     }
 
     #region BASE_FORM
@@ -175,6 +174,7 @@ public class FormScreen : MonoBehaviour
         if (bonusTimer < 0 || bonusTimer > 100)
         {
             ShowError("Bônus do timer", ErrorType.BETWEEN, new int[]{0,100});
+            return;
         }
         
         CheckGameFields();
@@ -186,6 +186,7 @@ public class FormScreen : MonoBehaviour
         title.text = baseForm.gameTitle;
         statement_EN.text = baseForm.questionStatementEnglishVersion;
         statement_PT.text = baseForm.questionStatementPortugueseVersion;
+        timer.SetIsOnWithoutNotify(baseForm.hasTimer);
         if (baseForm.hasTimer)
         {
             timer.onValueChanged.Invoke(baseForm.hasTimer);

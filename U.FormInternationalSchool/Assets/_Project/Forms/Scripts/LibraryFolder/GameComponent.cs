@@ -15,18 +15,17 @@ public class GameComponent : MonoBehaviour
     [SerializeField] private Button deleteButton;
 
     [SerializeField] private TextMeshProUGUI gameTitle;
+
+    [SerializeField] private LibraryScreen library;
     
     private ImageSeqJsonClass game;
     private int id;
 
-    private event Action<int, GameComponent> OnDelete;
-    
-    public void Init(ImageSeqJsonClass json, Action<int, GameComponent> delete)
+    public void Init(ImageSeqJsonClass json)
     {
         game = json;
         id = game.id;
         gameTitle.text = json.gameTitle;
-        OnDelete = delete;
     }
 
     private void Start()
@@ -44,7 +43,7 @@ public class GameComponent : MonoBehaviour
 
     private void OnDeleteButton()
     {
-        OnDelete?.Invoke(id, this);
+        library.OnDeleteGame(game.id,this,game.gameTitle );
     }
 
     public void Deactivate()

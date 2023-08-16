@@ -50,28 +50,32 @@ public class SupportMaterialCreation : MonoBehaviour
         int index = 0;
         for (int i = 0; i < materialInputs.Count; i++)
         {
-            if (materialInputs[i].IsText && !materialInputs[i].Text.IsNullEmptyOrWhitespace())
+            if (materialInputs[i].IsEdited)
             {
-                materials.Add(new Material()
+                if (materialInputs[i].IsText && !materialInputs[i].Text.IsNullEmptyOrWhitespace())
                 {
-                    index = index,
-                    file = null,
-                    isText = true,
-                    text = materialInputs[i].Text
-                });
-                index++;
+                    materials.Add(new Material()
+                    {
+                        index = index,
+                        file = null,
+                        isText = true,
+                        text = materialInputs[i].Text
+                    });
+                    index++;
 
-            }else if (!materialInputs[i].IsText)
-            {
-                materials.Add(new Material()
+                }else if (!materialInputs[i].IsText)
                 {
-                    index = index,
-                    file = materialInputs[i].Image != null? materialInputs[i].Image : null,
-                    isText = false,
-                    text = materialInputs[i].fileUploadEl.IsFilled? materialInputs[i].fileUploadEl.url : null
-                });
-                index++;
+                    materials.Add(new Material()
+                    {
+                        index = index,
+                        file = materialInputs[i].Image != null? materialInputs[i].Image : null,
+                        isText = false,
+                        text = materialInputs[i].fileUploadEl.IsFilled? materialInputs[i].fileUploadEl.url : null
+                    });
+                    index++;
+                }
             }
+           
         }
 
         return materials;

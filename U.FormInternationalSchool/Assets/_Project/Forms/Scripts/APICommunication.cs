@@ -18,16 +18,16 @@ public class APICommunication : SimpleSingleton<APICommunication>
 	public event Action<string[]> OnUploadFiles; 
 
 
-	public void StartDownloadFiles(string url)
+	public void StartDownloadFiles(string url,int page,int qtt, string filter = "")
 	{
 		getURL = url;
-		StartCoroutine(GetJsonData(url));
+		StartCoroutine(GetJsonData(url, page, qtt, filter));
 	}
 
-	IEnumerator GetJsonData(string url)
+	IEnumerator GetJsonData(string url, int page,int qtt, string filter)
 	{
-
-		UnityWebRequest www = UnityWebRequest.Get(Constants.URL_DATABASE + url + "?page=1&take=100");
+		string searchString = "?page="+page+"&take="+qtt+"&search="+filter;
+		UnityWebRequest www = UnityWebRequest.Get(Constants.URL_DATABASE + url + searchString);
 
 		www.SetRequestHeader("authorization", "Bearer Luby2021");
 		yield return www.SendWebRequest();
@@ -42,7 +42,6 @@ public class APICommunication : SimpleSingleton<APICommunication>
 			//ImageSeqList seqList = JsonUtility.FromJson<ImageSeqList>(www.downloadHandler.text);
 			library.InstantiateGamesList(seqList);
 		}
-
 	}
 	
 	public void StartHealthChecker(string url)
@@ -64,17 +63,17 @@ public class APICommunication : SimpleSingleton<APICommunication>
 
 		if (www.result != UnityWebRequest.Result.Success)
 		{
-			Debug.LogError("request error: " + www.error);
+			SucessPanel.Instance.SetText("Erro ao conectar ao servidor.", SucessPanel.MessageType.ERROR);
 		}
 
 	}
 
-	public void StartDeleteData(int id, GameComponent component)
+	public void StartDeleteData(int id, LibraryScreen screen)
 	{
-		StartCoroutine(DeleteData(id,component));
+		StartCoroutine(DeleteData(id,screen));
 	}
 	
-	IEnumerator DeleteData(int id, GameComponent component)
+	IEnumerator DeleteData(int id, LibraryScreen screen)
 	{
 		UnityWebRequest www = UnityWebRequest.Delete(Constants.URL_DATABASE + getURL+"/"+id);
 
@@ -83,13 +82,13 @@ public class APICommunication : SimpleSingleton<APICommunication>
 
 		if (www.result != UnityWebRequest.Result.Success)
 		{
-			Debug.Log(www.error);
+			SucessPanel.Instance.SetText("Erro ao deletar jogo.", SucessPanel.MessageType.ERROR);
 		}
-		
 		else
 		{
+			SucessPanel.Instance.SetText("Deletado com sucesso.", SucessPanel.MessageType.SUCCESS);
 			Debug.Log(www.isDone);
-			component.Deactivate();
+			screen.OnDeletedGame();
 		}
 	}
 
