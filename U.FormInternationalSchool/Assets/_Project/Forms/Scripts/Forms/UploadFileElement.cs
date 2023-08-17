@@ -167,8 +167,9 @@ public class UploadFileElement : MonoBehaviour
                           fileData.text += $"\nFile content: {content.Substring(0, Mathf.Min(30, content.Length))}...";
                       }
       */
-                    if (file.IsAudio(FrostweepGames.Plugins.WebGLFileBrowser.AudioType.OGG))
+                    if (file.IsAudio(AudioType.OGG) || file.IsAudio(AudioType.OGGVORBIS))
                     {
+                        Debug.Log("File is OGG. " + file.fileInfo.extension);
                         AudioClip clip = file.ToAudioClip();
 
                         WebGLFileBrowser.RegisterFileObject(clip);
@@ -178,6 +179,10 @@ public class UploadFileElement : MonoBehaviour
                         playAudio.gameObject.SetActive(true);
                         pauseAudio.gameObject.SetActive(true);
                         fileField.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        Debug.LogError("Não é OGG. " + file.fileInfo.extension);
                     }
                 }
             }

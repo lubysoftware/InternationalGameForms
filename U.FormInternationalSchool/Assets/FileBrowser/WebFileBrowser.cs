@@ -1,5 +1,6 @@
 using System;
 using FrostweepGames.Plugins.WebGLFileBrowser;
+using UnityEngine;
 
 public class WebFileBrowser : IFileBrowser
 {
@@ -39,7 +40,7 @@ public class WebFileBrowser : IFileBrowser
         
         SubscribeEvents();
 
-        WebGLFileBrowser.SetLocalization(LocalizationKey.DESCRIPTION_TEXT, "Select file to load or use drag & drop");
+        //WebGLFileBrowser.SetLocalization(LocalizationKey.DESCRIPTION_TEXT, "Select file to load or use drag & drop");
         WebGLFileBrowser.OpenFilePanelWithFilters(".ogg");
     }
 
@@ -57,6 +58,7 @@ public class WebFileBrowser : IFileBrowser
     
     private void OnClosePanel()
     {
-        //WebGLFileBrowser.FilesWereOpenedEvent += ;
+        Debug.LogError("Popup closed");
+        UnsubscribeEvents();
     }
 }

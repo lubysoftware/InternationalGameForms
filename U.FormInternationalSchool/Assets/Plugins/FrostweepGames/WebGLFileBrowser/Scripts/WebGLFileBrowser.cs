@@ -541,6 +541,7 @@ namespace FrostweepGames.Plugins.WebGLFileBrowser
     {
         WAV,
         OGG,
+        OGGVORBIS,
         MP3
     }
 
@@ -679,13 +680,9 @@ namespace FrostweepGames.Plugins.WebGLFileBrowser
             if (file == null || file.data == null)
                 throw new Exception($"Failed to create an Audio Clip. File or it's data is null.");
 
-            if (file.fileInfo.extension == ".ogg")
+            if (file.fileInfo.extension == ".ogg" || file.fileInfo.extension == "ogg")
             {
                 return OggFileToUnityAudioClip.ToAudioClip(file.data, file.fileInfo.name);
-            }
-            else if(file.fileInfo.extension == ".mp3")
-            {
-                return Mp3FileToUnityAudioClip.ToAudioClip(file.data, file.fileInfo.name);
             }
 
             return null;
