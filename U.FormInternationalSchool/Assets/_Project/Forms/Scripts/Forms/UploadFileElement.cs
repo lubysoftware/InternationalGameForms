@@ -229,6 +229,11 @@ public class UploadFileElement : MonoBehaviour
         this.fileName = fileName;
         url = path;
         //this.extension = System.IO.Path.GetExtension(path);
+        string[] getName = path.Split("_");
+        if (getName.Length > 1)
+        {
+            this.fileName = getName[getName.Length - 1];
+        }
         if (isImage)
         {
             SendFilesToAPI.Instance.StartDownloadImage(this, path);
