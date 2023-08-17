@@ -23,7 +23,7 @@ public class FileUpload : BaseApi
             string contentType = file.fileInfo.extension == "ogg" || file.fileInfo.extension == ".ogg"
                 ? "audio/ogg"
                 : "image/jpg";
-            currentRequest.FormSections.Add(new MultipartFormFileSection("arquivos", file.data, file.fileInfo.name, contentType));
+            currentRequest.FormSections.Add(new MultipartFormFileSection("arquivos", file.data, file.fileInfo.fullName, contentType));
         }
         
         Api.Post(currentRequest, onSuccess, onError);

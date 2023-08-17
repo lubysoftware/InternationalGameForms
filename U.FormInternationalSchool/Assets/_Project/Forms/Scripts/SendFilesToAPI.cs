@@ -18,12 +18,12 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
     //public event Action<string[]> OnUploadFiles; 
 
-    public void StartUploadJson(string json, string url, string title)
+    public void StartUploadJson(string json, string url, string title, FormScreen screen)
     {
-        StartCoroutine(UploadJson(url, json, title));
+        StartCoroutine(UploadJson(url, json, title, screen));
     }
 
-    IEnumerator UploadJson(string postURL, string json, string title)
+    IEnumerator UploadJson(string postURL, string json, string title, FormScreen screen)
     {
         //UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
         UnityWebRequest www = UnityWebRequest.Post(Constants.URL_DATABASE + postURL, json, "application/json");
@@ -35,21 +35,23 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         {
             Debug.Log(www.error);
             SucessPanel.Instance.SetText("Erro ao salvar o jogo \"" + title + "\".", SucessPanel.MessageType.ERROR);
+            screen.SetCanClick(true);
         }
         else
         {
             Debug.Log(www.downloadHandler.text);
             SucessPanel.Instance.SetText("O jogo \"" + title + "\" foi salvo com sucesso.",
                 SucessPanel.MessageType.SUCCESS);
+            screen.BackButton();
         }
     }
 
-    public void StartUploadJsonUpdate(string json, string url, int id, string titulo)
+    public void StartUploadJsonUpdate(string json, string url, int id, string titulo, FormScreen screen)
     {
-        StartCoroutine(UploadJsonUpdate(id, url, json, titulo));
+        StartCoroutine(UploadJsonUpdate(id, url, json, titulo, screen));
     }
 
-    IEnumerator UploadJsonUpdate(int id, string postURL, string json, string titulo)
+    IEnumerator UploadJsonUpdate(int id, string postURL, string json, string titulo, FormScreen screen)
     {
         UnityWebRequest www = UnityWebRequest.Put(Constants.URL_DATABASE + postURL + "/" + id, json);
 
@@ -61,11 +63,13 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         {
             Debug.LogError(www.error);
             SucessPanel.Instance.SetText("Erro ao alterar o jogo \"" + titulo + "\".", SucessPanel.MessageType.ERROR);
+            screen.SetCanClick(true);
         }
         else
         {
             SucessPanel.Instance.SetText("O jogo \"" + titulo + "\" foi alterado com sucesso",
                 SucessPanel.MessageType.SUCCESS);
+            screen.BackButton();
         }
     }
 
@@ -87,6 +91,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
             }
 
             string[] result = list.ToArray();
+            
             if (isBaseForm)
             {
                 screen.SerializeBaseFormData(result);
@@ -95,7 +100,13 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
             {
                 screen.SerializeGameData(result);
             }
-        }, error => Debug.LogError(error.message));
+        }, error =>
+        {
+            Debug.LogError(error.message);
+            SucessPanel.Instance.SetText("Houve um erro ao enviar os arquivos: "+ error.message,
+                SucessPanel.MessageType.ERROR);
+            screen.SetCanClick(true);
+        });
     }
 
     IEnumerator SendFiles(FormScreen screen, List<File> fileList, bool isBaseform)

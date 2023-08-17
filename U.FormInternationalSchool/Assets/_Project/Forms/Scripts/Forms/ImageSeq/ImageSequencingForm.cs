@@ -148,13 +148,12 @@ public class ImageSequencingForm : FormScreen
         string json = JsonConvert.SerializeObject(completeForm);
         if (isEdit)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, "image-sequence", id, title.text);
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, "image-sequence", id, title.text, this);
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence", title.text);
+            SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence", title.text, this);
         }
-        Invoke(nameof(BackButton), 0.4f);
     }
 
     protected override void FillGameData(ImageSeqJsonGet json)

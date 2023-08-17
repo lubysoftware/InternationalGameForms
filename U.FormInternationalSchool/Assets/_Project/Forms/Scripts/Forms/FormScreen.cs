@@ -16,6 +16,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
 using File = FrostweepGames.Plugins.WebGLFileBrowser.File;
+using FileInfo = System.IO.FileInfo;
 using FileIO = System.IO.File;
 using Toggle = UnityEngine.UI.Toggle;
 
@@ -55,10 +56,13 @@ public class FormScreen : MonoBehaviour
     protected int currentLoad = 0;
     protected bool isLoading;
 
+    protected bool canClick;
+
     protected virtual void Start()
     {
         sendForm.onClick.AddListener(SendFormData);
         backButton.onClick.AddListener(BackButton);
+        SetCanClick(true);
     }
 
     public virtual void FinishDownloadingGame(string text)
@@ -66,9 +70,16 @@ public class FormScreen : MonoBehaviour
          
     }
 
-    protected void BackButton()
+    public void BackButton()
     {
         SceneManager.LoadScene("Library");
+        SetCanClick(true);
+    }
+
+    public void SetCanClick(bool status)
+    {
+        canClick = status;
+        sendForm.interactable = status;
     }
 
     protected void StopLoading()
@@ -78,6 +89,9 @@ public class FormScreen : MonoBehaviour
 
     public void SendFormData()
     {
+        if (!canClick) return;
+        
+        SetCanClick(false);
         CheckBaseFormFields();
     }
 
@@ -252,6 +266,7 @@ public class FormScreen : MonoBehaviour
         urlDict.Clear();
         if (titleImage.UploadedFile != null)
         {
+            Debug.LogError("name: "+ titleImage.UploadedFile.fileInfo.name +" fullname: "+ titleImage.UploadedFile.fileInfo.fullName + " extension: " + titleImage.UploadedFile.fileInfo.extension);
             newUrlFiles.TryAdd(fields[0],titleImage.UploadedFile.fileInfo.name);
             files.Add(titleImage.UploadedFile);
         }
@@ -550,6 +565,7 @@ public class FormScreen : MonoBehaviour
 
         errorText.text = error;
         errorPanel.gameObject.SetActive(true);
+        SetCanClick(true);
     }
     
 
