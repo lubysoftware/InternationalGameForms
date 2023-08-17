@@ -35,7 +35,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         {
             Debug.Log(www.error);
             SucessPanel.Instance.SetText("Erro ao salvar o jogo \"" + title + "\".", SucessPanel.MessageType.ERROR);
-            screen.SetCanClick(true);
+            screen.SaveDataFail();
         }
         else
         {
@@ -63,7 +63,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         {
             Debug.LogError(www.error);
             SucessPanel.Instance.SetText("Erro ao alterar o jogo \"" + titulo + "\".", SucessPanel.MessageType.ERROR);
-            screen.SetCanClick(true);
+            screen.SaveDataFail();
         }
         else
         {
@@ -105,7 +105,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
             Debug.LogError(error.message);
             SucessPanel.Instance.SetText("Houve um erro ao enviar os arquivos: "+ error.message,
                 SucessPanel.MessageType.ERROR);
-            screen.SetCanClick(true);
+            screen.SaveDataFail();
         });
     }
 

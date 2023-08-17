@@ -76,6 +76,12 @@ public class FormScreen : MonoBehaviour
         SetCanClick(true);
     }
 
+    public void SaveDataFail()
+    {
+        StopLoading();
+        SetCanClick(true);
+    }
+
     public void SetCanClick(bool status)
     {
         canClick = status;
@@ -90,7 +96,7 @@ public class FormScreen : MonoBehaviour
     public void SendFormData()
     {
         if (!canClick) return;
-        
+        loading.gameObject.SetActive(true);
         SetCanClick(false);
         CheckBaseFormFields();
     }
@@ -565,7 +571,7 @@ public class FormScreen : MonoBehaviour
 
         errorText.text = error;
         errorPanel.gameObject.SetActive(true);
-        SetCanClick(true);
+        SaveDataFail();
     }
     
 
