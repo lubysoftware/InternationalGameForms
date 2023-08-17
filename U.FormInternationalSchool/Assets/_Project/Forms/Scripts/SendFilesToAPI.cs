@@ -85,11 +85,6 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
         APIFactory.GetApi<FileUpload>().UploadFile(fileList, list =>
         {
-            foreach (var url in list)
-            {
-                print(url);
-            }
-
             string[] result = list.ToArray();
             
             if (isBaseForm)
