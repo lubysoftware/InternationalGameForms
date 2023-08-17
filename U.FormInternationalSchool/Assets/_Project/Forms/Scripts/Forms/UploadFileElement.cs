@@ -32,12 +32,21 @@ public class UploadFileElement : MonoBehaviour
 
     private string fileName;
     private string extension;
-    public File UploadedFile => _loadedFiles != null? _loadedFiles[0]: null;
+
+    private IFileBrowser _fileBrowser;
+
+    public File UploadedFile => _loadedFiles != null ? _loadedFiles[0] : null;
 
     public event Action<UploadFileElement> OnFill;
 
     protected virtual void Start()
     {
+#if UNITY_WEBGL
+        _fileBrowser = new WebFileBrowser();
+#else
+        _fileBrowser = new WindowsFileBrowser();
+#endif
+
         if (uploadFileButton != null)
         {
             uploadFileButton.onClick.AddListener(OpenFileDialogButtonOnClickHandler);
@@ -47,9 +56,9 @@ public class UploadFileElement : MonoBehaviour
         {
             deleteFile.onClick.AddListener(CleanupButtonOnClickHandler);
         }
-        
+
         if (isImage)
-            
+
         {
             types = ".png,.jpg";
         }
@@ -60,41 +69,30 @@ public class UploadFileElement : MonoBehaviour
             _audioSource = GetComponent<AudioSource>();
             types = ".ogg";
         }
+
         _audioSource = GetComponent<AudioSource>();
-        
+
         // if you want to set custom localization for file browser popup -> use that function:
         // fileBrowserSetLocalization(LocalizationKey.DESCRIPTION_TEXT, "Select file for loading:");
     }
 
-    private void UnsubscribeEvents()
-    {
-        WebGLFileBrowser.FilesWereOpenedEvent -= FilesWereOpenedEventHandler;
-        WebGLFileBrowser.FilePopupWasClosedEvent -= FilePopupWasClosedEventHandler;
-        WebGLFileBrowser.FileOpenFailedEvent -= FileOpenFailedEventHandler;
-    }
-
-    private void SubscribeEvents()
-    {
-        WebGLFileBrowser.FilesWereOpenedEvent += FilesWereOpenedEventHandler;
-        WebGLFileBrowser.FilePopupWasClosedEvent += FilePopupWasClosedEventHandler;
-        WebGLFileBrowser.FileOpenFailedEvent += FileOpenFailedEventHandler;
-    }
-
     protected void OpenFileDialogButtonOnClickHandler()
     {
-        SubscribeEvents();
-        WebGLFileBrowser.SetLocalization(LocalizationKey.DESCRIPTION_TEXT, "Select file to load or use drag & drop");
-
-        // you could paste types like: ".png,.jpg,.pdf,.txt,.json"
-        WebGLFileBrowser.OpenFilePanelWithFilters(types, isMultipleFiles);
-        // fileBrowserOpenFilePanelWithFilters(fileBrowserGetFilteredFileExtensions(_enteredFileExtensions), isMultipleFiles);
+        if (isImage)
+        {
+            _fileBrowser.LoadImage(FilesWereOpenedEventHandler, FileOpenFailedEventHandler);
+        }
+        else
+        {
+            _fileBrowser.LoadAudio(FilesWereOpenedEventHandler, FileOpenFailedEventHandler);
+        }
     }
 
     protected virtual void CleanupButtonOnClickHandler()
     {
         _loadedFiles =
             null; // you have to remove link to file and then GarbageCollector will think that there no links to that object
-        if(deleteFile != null)
+        if (deleteFile != null)
             deleteFile.gameObject.SetActive(false);
 
         fileData.text = string.Empty;
@@ -117,7 +115,6 @@ public class UploadFileElement : MonoBehaviour
 
     protected virtual void FilesWereOpenedEventHandler(File[] files)
     {
-        UnsubscribeEvents();
         _loadedFiles = files;
         if (_loadedFiles != null && _loadedFiles.Length > 0)
         {
@@ -134,17 +131,16 @@ public class UploadFileElement : MonoBehaviour
                 {
                     Debug.LogError($"Name: {loadedFile.fileInfo.name}{loadedFile.fileInfo.extension}");
                 }
-
             }
 
             if (deleteFile != null)
                 deleteFile.gameObject.SetActive(true);
-            
+
             if (_loadedFiles.Length == 1)
             {
                 if (isImage)
                 {
-                   if (file.IsImage())
+                    if (file.IsImage())
                     {
                         if (showImage != null)
                         {
@@ -164,7 +160,6 @@ public class UploadFileElement : MonoBehaviour
                 }
                 else
                 {
-
                     /*  if (file.IsText())
                       {
                           Debug.LogError("bbbbbbbbbbbbbbbbbb");
@@ -183,14 +178,13 @@ public class UploadFileElement : MonoBehaviour
                         playAudio.gameObject.SetActive(true);
                         pauseAudio.gameObject.SetActive(true);
                         fileField.gameObject.SetActive(true);
-                   }
+                    }
                 }
             }
             else
             {
                 Debug.LogError("loaded files count = 0");
             }
-
         }
         else
         {
@@ -200,14 +194,12 @@ public class UploadFileElement : MonoBehaviour
 
     private void FilePopupWasClosedEventHandler()
     {
-        UnsubscribeEvents();
         if (_loadedFiles == null)
             Debug.LogError("failed to load files");
     }
 
     private void FileOpenFailedEventHandler(string error)
     {
-        UnsubscribeEvents();
         Debug.LogError(error);
     }
 
@@ -215,35 +207,31 @@ public class UploadFileElement : MonoBehaviour
     {
         if (_audioSource.clip != null)
         {
-
-                _audioSource.Play(); 
-            
+            _audioSource.Play();
         }
     }
-    
+
     private void PauseAudio()
     {
         if (_audioSource.clip != null)
         {
-
-            _audioSource.Pause(); 
-            
+            _audioSource.Pause();
         }
     }
 
-    public void FillData(string fileName, string path )
+    public void FillData(string fileName, string path)
     {
         this.fileName = fileName;
         url = path;
         //this.extension = System.IO.Path.GetExtension(path);
-       if (isImage)
-       {
-           SendFilesToAPI.Instance.StartDownloadImage(this, path);
-       }
-       else
-       {
-           SendFilesToAPI.Instance.StartDownloadAudio(this, path);
-       }
+        if (isImage)
+        {
+            SendFilesToAPI.Instance.StartDownloadImage(this, path);
+        }
+        else
+        {
+            SendFilesToAPI.Instance.StartDownloadAudio(this, path);
+        }
     }
 
     public void FinishedDownloadFileData(Texture2D texture)
@@ -257,7 +245,7 @@ public class UploadFileElement : MonoBehaviour
             deleteFile.gameObject.SetActive(true);
         OnFill?.Invoke(this);
     }
-    
+
     public void FinishedDownloadFileData(AudioClip clip)
     {
         fileData.gameObject.SetActive(true);
@@ -276,8 +264,6 @@ public class UploadFileElement : MonoBehaviour
         SucessPanel.Instance.SetText($"Erro ao baixar \"{fileName}\".", SucessPanel.MessageType.ERROR);
         OnFill?.Invoke(this);
     }
-
-
 }
 
 public class FileData

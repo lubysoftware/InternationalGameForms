@@ -61,7 +61,7 @@ public class WindowsFileBrowser : IFileBrowser
             fileInfo = new FrostweepGames.Plugins.WebGLFileBrowser.FileInfo
             {
                 path = file.path,
-                fullName = Path.Combine(file.path, file.name + file.extension),
+                fullName = file.name + file.extension,
                 name = file.name,
                 extension = file.extension
             }
