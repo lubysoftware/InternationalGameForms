@@ -97,7 +97,7 @@ public class LibraryScreen : MonoBehaviour
     private void OnClickNewGame()
     {
         SceneDataCarrier.AddData(Constants.IS_EDIT, false);
-        SceneManager.LoadScene("Form");
+        SceneManager.LoadScene("Form_ImageSeq");
     }
     
     private void OnClickBack()
