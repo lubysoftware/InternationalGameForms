@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 [Serializable]
 public class ImageSeqJsonClass
@@ -96,7 +94,7 @@ public class Meta
     public int lastPage;
 }
 
-public class ImageSeqList
+public class ImageSeqList : BaseActivityList
 {
     public Meta meta;
     public List<ImageSeqJsonClass> data;

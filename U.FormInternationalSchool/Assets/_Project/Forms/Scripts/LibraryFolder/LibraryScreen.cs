@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using System;
+using API;
+using International.Api;
 using LubyLib.Core;
 using LubyLib.Core.Extensions;
-using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,7 +22,7 @@ public class LibraryScreen : MonoBehaviour
     [SerializeField] private Button onNoButton;
     [SerializeField] private Button nextPage;
     [SerializeField] private Button previousPage;
-    
+
     private string url;
 
     private int gameId;
@@ -32,8 +31,10 @@ public class LibraryScreen : MonoBehaviour
     private int page = 1;
 
     private string gameTitle;
+    
+    private I
 
-    void Start()
+    private void Awake()
     {
         newGame.onClick.AddListener(OnClickNewGame);
         backButton.onClick.AddListener(OnClickBack);
@@ -41,9 +42,30 @@ public class LibraryScreen : MonoBehaviour
         onNoButton.onClick.AddListener(DontDeleteGame);
         nextPage.onClick.AddListener(OnClickNext);
         previousPage.onClick.AddListener(OnClickPrevious);
+    }
+
+    private void Start()
+    {
         SceneDataCarrier.GetData(Constants.GAME_TYPE_KEY, out url);
+
+        //Primeiro checa o status do server
+        ApiController.Instance.CheckHealth(OnApiHealthChecked);
+    }
+
+    private void OnApiHealthChecked(bool healthStatus)
+    {
+        //Se o server estiver on, baixa a lista de atividades
+        if (healthStatus)
+        {
+            DownloadGameList();
+        }
+    }
+
+    private void DownloadGameList()
+    {
+        APIFactory.GetApi<ImageSequenceApi>().
+        
         DownloadData(1);
-        APICommunication.Instance.StartHealthChecker(url);
     }
 
     public void InstantiateGamesList(ImageSeqList list)
@@ -51,7 +73,7 @@ public class LibraryScreen : MonoBehaviour
         page = list.meta.page;
         nextPage.interactable = list.meta.countItems > page * list.meta.perPage;
         previousPage.interactable = page > 1;
-        for (int i=0; i < component.Length; i++)
+        for (int i = 0; i < component.Length; i++)
         {
             if (i < list.data.Count)
             {
@@ -65,8 +87,8 @@ public class LibraryScreen : MonoBehaviour
             {
                 component[i].gameObject.SetActive(false);
             }
-            
         }
+
         loading.gameObject.SetActive(false);
     }
 
@@ -86,20 +108,20 @@ public class LibraryScreen : MonoBehaviour
         comp = null;
         gameTitle = "";
     }
-    
+
     public void DontDeleteGame()
     {
         confirmDialog.gameObject.SetActive(false);
         gameId = -1;
-        this.comp =null;
+        this.comp = null;
     }
-    
+
     private void OnClickNewGame()
     {
         SceneDataCarrier.AddData(Constants.IS_EDIT, false);
         SceneManager.LoadScene("Form");
     }
-    
+
     private void OnClickBack()
     {
         SceneManager.LoadScene("Dashboard");
@@ -115,18 +137,18 @@ public class LibraryScreen : MonoBehaviour
         loading.gameObject.SetActive(true);
         if (!url.IsNullEmptyOrWhitespace())
         {
-            APICommunication.Instance.StartDownloadFiles(url,page,component.Length, searchTitle.text);
+            APICommunication.Instance.StartDownloadFiles(url, page, component.Length, searchTitle.text);
         }
     }
 
     private void OnClickNext()
     {
-        DownloadData(page +1);
+        DownloadData(page + 1);
     }
 
     private void OnClickPrevious()
     {
-        DownloadData(page -1);
+        DownloadData(page - 1);
     }
 
     public void OnDeletedGame()

@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using LubyLib.Core.Singletons;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SucessPanel : SimpleSingleton<SucessPanel>
+public class SuccessPanel : SimpleSingleton<SuccessPanel>
 {
     [SerializeField] private TextMeshProUGUI textMessage;
     [SerializeField] private Transform panel;
@@ -24,7 +22,7 @@ public class SucessPanel : SimpleSingleton<SucessPanel>
         textMessage.text = text;
         GetMessageType(type);
         panel.gameObject.SetActive(true);
-        Invoke(nameof(AutoDestroy),5f );
+        Invoke(nameof(AutoDestroy), 5f);
     }
 
     private void AutoDestroy()
@@ -38,7 +36,7 @@ public class SucessPanel : SimpleSingleton<SucessPanel>
         {
             case MessageType.ERROR:
             {
-                textMessage.color = new Color(0.34f,0.09f, 0.09f);
+                textMessage.color = new Color(0.34f, 0.09f, 0.09f);
                 image.sprite = backgrounds[0];
                 break;
             }

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Prod
   m_EditorClassIdentifier: 
   DeploymentEnvironment: 2
-  Url: https://gamehubapi.internationalschool.global
+  Url: https://gamehubapi.internationalschool.global/
   IsDebug: 0

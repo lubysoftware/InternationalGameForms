@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using LubyLib.Core;
 using TMPro;
 using UnityEngine;
@@ -15,7 +12,8 @@ public class GameTypeButton : MonoBehaviour
     private Image image;
 
     private GameTypeSO so;
-    
+    private bool _canClick;
+
     public void Init(GameTypeSO so)
     {
         description.text = so.description;
@@ -23,6 +21,7 @@ public class GameTypeButton : MonoBehaviour
         GetComponent<Image>().sprite = so.sprite;
         button.interactable = so.isActive;
         this.so = so;
+        _canClick = so.isActive;
         if (so.isActive)
         {
             title.color = new Color(0, 0.2f, 0.3f, 1);
@@ -33,6 +32,9 @@ public class GameTypeButton : MonoBehaviour
 
     private void OnClick()
     {
+        if(!_canClick) return;
+
+        _canClick = false;
         SceneDataCarrier.AddData("GAME_TYPE", so.url);
         SceneManager.LoadScene("Library");
     }

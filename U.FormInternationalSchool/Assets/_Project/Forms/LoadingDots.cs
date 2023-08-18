@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class LoadingDots : MonoBehaviour {
-
+public class LoadingDots : MonoBehaviour
+{
     //the total time of the animation
     public float repeatTime = 1;
 
@@ -15,15 +15,20 @@ public class LoadingDots : MonoBehaviour {
 
     public List<GameObject> dots;
 
-    void Start(){
-        if (repeatTime < dots.Count * bounceTime){
+    private void Start()
+    {
+        if (repeatTime < dots.Count * bounceTime)
+        {
             repeatTime = dots.Count * bounceTime;
         }
+
         InvokeRepeating("Animate", 0, repeatTime);
     }
-	
-    void Animate(){
-        for (int i = 0; i < dots.Count; i++){
+
+    void Animate()
+    {
+        for (int i = 0; i < dots.Count; i++)
+        {
             int dotIndex = i;
 
             dots[dotIndex].transform
@@ -31,12 +36,11 @@ public class LoadingDots : MonoBehaviour {
                 .SetDelay(dotIndex * bounceTime / 2)
                 .SetEase(Ease.OutQuad)
                 .OnComplete(() =>
-                {	
+                {
                     dots[dotIndex].transform
                         .DOMoveY(dots[dotIndex].transform.position.y - bounceHeight, bounceTime / 2)
                         .SetEase(Ease.InQuad);
                 });
         }
     }
-    
 }

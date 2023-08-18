@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using System.Text;
 using API;
 using FrostweepGames.Plugins.WebGLFileBrowser;
+using International.Api;
 using UnityEngine;
 using UnityEngine.Networking;
 using LubyLib.Core.Singletons;
-using Newtonsoft.Json;
 using Proyecto26;
-using Unity.VisualScripting;
 using AudioType = UnityEngine.AudioType;
 
 public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
@@ -34,14 +33,14 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         if (www.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(www.error);
-            SucessPanel.Instance.SetText("Erro ao salvar o jogo \"" + title + "\".", SucessPanel.MessageType.ERROR);
+            SuccessPanel.Instance.SetText("Erro ao salvar o jogo \"" + title + "\".", SuccessPanel.MessageType.ERROR);
             screen.SaveDataFail();
         }
         else
         {
             Debug.Log(www.downloadHandler.text);
-            SucessPanel.Instance.SetText("O jogo \"" + title + "\" foi salvo com sucesso.",
-                SucessPanel.MessageType.SUCCESS);
+            SuccessPanel.Instance.SetText("O jogo \"" + title + "\" foi salvo com sucesso.",
+                SuccessPanel.MessageType.SUCCESS);
             screen.BackButton();
         }
     }
@@ -62,13 +61,13 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         if (www.result != UnityWebRequest.Result.Success)
         {
             Debug.LogError(www.error);
-            SucessPanel.Instance.SetText("Erro ao alterar o jogo \"" + titulo + "\".", SucessPanel.MessageType.ERROR);
+            SuccessPanel.Instance.SetText("Erro ao alterar o jogo \"" + titulo + "\".", SuccessPanel.MessageType.ERROR);
             screen.SaveDataFail();
         }
         else
         {
-            SucessPanel.Instance.SetText("O jogo \"" + titulo + "\" foi alterado com sucesso",
-                SucessPanel.MessageType.SUCCESS);
+            SuccessPanel.Instance.SetText("O jogo \"" + titulo + "\" foi alterado com sucesso",
+                SuccessPanel.MessageType.SUCCESS);
             screen.BackButton();
         }
     }
@@ -83,7 +82,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
     {
         RestClient.DefaultRequestHeaders["Authorization"] = "Bearer Luby2021";
 
-        APIFactory.GetApi<FileUpload>().UploadFile(fileList, list =>
+        APIFactory.GetApi<UtilsApi>().UploadFiles(fileList, list =>
         {
             string[] result = list.ToArray();
             
@@ -98,8 +97,8 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         }, error =>
         {
             Debug.LogError(error.message);
-            SucessPanel.Instance.SetText("Houve um erro ao enviar os arquivos: "+ error.message,
-                SucessPanel.MessageType.ERROR);
+            SuccessPanel.Instance.SetText("Houve um erro ao enviar os arquivos: "+ error.message,
+                SuccessPanel.MessageType.ERROR);
             screen.SaveDataFail();
         });
     }
@@ -153,12 +152,12 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         {
             if (isBaseform)
             {
-                SucessPanel.Instance.SetText("Erro ao fazer upload de arquivos. \n" + wr.error,
-                    SucessPanel.MessageType.ERROR);
+                SuccessPanel.Instance.SetText("Erro ao fazer upload de arquivos. \n" + wr.error,
+                    SuccessPanel.MessageType.ERROR);
             }
             else
             {
-                SucessPanel.Instance.SetText("Erro ao fazer upload de arquivos da seção de sequenciamento de imagens. \n" + wr.error, SucessPanel.MessageType.ERROR);
+                SuccessPanel.Instance.SetText("Erro ao fazer upload de arquivos da seção de sequenciamento de imagens. \n" + wr.error, SuccessPanel.MessageType.ERROR);
             }
         }
         else

@@ -1,13 +1,9 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using FrostweepGames.Plugins.WebGLFileBrowser;
 using UnityEngine;
 using UnityEngine.Networking;
 using LubyLib.Core.Singletons;
 using Newtonsoft.Json;
-using Unity.VisualScripting;
 
 public class APICommunication : SimpleSingleton<APICommunication>
 {
@@ -63,7 +59,7 @@ public class APICommunication : SimpleSingleton<APICommunication>
 
 		if (www.result != UnityWebRequest.Result.Success)
 		{
-			SucessPanel.Instance.SetText("Erro ao conectar ao servidor.", SucessPanel.MessageType.ERROR);
+			SuccessPanel.Instance.SetText("Erro ao conectar ao servidor.", SuccessPanel.MessageType.ERROR);
 		}
 
 	}
@@ -82,11 +78,11 @@ public class APICommunication : SimpleSingleton<APICommunication>
 
 		if (www.result != UnityWebRequest.Result.Success)
 		{
-			SucessPanel.Instance.SetText("Erro ao deletar \""+title+"\".", SucessPanel.MessageType.ERROR);
+			SuccessPanel.Instance.SetText("Erro ao deletar \""+title+"\".", SuccessPanel.MessageType.ERROR);
 		}
 		else
 		{
-			SucessPanel.Instance.SetText("\""+ title+ "\" deletado com sucesso.", SucessPanel.MessageType.SUCCESS);
+			SuccessPanel.Instance.SetText("\""+ title+ "\" deletado com sucesso.", SuccessPanel.MessageType.SUCCESS);
 			Debug.Log(www.isDone);
 			screen.OnDeletedGame();
 		}

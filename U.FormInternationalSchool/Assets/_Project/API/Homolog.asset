@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d375a4fd4050987418085b7369c306af, type: 3}
-  m_Name: homolog
+  m_Name: Homolog
   m_EditorClassIdentifier: 
   DeploymentEnvironment: 0
-  Url: https://school.gamehub.api.oke.luby.me
+  Url: https://school.gamehub.api.oke.luby.me/
   IsDebug: 1
