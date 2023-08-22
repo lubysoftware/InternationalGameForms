@@ -91,7 +91,8 @@ public class ImagePairPanel : MonoBehaviour
 
     public bool AllPairsFilled()
     {
-        return CompletedPairs() == pairQtt.value+2;
+        Debug.LogError("completed pairs: " + CompletedPairs() + " value no pair qtt " + (pairQtt.value+2) );
+        return CompletedPairs() == pairQtt.value + 2;
     }
 
     public List<File> GetAllFiles()
@@ -123,7 +124,7 @@ public class ImagePairPanel : MonoBehaviour
     public void FillImages(List<string[]> urls,Action<UploadFileElement, string, string> action)
     {
         Debug.LogError(urls.Count);
-        pairQtt.value = urls.Count-2;
+        pairQtt.SetValueWithoutNotify(urls.Count -2);
         ShowDropdownQtt();
         for (int i = 0; i< urls.Count;i++)
         {
