@@ -18,14 +18,17 @@ public class GameComponent : MonoBehaviour
 
     [SerializeField] private LibraryScreen library;
     
-    private ImageSeqJsonClass game;
-    private int id;
 
-    public void Init(ImageSeqJsonClass json)
+    private string title;
+    private int id;
+    private string scene;
+
+    public void Init(string titleGame, int idGame, string sceneGame)
     {
-        game = json;
-        id = game.id;
-        gameTitle.text = json.gameTitle;
+        title = titleGame;
+        id = idGame;
+        scene = sceneGame;
+        gameTitle.text = title;
     }
 
     private void Start()
@@ -37,13 +40,13 @@ public class GameComponent : MonoBehaviour
     private void OnEditButton()
     {
         SceneDataCarrier.AddData(Constants.IS_EDIT, true);
-        SceneDataCarrier.AddData(Constants.GAME_EDIT, game.id);
-        SceneManager.LoadScene("Form");
+        SceneDataCarrier.AddData(Constants.GAME_EDIT, id);
+        SceneManager.LoadScene(scene);
     }
 
     private void OnDeleteButton()
     {
-        library.OnDeleteGame(game.id,this,game.gameTitle );
+        library.OnDeleteGame(id,this,title );
     }
 
     public void Deactivate()

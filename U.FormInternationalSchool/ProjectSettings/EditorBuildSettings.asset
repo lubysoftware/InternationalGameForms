@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Forms/Scenes/Form_ImageSeq.unity
     guid: 7f64fdfa23adf7e4681fea2174a4861e
+  - enabled: 1
+    path: Assets/_Project/Forms/Scenes/Form_ImagePairing.unity
+    guid: 7e5ac4643cdaeaa41a103cbda824e098
   m_configObjects: {}

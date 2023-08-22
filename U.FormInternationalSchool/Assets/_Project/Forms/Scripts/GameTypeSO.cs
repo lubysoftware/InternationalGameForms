@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "SO/GameTypeSO")]
+[Serializable]
 public class GameTypeSO : ScriptableObject
 {
    public GameType gameType;
@@ -11,4 +13,6 @@ public class GameTypeSO : ScriptableObject
    public string description;
    public string url;
    public bool isActive;
+   public Color[] colors;
+   public string scene;
 }

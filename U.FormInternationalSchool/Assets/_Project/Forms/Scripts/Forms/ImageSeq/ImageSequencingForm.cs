@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using FileIO = System.IO.File;
+
 public class ImageSequencingForm : FormScreen
 {
     [SerializeField] private ImageSequencingPanel panel;
@@ -16,44 +17,20 @@ public class ImageSequencingForm : FormScreen
     private int imageSeqQtt;
     private Dictionary<int, string> filledImages;
 
-    private string url = "image-sequence";
+    private int failsPenaltyValue = 0;
 
-    private int failsPenaltyValue =0;
+    private int sequenceQtt;
 
-    private int id;
-
-    private bool isEdit;
-
-    protected override void Start()
-    {
-        base.Start();
-        isEdit = false;
-        SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
-        if (isEdit)
-        {
-            SceneDataCarrier.GetData(Constants.GAME_EDIT, out id);
-            SendFilesToAPI.Instance.StartDownloadGame(this, url, id);
-        }
-        else
-        {
-            loadFileQtt = 1;
-            FillUploadFiles( backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/8cda25d0-167c-48dc-8cfb-606a0511823d.ogg");
-           // StopLoading();
-        }
-    }
-    
     public override void FinishDownloadingGame(string text)
     {
-        ImageSeqJsonGet json = JsonConvert.DeserializeObject<ImageSeqJsonGet>(text);
-        if (json != null)
+        if (text != null)
         {
-            FillBaseData(json);
-            FillGameData(json);
+            FillBaseData(JsonConvert.DeserializeObject<BaseJsonGet>(text));
+            FillGameData(JsonConvert.DeserializeObject<ImageSeqJsonGet>(text));
         }
-        
     }
-    
-    
+
+
     protected override void SendGameFiles()
     {
         filledImages = panel.FilledImages();
@@ -148,18 +125,23 @@ public class ImageSequencingForm : FormScreen
         string json = JsonConvert.SerializeObject(completeForm);
         if (isEdit)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, "image-sequence", id, title.text, this);
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.text, this);
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, "image-sequence", title.text, this);
+            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.text, this);
         }
     }
 
-    protected override void FillGameData(ImageSeqJsonGet json)
+    private void FillGameData(ImageSeqJsonGet json)
     {
         failsPenalty.text = json.failPenalty.ToString();
         panel.FillImages(json.sequenceUnits, FillUploadFiles);
+        sequenceQtt = json.sequenceUnits.Count;
+    }
+    protected override int GetFilesQtt()
+    {
+        return sequenceQtt;
     }
 }
 

@@ -33,7 +33,7 @@ public class GameTypeButton : MonoBehaviour
 
     private void OnClick()
     {
-        SceneDataCarrier.AddData("GAME_TYPE", so.url);
+        SceneDataCarrier.AddData(Constants.GAME_SO, so);
         SceneManager.LoadScene("Library");
     }
 }

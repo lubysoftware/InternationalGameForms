@@ -18,3 +18,7 @@ MonoBehaviour:
   description: description
   url: image-sequence
   isActive: 1
+  colors:
+  - {r: 0.72156864, g: 0.85098046, b: 0.25490198, a: 1}
+  - {r: 0.8235295, g: 0.36862746, b: 0.9490197, a: 1}
+  scene: Form_ImageSeq

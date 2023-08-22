@@ -8,7 +8,7 @@ public class Constants : MonoBehaviour
     public const string AUDIO_PT = "questionStatementPortugueseAudioUrl";
     public const string AUDIO_EN = "questionStatementEnglishAudioUrl";
 
-    public const string GAME_TYPE_KEY = "GAME_TYPE";
+    public const string GAME_SO = "GAME_SO";
     public const string GAME_EDIT = "GAME_EDIT";
     public const string IS_EDIT = "IS_EDIT";
 

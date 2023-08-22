@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class ImageSeqJsonClass
+public class ImagePairJsonClass
 {
     public int id;
     public string gameType;
@@ -24,10 +24,11 @@ public class ImageSeqJsonClass
     public string updated_at;
     public bool deleted;
     public List<SupportMaterialGet> SupportMaterial;
-    public List<ImageSequenceGet> ImageSequence;
+    public List<ImagePairingGet> ImageParing;
 }
+
 [Serializable]
-public class ImageSeqJsonGet 
+public class ImagePairJsonGet 
 {
     public int id;
     public string gameType;
@@ -47,26 +48,11 @@ public class ImageSeqJsonGet
     public string updated_at;
     public bool deleted;
     public List<SupportMaterialGet> SupportMaterial;
-    public int imageSequenceId;
-    public int failPenalty;
-    public List<SequenceGet> sequenceUnits;
+    public ImagePairingGet ImageParing;
 }
 
 [Serializable]
-public class SupportMaterialGet
-{
-    public int id;
-    public int gameId;
-    public int position;
-    public string material;
-    public string materialType;
-    public string created_at;
-    public string updated_at;
-    public bool deleted;
-}
-
-[Serializable]
-public class ImageSequenceGet
+public class ImagePairingGet
 {
     public int id;
     public int gameId;
@@ -74,30 +60,24 @@ public class ImageSequenceGet
     public string created_at;
     public string updated_at;
     public bool deleted;
-    public List<SequenceGet> Sequence;
+    public List<PairGet> Pair;
 }
+
 [Serializable]
-public class SequenceGet
+public class PairGet
 {
     public int id;
-    public int imageSequenceId;
-    public int position;
-    public string imageUrl;
+    public int imageParingId;
+    public string firstImageUrl;
+    public string secondImageUrl;
     public string created_at;
     public string updated_at;
     public bool deleted;
 }
 
-public class Meta
-{
-    public int page;
-    public int perPage;
-    public int countItems;
-    public int lastPage;
-}
-
-public class ImageSeqList
+public class ImagePairList
 {
     public Meta meta;
-    public List<ImageSeqJsonClass> data;
+    public List<ImagePairJsonClass> data;
 }
+

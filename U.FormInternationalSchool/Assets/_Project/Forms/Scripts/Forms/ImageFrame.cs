@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class ImageSequenceFrame : MonoBehaviour
+public class ImageFrame : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI indextext;
 
@@ -23,7 +23,7 @@ public class ImageSequenceFrame : MonoBehaviour
 
     public bool IsActive => isActive;
     
-    public ImageSequenceElement Image => transform.GetComponentInChildren<ImageSequenceElement>();
+    public ImageElement Image => transform.GetComponentInChildren<ImageElement>();
     void Start()
     {
         isActive = false;
@@ -37,6 +37,13 @@ public class ImageSequenceFrame : MonoBehaviour
         indextext.text = (index + 1).ToString();
         SetActiveState(false);
     }
+
+    public void SetCharIndex(char letter , int index)
+    {
+        this.index = index;
+        indextext.text = letter + (index + 1).ToString();
+    }
+    
     private void OnDeleteButton()
     {
         Image.Delete();
@@ -54,4 +61,4 @@ public class ImageSequenceFrame : MonoBehaviour
         updateImg.gameObject.SetActive(state);
     }
     
-}
+} 

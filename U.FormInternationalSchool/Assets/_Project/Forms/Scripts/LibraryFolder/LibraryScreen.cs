@@ -24,7 +24,7 @@ public class LibraryScreen : MonoBehaviour
     [SerializeField] private Button nextPage;
     [SerializeField] private Button previousPage;
     
-    private string url;
+    private GameTypeSO so;
 
     private int gameId;
     private GameComponent comp;
@@ -41,9 +41,10 @@ public class LibraryScreen : MonoBehaviour
         onNoButton.onClick.AddListener(DontDeleteGame);
         nextPage.onClick.AddListener(OnClickNext);
         previousPage.onClick.AddListener(OnClickPrevious);
-        SceneDataCarrier.GetData(Constants.GAME_TYPE_KEY, out url);
+        SceneDataCarrier.GetData(Constants.GAME_SO, out so);
+        loading.SetColors(so.colors[0], so.colors[1]);
         DownloadData(1);
-        APICommunication.Instance.StartHealthChecker(url);
+        APICommunication.Instance.StartHealthChecker(so.url);
     }
 
     public void InstantiateGamesList(ImageSeqList list)
@@ -57,7 +58,7 @@ public class LibraryScreen : MonoBehaviour
             {
                 if (!list.data[i].deleted)
                 {
-                    component[i].Init(list.data[i]);
+                    component[i].Init(list.data[i].gameTitle,list.data[i].id,so.scene);
                     component[i].gameObject.SetActive(true);
                 }
             }
@@ -97,7 +98,7 @@ public class LibraryScreen : MonoBehaviour
     private void OnClickNewGame()
     {
         SceneDataCarrier.AddData(Constants.IS_EDIT, false);
-        SceneManager.LoadScene("Form_ImageSeq");
+        SceneManager.LoadScene(so.scene);
     }
     
     private void OnClickBack()
@@ -113,9 +114,9 @@ public class LibraryScreen : MonoBehaviour
     private void DownloadData(int page)
     {
         loading.gameObject.SetActive(true);
-        if (!url.IsNullEmptyOrWhitespace())
+        if (!so.url.IsNullEmptyOrWhitespace())
         {
-            APICommunication.Instance.StartDownloadFiles(url,page,component.Length, searchTitle.text);
+            APICommunication.Instance.StartDownloadFiles(so.url,page,component.Length, searchTitle.text);
         }
     }
 

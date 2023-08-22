@@ -57,12 +57,29 @@ public class FormScreen : MonoBehaviour
     protected bool isLoading;
 
     protected bool canClick;
+    protected bool isEdit;
+    protected int id;
+    [SerializeField]
+    protected GameTypeSO so;
 
     protected virtual void Start()
     {
         sendForm.onClick.AddListener(SendFormData);
         backButton.onClick.AddListener(BackButton);
         SetCanClick(true);
+        isEdit = false;
+        SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
+        if (isEdit)
+        {
+            SceneDataCarrier.GetData(Constants.GAME_EDIT, out id);
+            SendFilesToAPI.Instance.StartDownloadGame(this, so.url, id);
+        }
+        else
+        {
+            loadFileQtt = 1;
+            FillUploadFiles( backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/8cda25d0-167c-48dc-8cfb-606a0511823d.ogg");
+            // StopLoading();
+        }
     }
 
     public virtual void FinishDownloadingGame(string text)
@@ -201,7 +218,7 @@ public class FormScreen : MonoBehaviour
 
     }
 
-    protected void FillBaseData(ImageSeqJsonGet baseForm)
+    protected void FillBaseData(BaseJsonGet baseForm)
     {
         title.text = baseForm.gameTitle;
         statement_EN.text = baseForm.questionStatementEnglishVersion;
@@ -228,9 +245,7 @@ public class FormScreen : MonoBehaviour
         FillUploadFiles( backgroundMusic,"music_theme",baseForm.backgroundMusicUrl);
         FillUploadFiles( audioStatement_EN,"statement_en",baseForm.questionStatementEnglishAudioUrl);
         FillUploadFiles( audioStatement_PT,"statement_pt",baseForm.questionStatementPortugueseAudioUrl);
-        loadFileQtt = 5 + baseForm.sequenceUnits.Count;
-       
-        
+        loadFileQtt = 5 + GetFilesQtt();
     }
 
     public void FillUploadFiles(UploadFileElement element, string name, string value)
@@ -535,9 +550,9 @@ public class FormScreen : MonoBehaviour
         
     }
 
-    protected virtual void FillGameData(ImageSeqJsonGet json)
+    protected virtual int GetFilesQtt()
     {
-        
+        return 0;
     }
     
 
