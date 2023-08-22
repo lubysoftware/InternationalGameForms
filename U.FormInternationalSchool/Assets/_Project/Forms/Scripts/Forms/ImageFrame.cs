@@ -22,6 +22,8 @@ public class ImageFrame : MonoBehaviour
     public int Index => index;
 
     public bool IsActive => isActive;
+
+    [SerializeField] private bool disableUpdateButton = true;
     
     public ImageElement Image => transform.GetComponentInChildren<ImageElement>();
     void Start()
@@ -44,7 +46,7 @@ public class ImageFrame : MonoBehaviour
         indextext.text = letter + (index + 1).ToString();
     }
     
-    private void OnDeleteButton()
+    public void OnDeleteButton()
     {
         Image.Delete();
     }
@@ -58,7 +60,8 @@ public class ImageFrame : MonoBehaviour
     {
         isActive = state;
         delete.gameObject.SetActive(state);
-        updateImg.gameObject.SetActive(state);
+        if(disableUpdateButton)
+            updateImg.gameObject.SetActive(state);
     }
     
 } 

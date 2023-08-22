@@ -48,7 +48,8 @@ public class ImagePairJsonGet
     public string updated_at;
     public bool deleted;
     public List<SupportMaterialGet> SupportMaterial;
-    public ImagePairingGet ImageParing;
+    public int failPenalty;
+    public List<PairGet> paringUnits;
 }
 
 [Serializable]

@@ -10,6 +10,7 @@ public class ImageElement : UploadFileElement
     public bool IsActive = false;
     
     public event Action<bool> OnUploadFile;
+    public event Action<int, bool> OnUploadFileIndex;
     public event Action<ImageElement> OnDelete;
 
     public int Index => transform.GetComponentInParent<ImageFrame>().Index;
@@ -30,6 +31,7 @@ public class ImageElement : UploadFileElement
     {
         base.FilesWereOpenedEventHandler(files);
         OnUploadFile?.Invoke(IsActive);
+        OnUploadFileIndex?.Invoke(Index,IsActive);
     }
 
     protected override void CleanupButtonOnClickHandler()
@@ -43,6 +45,7 @@ public class ImageElement : UploadFileElement
     {
         showImage.sprite = previewImage;
         IsActive = false;
+        IsFilled = false;
         OnDelete?.Invoke(this);
     }
 }

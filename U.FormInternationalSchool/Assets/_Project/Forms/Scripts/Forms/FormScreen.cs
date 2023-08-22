@@ -250,6 +250,7 @@ public class FormScreen : MonoBehaviour
 
     public void FillUploadFiles(UploadFileElement element, string name, string value)
     {
+        Debug.LogError(name +" - filling");
         element.FillData(name,value);
         element.OnFill += OnLoadFile;
         currentLoad++;

@@ -53,6 +53,13 @@ public class ImagePairingForm : FormScreen
             return;
         }
 
+        int.TryParse(failsPenalty.text, out failsPenaltyValue);
+        if (failsPenaltyValue <= 0)
+        {
+            ShowError("Pontuação descontada por erro", ErrorType.GREATER_THAN, new int[]{0});
+            return;
+        }
+
         if (!panel.AllPairsFilled())
         {
             ShowError("Todos os pares devem ser preenchidos.", ErrorType.CUSTOM, null);
@@ -64,38 +71,44 @@ public class ImagePairingForm : FormScreen
 
     public override void SerializeGameData(string[] urls)
     {
-        Debug.LogError("serialize game" + urls);
-        
+        Debug.LogError("serialize game " + urls);
+
         List<Pair> listPair = new List<Pair>();
-        if (filledImages.Count == pairsQtt)
+        if (filledImages.Count == pairsQtt || urls == null)
         {
-            foreach (char id in panel.idsList)
+            Debug.LogError("filled = qtt");
+            for(int i=0; i< pairsQtt; i++)
             {
-                listPair.Add(new Pair() { firstImageUrl = filledImages[id][0], secondImageUrl = filledImages[id][1] });
+                listPair.Add(new Pair() { firstImageUrl = filledImages[panel.idsList[i]][0], secondImageUrl = filledImages[panel.idsList[i]][1] });
             }
         }
         else
         {
             int urlIndex = 0;
-            foreach (char id in panel.idsList)
+            for(int i = 0; i< pairsQtt; i++)
             {
-                if (filledImages.ContainsKey(id))
+                if (filledImages.ContainsKey(panel.idsList[i]))
                 {
-                    if (filledImages[id].Count == 2)
+                    Debug.LogError("contains key");
+                    if (filledImages[panel.idsList[i]].Count == 2)
                     {
-                        listPair.Add(new Pair() { firstImageUrl = filledImages[id][0], secondImageUrl = filledImages[id][1] });
+                        listPair.Add(new Pair()
+                            { firstImageUrl = filledImages[panel.idsList[i]][0], secondImageUrl = filledImages[panel.idsList[i]][1] });
                     }
-                    else if(filledImages[id].Count == 1)
+                    else if (filledImages[panel.idsList[i]].Count == 1)
                     {
-                        listPair.Add(new Pair() { firstImageUrl = filledImages[id][0], secondImageUrl = urls[urlIndex] });
+                        listPair.Add(
+                            new Pair() { firstImageUrl = filledImages[panel.idsList[i]][0], secondImageUrl = urls[urlIndex] });
                         urlIndex++;
                     }
                 }
                 else
                 {
-                    listPair.Add(new Pair() { firstImageUrl = urls[urlIndex], secondImageUrl = urls[urlIndex+1] });
-                    urlIndex = +2;
+                    Debug.LogError("nao contains key");
+                    listPair.Add(new Pair() { firstImageUrl = urls[urlIndex], secondImageUrl = urls[urlIndex + 1] });
+                    urlIndex +=2;
                 }
+                Debug.LogError("url index " + urlIndex + " completed pairs? " +  panel.CompletedPairs());
             }
         }
        
@@ -112,6 +125,7 @@ public class ImagePairingForm : FormScreen
 
        
         string json = JsonConvert.SerializeObject(completeForm);
+        Debug.LogError(json);
         if (isEdit)
         {
             SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.text, this);
@@ -124,11 +138,11 @@ public class ImagePairingForm : FormScreen
 
     private void FillGameData(ImagePairJsonGet json)
     {
-        failsPenalty.text = json.ImageParing.failPenalty.ToString();
+        failsPenalty.text = json.failPenalty.ToString();
         List<string[]> urls = new List<string[]>();
-        for (int i = 0; i < json.ImageParing.Pair.Count; i++)
+        for (int i = 0; i < json.paringUnits.Count; i++)
         {
-            string[] urlPair = new[] { json.ImageParing.Pair[i].firstImageUrl, json.ImageParing.Pair[i].secondImageUrl };
+            string[] urlPair = new[] { json.paringUnits[i].firstImageUrl, json.paringUnits[i].secondImageUrl };
             urls.Add(urlPair);
         }
         panel.FillImages(urls, FillUploadFiles);

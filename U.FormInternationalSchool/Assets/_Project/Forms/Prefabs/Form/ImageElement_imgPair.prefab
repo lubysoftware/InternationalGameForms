@@ -96,6 +96,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: e1127299413384548a3855004b07e44b, type: 3}
+    - target: {fileID: 2812974569656472246, guid: b9a8f6c01dfd2b14cb27116c0201e334, type: 3}
+      propertyPath: disableUpdateButton
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2914547074865135370, guid: b9a8f6c01dfd2b14cb27116c0201e334, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -132,25 +136,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: ImageElement_imgPair
       objectReference: {fileID: 0}
+    - target: {fileID: 7030504803540259440, guid: b9a8f6c01dfd2b14cb27116c0201e334, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7578486894271787442, guid: b9a8f6c01dfd2b14cb27116c0201e334, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: c188f6e49cd9bdb4b96333ab5a0cd95e, type: 3}
     - target: {fileID: 8015534877995586700, guid: b9a8f6c01dfd2b14cb27116c0201e334, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8015534877995586700, guid: b9a8f6c01dfd2b14cb27116c0201e334, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8015534877995586700, guid: b9a8f6c01dfd2b14cb27116c0201e334, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 92
       objectReference: {fileID: 0}
     - target: {fileID: 8015534877995586700, guid: b9a8f6c01dfd2b14cb27116c0201e334, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -32.4545
       objectReference: {fileID: 0}
     - target: {fileID: 8035156358052693048, guid: b9a8f6c01dfd2b14cb27116c0201e334, type: 3}
       propertyPath: m_AnchorMax.y
@@ -202,7 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42e1b5a299d17714aaa4f82b464676e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uploadFileButton: {fileID: 9212315557131488907}
+  uploadFileButton: {fileID: 0}
   fileData: {fileID: 7873968391590350334}
   fileField: {fileID: 3311652427033501950}
   deleteFile: {fileID: 8905136299911826768}
@@ -256,17 +264,6 @@ MonoBehaviour:
 --- !u!114 &8905136299911826768 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7496332824668319643, guid: b9a8f6c01dfd2b14cb27116c0201e334, type: 3}
-  m_PrefabInstance: {fileID: 1413343806112850635}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &9212315557131488907 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7801796430761978944, guid: b9a8f6c01dfd2b14cb27116c0201e334, type: 3}
   m_PrefabInstance: {fileID: 1413343806112850635}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

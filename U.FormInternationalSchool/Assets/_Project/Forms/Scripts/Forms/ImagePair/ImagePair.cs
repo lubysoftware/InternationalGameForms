@@ -11,11 +11,18 @@ public class ImagePair : MonoBehaviour
     [SerializeField] private ImageFrame[] frames;
     public char Id;
 
+    private void Start()
+    {
+        foreach (var frame in frames)
+        {
+            frame.Image.OnUploadFileIndex += OnAddImage;
+        }
+    }
     public bool IsCompleted()
     {
         foreach (var frame in frames)
         {
-            if (!frame.IsActive || frame.Image.UploadedFile == null)
+            if (!frame.IsActive || (frame.Image.UploadedFile == null && !frame.Image.IsFilled))
             {
                 return false;
             }
@@ -31,7 +38,8 @@ public class ImagePair : MonoBehaviour
         {
             foreach (var frame in frames)
             {
-                files.Add(frame.Image.UploadedFile);
+                if(!frame.Image.IsFilled && frame.Image.UploadedFile != null)
+                    files.Add(frame.Image.UploadedFile);
             }
         }
 
@@ -68,7 +76,7 @@ public class ImagePair : MonoBehaviour
         int i = 0;
         foreach (var frame in frames)
         {
-            action.Invoke(frame.Image, "pair0", urls[i]);
+            action.Invoke(frame.Image, "pair" + i, urls[i]);
             OnAddImage(i, false);
             i++;
         }
@@ -80,6 +88,27 @@ public class ImagePair : MonoBehaviour
         for (int i =0; i< frames.Length ; i++)
         {
             frames[i].SetCharIndex(Id,i);
+        }
+    }
+
+    public void ClearPair()
+    {
+        foreach (var frame in frames)
+        {
+           frame.OnDeleteButton();
+        }
+    }
+
+    public void Activate(bool status)
+    {
+        if (status)
+        {
+            this.gameObject.SetActive(true);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+            ClearPair();
         }
     }
 

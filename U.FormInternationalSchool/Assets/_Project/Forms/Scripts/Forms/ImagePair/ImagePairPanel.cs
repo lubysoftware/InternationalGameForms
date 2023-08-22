@@ -18,28 +18,35 @@ public class ImagePairPanel : MonoBehaviour
     [SerializeField] private Transform confirmReducePanel;
 
     [SerializeField] private Button confirmButton;
+    [SerializeField] private Button denyButton;
+    [SerializeField] private TextMeshProUGUI alertMessage;
 
     public char[] idsList = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
-    
+
+    private int previousDropdown;
     private void Start()
     {
         confirmButton.onClick.AddListener(ShowDropdownQtt);
+        denyButton.onClick.AddListener(ResetDropdown);
         pairQtt.onValueChanged.AddListener(OnDropDownChangeValue);
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).GetComponent<ImagePair>().SetId(idsList[i]);
         }
-        ShowDropdownQtt();
+        
+        //ShowDropdownQtt();
     }
 
     public void OnDropDownChangeValue(int newValue)
     {
-        if (CompletedPairs() > pairQtt.value + 2)
+        int completed = CompletedPairs();
+        int value = pairQtt.value + 2;
+        if (completed > value)
         {
-            Debug.LogError("tem certeza? voce tem " + CompletedPairs() + " pares preenchidos.");
+            alertMessage.text = String.Format("Confirma reduzir para {0} pares e descartar {1} pares já preenchidos?", value, completed-value);
+            confirmReducePanel.gameObject.SetActive(true);
             return;
         }
-
         ShowDropdownQtt();
     }
 
@@ -50,16 +57,22 @@ public class ImagePairPanel : MonoBehaviour
         {
             if (transform.GetChild(i).GetComponent<ImagePair>().IsCompleted())
             {
+                transform.GetChild(i).GetComponent<ImagePair>().SetId(idsList[index]);
                 transform.GetChild(i).SetSiblingIndex(index);
-                transform.GetChild(i).GetComponent<ImagePair>().SetId(idsList[i]);
                 index++;
             }
         }
-
+        previousDropdown = pairQtt.value+2;
         for (int i = 0; i < transform.childCount; i++)
         {
-            transform.GetChild(i).gameObject.SetActive(i < pairQtt.value+2);
+            transform.GetChild(i).gameObject.GetComponent<ImagePair>().Activate(i < previousDropdown);
+            
         }
+    }
+
+    private void ResetDropdown()
+    {
+        pairQtt.value = previousDropdown;
     }
 
     public int CompletedPairs()
@@ -86,9 +99,11 @@ public class ImagePairPanel : MonoBehaviour
         List<File> files = new List<File>();
         foreach (ImagePair pair in pairs)
         {
-            files.AddRange(pair.GetFiles());
+            if(pair.GetFiles() != null && pair.GetFiles().Count == 2)
+                files.AddRange(pair.GetFiles());
         }
 
+        Debug.LogError("files count?" + files.Count);
         return files;
     }
 
@@ -97,7 +112,8 @@ public class ImagePairPanel : MonoBehaviour
         Dictionary<char, List<string>> files = new Dictionary<char, List<string>>();
         foreach (ImagePair pair in pairs)
         {
-            files.Add(pair.Id, pair.FilledImages());
+            if(pair.FilledImages() != null && pair.FilledImages().Count > 0)
+                files.Add(pair.Id, pair.FilledImages());
         }
 
         return files;
@@ -106,11 +122,12 @@ public class ImagePairPanel : MonoBehaviour
 
     public void FillImages(List<string[]> urls,Action<UploadFileElement, string, string> action)
     {
-        int i = 0;
-        foreach (ImagePair pair in pairs)
+        Debug.LogError(urls.Count);
+        pairQtt.value = urls.Count-2;
+        ShowDropdownQtt();
+        for (int i = 0; i< urls.Count;i++)
         {
-            pair.FillImage(urls[i],action);
-            i++;
+            pairs[i].FillImage(urls[i],action);
         }
     }
 
