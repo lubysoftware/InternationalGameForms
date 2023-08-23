@@ -14,7 +14,6 @@ public class ImagePairingForm : FormScreen
     [SerializeField] private TMP_InputField failsPenalty;
     private int pairsQtt;
     private Dictionary<char,List<string>> filledImages;
-    
     private int failsPenaltyValue = 0;
     public override void FinishDownloadingGame(string text)
     {
@@ -146,6 +145,8 @@ public class ImagePairingForm : FormScreen
             urls.Add(urlPair);
         }
         panel.FillImages(urls, FillUploadFiles);
+        loadFileQtt = loadFileQtt + urls.Count * 2;
+        CheckIfMaxQtt();
     }
 
 }

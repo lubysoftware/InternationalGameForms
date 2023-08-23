@@ -138,10 +138,9 @@ public class ImageSequencingForm : FormScreen
         failsPenalty.text = json.failPenalty.ToString();
         panel.FillImages(json.sequenceUnits, FillUploadFiles);
         sequenceQtt = json.sequenceUnits.Count;
-    }
-    protected override int GetFilesQtt()
-    {
-        return sequenceQtt;
+        loadFileQtt = loadFileQtt + sequenceQtt;
+        CheckIfMaxQtt();
+        Debug.LogError("qtt "+loadFileQtt);
     }
 }
 

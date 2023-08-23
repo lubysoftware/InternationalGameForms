@@ -52,7 +52,7 @@ public class FormScreen : MonoBehaviour
 
     private List<Material> materials = new List<Material>();
 
-    protected int loadFileQtt = 0;
+    public int loadFileQtt = 0;
     protected int currentLoad = 0;
     protected bool isLoading;
 
@@ -245,7 +245,9 @@ public class FormScreen : MonoBehaviour
         FillUploadFiles( backgroundMusic,"music_theme",baseForm.backgroundMusicUrl);
         FillUploadFiles( audioStatement_EN,"statement_en",baseForm.questionStatementEnglishAudioUrl);
         FillUploadFiles( audioStatement_PT,"statement_pt",baseForm.questionStatementPortugueseAudioUrl);
-        loadFileQtt = 5 + GetFilesQtt();
+        loadFileQtt = loadFileQtt + 5;
+        CheckIfMaxQtt();
+        Debug.LogError("qtt "+loadFileQtt);
     }
 
     public void FillUploadFiles(UploadFileElement element, string name, string value)
@@ -254,6 +256,12 @@ public class FormScreen : MonoBehaviour
         element.FillData(name,value);
         element.OnFill += OnLoadFile;
         currentLoad++;
+        Debug.LogError("current qtt "+currentLoad);
+        CheckIfMaxQtt();
+    }
+
+    protected void CheckIfMaxQtt()
+    {
         if (currentLoad == loadFileQtt)
         {
             isLoading = true;
@@ -276,6 +284,7 @@ public class FormScreen : MonoBehaviour
     {
         loadFileQtt--;
         currentLoad--;
+        Debug.LogError("qtt "+loadFileQtt);
         el.OnFill -= OnLoadFile;
     }
     
@@ -550,11 +559,7 @@ public class FormScreen : MonoBehaviour
     {
         
     }
-
-    protected virtual int GetFilesQtt()
-    {
-        return 0;
-    }
+    
     
 
     #endregion
