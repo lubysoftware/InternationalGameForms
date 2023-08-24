@@ -17,18 +17,18 @@ public class ImageFrame : MonoBehaviour
 
     [SerializeField] private bool isActive;
 
+    [SerializeField] private Button newImageButton;
+
     private int index;
 
     public int Index => index;
 
     public bool IsActive => isActive;
-
-    [SerializeField] private bool disableUpdateButton = true;
+    
     
     public ImageElement Image => transform.GetComponentInChildren<ImageElement>();
     void Start()
     {
-        isActive = false;
         updateImg.onClick.AddListener(OnUpdateButton);
         delete.onClick.AddListener(OnDeleteButton);
     }
@@ -49,6 +49,7 @@ public class ImageFrame : MonoBehaviour
     public void OnDeleteButton()
     {
         Image.Delete();
+        SetActiveState(false);
     }
 
     private void OnUpdateButton()
@@ -60,8 +61,8 @@ public class ImageFrame : MonoBehaviour
     {
         isActive = state;
         delete.gameObject.SetActive(state);
-        if(disableUpdateButton)
-            updateImg.gameObject.SetActive(state);
+        updateImg.gameObject.SetActive(state);
+        newImageButton.gameObject.SetActive(!state);
     }
     
 } 

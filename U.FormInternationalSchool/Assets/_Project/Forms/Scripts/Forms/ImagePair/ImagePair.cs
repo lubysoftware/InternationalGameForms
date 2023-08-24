@@ -22,8 +22,12 @@ public class ImagePair : MonoBehaviour
     {
         foreach (var frame in frames)
         {
+            Debug.LogError(Id +" is active " + frame.IsActive);
+            Debug.LogError(Id +" uploaded file null " + frame.Image.UploadedFile == null);
+            Debug.LogError(Id+ " is filled " + frame.Image.IsFilled);
             if (!frame.IsActive || (frame.Image.UploadedFile == null && !frame.Image.IsFilled))
             {
+                Debug.LogError("false");
                 return false;
             }
         }

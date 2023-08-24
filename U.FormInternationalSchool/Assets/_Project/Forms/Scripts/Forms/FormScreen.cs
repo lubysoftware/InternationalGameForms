@@ -246,17 +246,13 @@ public class FormScreen : MonoBehaviour
         FillUploadFiles( audioStatement_EN,"statement_en",baseForm.questionStatementEnglishAudioUrl);
         FillUploadFiles( audioStatement_PT,"statement_pt",baseForm.questionStatementPortugueseAudioUrl);
         loadFileQtt = loadFileQtt + 5;
-        CheckIfMaxQtt();
-        Debug.LogError("qtt "+loadFileQtt);
     }
 
     public void FillUploadFiles(UploadFileElement element, string name, string value)
     {
-        Debug.LogError(name +" - filling");
         element.FillData(name,value);
         element.OnFill += OnLoadFile;
         currentLoad++;
-        Debug.LogError("current qtt "+currentLoad);
         CheckIfMaxQtt();
     }
 
@@ -284,7 +280,6 @@ public class FormScreen : MonoBehaviour
     {
         loadFileQtt--;
         currentLoad--;
-        Debug.LogError("qtt "+loadFileQtt);
         el.OnFill -= OnLoadFile;
     }
     
@@ -446,10 +441,10 @@ public class FormScreen : MonoBehaviour
                 
                 urlDict = newUrlFiles;
                 urlDict.AddRange(filledUrlFiles);
-                foreach (var str in urlDict)
+                /*foreach (var str in urlDict)
                 {
                     Debug.LogError(str.Key + " " + str.Value);
-                }
+                }*/
                 
                 for (int i = 0; i< materials.Count; i++)
                 {

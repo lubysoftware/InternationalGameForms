@@ -75,7 +75,6 @@ public class ImagePairingForm : FormScreen
         List<Pair> listPair = new List<Pair>();
         if (filledImages.Count == pairsQtt || urls == null)
         {
-            Debug.LogError("filled = qtt");
             for(int i=0; i< pairsQtt; i++)
             {
                 listPair.Add(new Pair() { firstImageUrl = filledImages[panel.idsList[i]][0], secondImageUrl = filledImages[panel.idsList[i]][1] });
@@ -88,7 +87,6 @@ public class ImagePairingForm : FormScreen
             {
                 if (filledImages.ContainsKey(panel.idsList[i]))
                 {
-                    Debug.LogError("contains key");
                     if (filledImages[panel.idsList[i]].Count == 2)
                     {
                         listPair.Add(new Pair()
@@ -103,7 +101,6 @@ public class ImagePairingForm : FormScreen
                 }
                 else
                 {
-                    Debug.LogError("nao contains key");
                     listPair.Add(new Pair() { firstImageUrl = urls[urlIndex], secondImageUrl = urls[urlIndex + 1] });
                     urlIndex +=2;
                 }

@@ -4645,7 +4645,7 @@ MonoBehaviour:
   m_CharacterValidation: 2
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 0
+  m_CharacterLimit: 2
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -4982,6 +4982,8 @@ MonoBehaviour:
   errorText: {fileID: 19439863152849778}
   loading: {fileID: 663903979065593149}
   backButton: {fileID: 7684159700053625269}
+  loadFileQtt: 0
+  so: {fileID: 0}
   panel: {fileID: 0}
   failsPenalty: {fileID: 0}
 --- !u!1001 &2194872284356579106

@@ -43,7 +43,7 @@ public class ImagePairPanel : MonoBehaviour
         int value = pairQtt.value + 2;
         if (completed > value)
         {
-            alertMessage.text = String.Format("Confirma reduzir para {0} pares e descartar {1} pares já preenchidos?", value, completed-value);
+            alertMessage.text = String.Format("Deseja excluir os últimos {1} pares preenchidos?", value, completed-value);
             confirmReducePanel.gameObject.SetActive(true);
             return;
         }
@@ -103,8 +103,7 @@ public class ImagePairPanel : MonoBehaviour
             if(pair.GetFiles() != null && pair.GetFiles().Count == 2)
                 files.AddRange(pair.GetFiles());
         }
-
-        Debug.LogError("files count?" + files.Count);
+        
         return files;
     }
 
@@ -123,7 +122,6 @@ public class ImagePairPanel : MonoBehaviour
 
     public void FillImages(List<string[]> urls,Action<UploadFileElement, string, string> action)
     {
-        Debug.LogError(urls.Count);
         pairQtt.SetValueWithoutNotify(urls.Count -2);
         ShowDropdownQtt();
         for (int i = 0; i< urls.Count;i++)
