@@ -17,18 +17,28 @@ public class GameComponent : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameTitle;
 
     [SerializeField] private LibraryScreen library;
+
+    [SerializeField] private Image fieldBackground;
     
 
     private string title;
     private int id;
     private string scene;
 
-    public void Init(string titleGame, int idGame, string sceneGame)
+    public void Init(string titleGame, int idGame, string sceneGame, Color button, Color field)
     {
         title = titleGame;
         id = idGame;
         scene = sceneGame;
         gameTitle.text = title;
+        SetColors(button,field);
+    }
+
+    private void SetColors(Color button, Color field)
+    {
+        editButton.image.color = button;
+        deleteButton.image.color = button;
+        fieldBackground.color = field;
     }
 
     private void Start()

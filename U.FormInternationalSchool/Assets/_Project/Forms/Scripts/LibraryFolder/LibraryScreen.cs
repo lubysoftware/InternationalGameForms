@@ -23,6 +23,9 @@ public class LibraryScreen : MonoBehaviour
     [SerializeField] private Button onNoButton;
     [SerializeField] private Button nextPage;
     [SerializeField] private Button previousPage;
+    [SerializeField] private TextMeshProUGUI pagesText;
+    [SerializeField] private Image scroll;
+    [SerializeField] private Image scrollBack;
     
     private GameTypeSO so;
 
@@ -43,14 +46,34 @@ public class LibraryScreen : MonoBehaviour
         previousPage.onClick.AddListener(OnClickPrevious);
         SceneDataCarrier.GetData(Constants.GAME_SO, out so);
         loading.SetColors(so.colors[0], so.colors[1]);
+        SetLibColors();
         DownloadData(1);
         APICommunication.Instance.StartHealthChecker(so.url);
+    }
+
+    public void SetLibColors()
+    {
+        //round buttons
+        backButton.image.color = so.colors[4];
+        nextPage.image.color = so.colors[4];
+        previousPage.image.color = so.colors[4];
+
+        //new game button
+        newGame.image.color = so.colors[1];
+        
+        //searchBar
+        searchTitle.image.color = so.colors[3];
+        
+        //scroll
+        scroll.color = so.colors[1];
+        scrollBack.color = so.colors[3];
     }
 
     public void InstantiateGamesList(ImageSeqList list)
     {
         page = list.meta.page;
         nextPage.interactable = list.meta.countItems > page * list.meta.perPage;
+        pagesText.text = page + "/" + list.meta.lastPage;
         previousPage.interactable = page > 1;
         for (int i=0; i < component.Length; i++)
         {
@@ -58,7 +81,7 @@ public class LibraryScreen : MonoBehaviour
             {
                 if (!list.data[i].deleted)
                 {
-                    component[i].Init(list.data[i].gameTitle,list.data[i].id,so.scene);
+                    component[i].Init(list.data[i].gameTitle,list.data[i].id,so.scene, so.colors[4], so.colors[2] );
                     component[i].gameObject.SetActive(true);
                 }
             }
@@ -116,7 +139,7 @@ public class LibraryScreen : MonoBehaviour
         loading.gameObject.SetActive(true);
         if (!so.url.IsNullEmptyOrWhitespace())
         {
-            APICommunication.Instance.StartDownloadFiles(so.url,page,component.Length, searchTitle.text);
+            APICommunication.Instance.StartDownloadFiles(so.url,page,7, searchTitle.text);
         }
     }
 
