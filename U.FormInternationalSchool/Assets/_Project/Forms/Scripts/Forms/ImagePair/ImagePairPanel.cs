@@ -6,6 +6,7 @@ using FrostweepGames.Plugins.WebGLFileBrowser;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
 
@@ -20,10 +21,12 @@ public class ImagePairPanel : MonoBehaviour
     [SerializeField] private Button confirmButton;
     [SerializeField] private Button denyButton;
     [SerializeField] private TextMeshProUGUI alertMessage;
+    [SerializeField] private LayoutGroup layoutGroup;
 
     public char[] idsList = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
 
     private int previousDropdown;
+
     private void Start()
     {
         confirmButton.onClick.AddListener(ShowDropdownQtt);
@@ -33,7 +36,7 @@ public class ImagePairPanel : MonoBehaviour
         {
             transform.GetChild(i).GetComponent<ImagePair>().SetId(idsList[i]);
         }
-        
+
         //ShowDropdownQtt();
     }
 
@@ -43,10 +46,12 @@ public class ImagePairPanel : MonoBehaviour
         int value = pairQtt.value + 2;
         if (completed > value)
         {
-            alertMessage.text = String.Format("Deseja excluir os últimos {1} pares preenchidos?", value, completed-value);
+            alertMessage.text =
+                String.Format("Deseja excluir os últimos {1} pares preenchidos?", value, completed - value);
             confirmReducePanel.gameObject.SetActive(true);
             return;
         }
+
         ShowDropdownQtt();
     }
 
@@ -62,13 +67,14 @@ public class ImagePairPanel : MonoBehaviour
                 index++;
             }
         }
-        previousDropdown = pairQtt.value+2;
+
+        previousDropdown = pairQtt.value + 2;
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.GetComponent<ImagePair>().Activate(i < previousDropdown);
-            
         }
     }
+    
 
     private void ResetDropdown()
     {

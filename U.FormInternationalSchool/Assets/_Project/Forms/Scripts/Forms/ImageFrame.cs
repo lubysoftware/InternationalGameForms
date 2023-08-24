@@ -62,7 +62,8 @@ public class ImageFrame : MonoBehaviour
         isActive = state;
         delete.gameObject.SetActive(state);
         updateImg.gameObject.SetActive(state);
-        newImageButton.gameObject.SetActive(!state);
+        if(newImageButton != null) 
+            newImageButton.gameObject.SetActive(!state);
     }
     
 } 
