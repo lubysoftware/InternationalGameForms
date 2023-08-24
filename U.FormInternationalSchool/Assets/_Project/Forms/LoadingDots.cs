@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using Microsoft.Unity.VisualStudio.Editor;
 using Image = UnityEngine.UI.Image;
 
 public class LoadingDots : MonoBehaviour
