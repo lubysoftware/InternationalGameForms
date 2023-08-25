@@ -73,6 +73,8 @@ public class ImagePairPanel : MonoBehaviour
         {
             transform.GetChild(i).gameObject.GetComponent<ImagePair>().Activate(i < previousDropdown);
         }
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup.transform as RectTransform);
     }
     
 

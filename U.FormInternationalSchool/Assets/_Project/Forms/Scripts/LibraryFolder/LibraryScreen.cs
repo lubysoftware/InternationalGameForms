@@ -26,6 +26,8 @@ public class LibraryScreen : MonoBehaviour
     [SerializeField] private TextMeshProUGUI pagesText;
     [SerializeField] private Image scroll;
     [SerializeField] private Image scrollBack;
+    [SerializeField] private TextMeshProUGUI title;
+    [SerializeField] private Image popUp;
     
     private GameTypeSO so;
 
@@ -67,6 +69,9 @@ public class LibraryScreen : MonoBehaviour
         //scroll
         scroll.color = so.colors[1];
         scrollBack.color = so.colors[3];
+
+        popUp.sprite = so.popup;
+        title.text = so.title;
     }
 
     public void InstantiateGamesList(ImageSeqList list)
