@@ -7,9 +7,7 @@ using FrostweepGames.Plugins.WebGLFileBrowser;
 using UnityEngine;
 using UnityEngine.Networking;
 using LubyLib.Core.Singletons;
-using Newtonsoft.Json;
 using Proyecto26;
-using Unity.VisualScripting;
 using AudioType = UnityEngine.AudioType;
 
 public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
@@ -29,6 +27,11 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         UnityWebRequest www = UnityWebRequest.Post(Constants.URL_DATABASE + postURL, json, "application/json");
 
         www.SetRequestHeader("authorization", "Bearer Luby2021");
+        www.SetRequestHeader("Access-Control-Allow-Credentials", "true");
+        www.SetRequestHeader("Access-Control-Allow-Headers", "Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time");
+        www.SetRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        www.SetRequestHeader("Access-Control-Allow-Origin", "*");
+        
         yield return www.SendWebRequest();
 
         if (www.result != UnityWebRequest.Result.Success)
@@ -57,6 +60,12 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
         www.SetRequestHeader("authorization", "Bearer Luby2021");
         www.SetRequestHeader("content-type", "application/json");
+        www.SetRequestHeader("Access-Control-Allow-Credentials", "true");
+        www.SetRequestHeader("Access-Control-Allow-Headers",
+            "Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time");
+        www.SetRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        www.SetRequestHeader("Access-Control-Allow-Origin", "*");
+        
         yield return www.SendWebRequest();
 
         if (www.result != UnityWebRequest.Result.Success)
@@ -110,8 +119,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         List<IMultipartFormSection> form = new List<IMultipartFormSection>();
         foreach (var file in fileList)
         {
-            Debug.LogError("Send files: file name " + file.fileInfo.fullName + " . extension: " +
-                           file.fileInfo.extension);
+            Debug.LogError("Send files: file name " + file.fileInfo.fullName + " . extension: " + file.fileInfo.extension);
             if (file.fileInfo.extension == "ogg" || file.fileInfo.extension == ".ogg")
             {
                 form.Add(new MultipartFormFileSection("arquivos", file.data, file.fileInfo.fullName, "audio/ogg"));
@@ -147,7 +155,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         wr.method = "POST";
         wr.redirectLimit = -1;
         wr.SetRequestHeader("authorization", "Bearer Luby2021");
-        yield return wr.Send();
+        yield return wr.SendWebRequest();
 
         if (wr.result != UnityWebRequest.Result.Success)
         {
