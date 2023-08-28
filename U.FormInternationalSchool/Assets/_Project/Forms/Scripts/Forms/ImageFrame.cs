@@ -24,9 +24,10 @@ public class ImageFrame : MonoBehaviour
     public int Index => index;
 
     public bool IsActive => isActive;
-    
-    
+
+
     public ImageElement Image => transform.GetComponentInChildren<ImageElement>();
+
     void Start()
     {
         updateImg.onClick.AddListener(OnUpdateButton);
@@ -40,12 +41,20 @@ public class ImageFrame : MonoBehaviour
         SetActiveState(false);
     }
 
-    public void SetCharIndex(char letter , int index)
+    public void SetCharIndex(char letter, int index, bool showIndex)
     {
         this.index = index;
+        if (showIndex)
+        {
+            SetIndexText(letter);
+        }
+}
+
+    private void SetIndexText(char letter)
+    {
         indextext.text = letter + (index + 1).ToString();
     }
-    
+
     public void OnDeleteButton()
     {
         Image.Delete();

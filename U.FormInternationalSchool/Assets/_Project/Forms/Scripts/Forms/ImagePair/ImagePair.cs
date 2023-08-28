@@ -22,12 +22,8 @@ public class ImagePair : MonoBehaviour
     {
         foreach (var frame in frames)
         {
-            Debug.LogError(Id +" is active " + frame.IsActive);
-            Debug.LogError(Id +" uploaded file null " + frame.Image.UploadedFile == null);
-            Debug.LogError(Id+ " is filled " + frame.Image.IsFilled);
             if (!frame.IsActive || (frame.Image.UploadedFile == null && !frame.Image.IsFilled))
             {
-                Debug.LogError("false");
                 return false;
             }
         }
@@ -86,12 +82,12 @@ public class ImagePair : MonoBehaviour
         }
     }
 
-    public void SetId(char id)
+    public void SetId(char id, bool showIndex)
     {
         Id = id;
         for (int i =0; i< frames.Length ; i++)
         {
-            frames[i].SetCharIndex(Id,i);
+            frames[i].SetCharIndex(Id,i, showIndex);
         }
     }
 

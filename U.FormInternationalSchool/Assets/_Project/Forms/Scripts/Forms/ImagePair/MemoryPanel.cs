@@ -1,13 +1,16 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
 
-public class ImagePairPanel : MonoBehaviour
+public class MemoryPanel : MonoBehaviour
 {
     [SerializeField] private TMP_Dropdown pairQtt;
 
@@ -19,7 +22,6 @@ public class ImagePairPanel : MonoBehaviour
     [SerializeField] private Button denyButton;
     [SerializeField] private TextMeshProUGUI alertMessage;
     [SerializeField] private LayoutGroup layoutGroup;
-
     public char[] idsList = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
 
     private int previousDropdown;
@@ -31,9 +33,8 @@ public class ImagePairPanel : MonoBehaviour
         pairQtt.onValueChanged.AddListener(OnDropDownChangeValue);
         for (int i = 0; i < transform.childCount; i++)
         {
-            transform.GetChild(i).GetComponent<ImagePair>().SetId(idsList[i], true);
+            transform.GetChild(i).GetComponent<ImagePair>().SetId(idsList[i], false);
         }
-
         //ShowDropdownQtt();
     }
 
@@ -59,7 +60,6 @@ public class ImagePairPanel : MonoBehaviour
         {
             if (transform.GetChild(i).GetComponent<ImagePair>().IsCompleted())
             {
-                transform.GetChild(i).GetComponent<ImagePair>().SetId(idsList[index], true);
                 transform.GetChild(i).SetSiblingIndex(index);
                 index++;
             }
