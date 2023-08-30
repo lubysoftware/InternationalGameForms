@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using TMPro;
@@ -9,6 +10,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
+using Image = UnityEngine.UI.Image;
 
 public class MemoryPanel : MonoBehaviour
 {
@@ -22,7 +24,9 @@ public class MemoryPanel : MonoBehaviour
     [SerializeField] private Button denyButton;
     [SerializeField] private TextMeshProUGUI alertMessage;
     [SerializeField] private LayoutGroup layoutGroup;
-    public char[] idsList = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
+    [SerializeField] private GridLayoutGroup gridLayout;
+    [HideInInspector]
+    public char[] idsList = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R' };
 
     private int previousDropdown;
 
@@ -35,17 +39,18 @@ public class MemoryPanel : MonoBehaviour
         {
             transform.GetChild(i).GetComponent<ImagePair>().SetId(idsList[i], false);
         }
-        //ShowDropdownQtt();
     }
 
     public void OnDropDownChangeValue(int newValue)
     {
         int completed = CompletedPairs();
-        int value = pairQtt.value + 2;
+        int value = 0;
+        int.TryParse(pairQtt.options[newValue].text, out value);
+        Debug.LogError("new value: " + value);
         if (completed > value)
         {
             alertMessage.text =
-                String.Format("Deseja excluir os últimos {1} pares preenchidos?", value, completed - value);
+                String.Format("Deseja excluir os últimos {0} pares preenchidos?", completed - value);
             confirmReducePanel.gameObject.SetActive(true);
             return;
         }
@@ -65,11 +70,13 @@ public class MemoryPanel : MonoBehaviour
             }
         }
 
-        previousDropdown = pairQtt.value + 2;
+        int.TryParse(pairQtt.options[pairQtt.value].text, out previousDropdown);
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.GetComponent<ImagePair>().Activate(i < previousDropdown);
         }
+
+        gridLayout.constraintCount = previousDropdown == 6 || previousDropdown == 12 || previousDropdown == 18 ? 3 : 2;
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup.transform as RectTransform);
     }
@@ -77,7 +84,7 @@ public class MemoryPanel : MonoBehaviour
 
     private void ResetDropdown()
     {
-        pairQtt.value = previousDropdown;
+        pairQtt.value = GetDropdownIndex(previousDropdown);
     }
 
     public int CompletedPairs()
@@ -96,8 +103,10 @@ public class MemoryPanel : MonoBehaviour
 
     public bool AllPairsFilled()
     {
-        Debug.LogError("completed pairs: " + CompletedPairs() + " value no pair qtt " + (pairQtt.value+2) );
-        return CompletedPairs() == pairQtt.value + 2;
+        Debug.LogError("completed pairs: " + CompletedPairs() + " value no pair qtt " + (pairQtt.options[pairQtt.value].text) );
+        var pair = 0;
+        int.TryParse(pairQtt.options[pairQtt.value].text, out pair);
+        return CompletedPairs() == pair;
     }
 
     public List<File> GetAllFiles()
@@ -127,12 +136,19 @@ public class MemoryPanel : MonoBehaviour
 
     public void FillImages(List<string[]> urls,Action<UploadFileElement, string, string> action)
     {
-        pairQtt.SetValueWithoutNotify(urls.Count -2);
+        Debug.LogError(urls.Count);
+        pairQtt.SetValueWithoutNotify(GetDropdownIndex(urls.Count));
         ShowDropdownQtt();
         for (int i = 0; i< urls.Count;i++)
         {
             pairs[i].FillImage(urls[i],action);
         }
+    }
+
+    private int GetDropdownIndex(int qtt)
+    {
+        Debug.LogError("index: "+ pairQtt.options.FindIndex(x => x.text == qtt.ToString()));
+        return pairQtt.options.FindIndex(x => x.text == qtt.ToString());
     }
 
 

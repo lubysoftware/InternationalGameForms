@@ -7,20 +7,19 @@ using LubyLib.Core.Extensions;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class MemoryForm : FormScreen
 {
     [SerializeField] private MemoryPanel panel;
-    [SerializeField] private TMP_InputField failsPenalty;
     private int pairsQtt;
     private Dictionary<char,List<string>> filledImages;
-    private int failsPenaltyValue = 0;
     public override void FinishDownloadingGame(string text)
     {
         if (text != null)
         {
             FillBaseData(JsonConvert.DeserializeObject<BaseJsonGet>(text));
-            FillGameData(JsonConvert.DeserializeObject<ImagePairJsonGet>(text));
+            FillGameData(JsonConvert.DeserializeObject<MemoryJsonGet>(text));
         }
     }
 
@@ -46,19 +45,6 @@ public class MemoryForm : FormScreen
     
     protected override void CheckGameFields()
     {
-        if (failsPenalty.text.IsNullEmptyOrWhitespace())
-        {
-            ShowError("Pontuação descontada por erro", ErrorType.EMPTY, null);
-            return;
-        }
-
-        int.TryParse(failsPenalty.text, out failsPenaltyValue);
-        if (failsPenaltyValue <= 0)
-        {
-            ShowError("Pontuação descontada por erro", ErrorType.GREATER_THAN, new int[]{0});
-            return;
-        }
-
         if (!panel.AllPairsFilled())
         {
             ShowError("Todos os pares devem ser preenchidos.", ErrorType.CUSTOM, null);
@@ -109,13 +95,13 @@ public class MemoryForm : FormScreen
         }
        
 
-        FormImagePairing completeForm = new FormImagePairing()
+        FormMatchCard completeForm = new FormMatchCard()
         {
             game = this.game,
-            gameData =  new ImagePairing()
+            gameData =  new MatchCard()
             {
-                failPenalty = failsPenaltyValue,
-                pairs = listPair
+                failPenalty = 0,
+                cardPairs = listPair
             }
         };
 
@@ -132,13 +118,12 @@ public class MemoryForm : FormScreen
         }
     }
 
-    private void FillGameData(ImagePairJsonGet json)
+    private void FillGameData(MemoryJsonGet json)
     {
-        failsPenalty.text = json.failPenalty.ToString();
         List<string[]> urls = new List<string[]>();
-        for (int i = 0; i < json.paringUnits.Count; i++)
+        for (int i = 0; i < json.cardPairs.Count; i++)
         {
-            string[] urlPair = new[] { json.paringUnits[i].firstImageUrl, json.paringUnits[i].secondImageUrl };
+            string[] urlPair = new[] { json.cardPairs[i].firstImageUrl, json.cardPairs[i].secondImageUrl };
             urls.Add(urlPair);
         }
         panel.FillImages(urls, FillUploadFiles);
@@ -146,6 +131,20 @@ public class MemoryForm : FormScreen
         CheckIfMaxQtt();
     }
 
+}
+
+[Serializable]
+public class MatchCard
+{
+    public int failPenalty;
+    public List<Pair> cardPairs;
+}
+
+[Serializable]
+public class FormMatchCard
+{
+    public FormBase game;
+    public MatchCard gameData;
 }
 
 

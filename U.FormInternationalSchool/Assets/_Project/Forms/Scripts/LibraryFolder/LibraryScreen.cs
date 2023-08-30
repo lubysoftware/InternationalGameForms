@@ -18,17 +18,14 @@ public class LibraryScreen : MonoBehaviour
 
     [SerializeField] private GameComponent[] component;
     [SerializeField] private LoadingDots loading;
-    [SerializeField] private Transform confirmDialog;
-    [SerializeField] private Button onYesButton;
-    [SerializeField] private Button onNoButton;
+    [SerializeField] private DeleteGamePanel confirmDialog;
     [SerializeField] private Button nextPage;
     [SerializeField] private Button previousPage;
     [SerializeField] private TextMeshProUGUI pagesText;
     [SerializeField] private Image scroll;
     [SerializeField] private Image scrollBack;
     [SerializeField] private TextMeshProUGUI title;
-    [SerializeField] private Image popUp;
-    
+
     private GameTypeSO so;
 
     private int gameId;
@@ -42,8 +39,6 @@ public class LibraryScreen : MonoBehaviour
     {
         newGame.onClick.AddListener(OnClickNewGame);
         backButton.onClick.AddListener(OnClickBack);
-        onYesButton.onClick.AddListener(ConfirmDeleteGame);
-        onNoButton.onClick.AddListener(DontDeleteGame);
         nextPage.onClick.AddListener(OnClickNext);
         previousPage.onClick.AddListener(OnClickPrevious);
         SceneDataCarrier.GetData(Constants.GAME_SO, out so);
@@ -60,18 +55,17 @@ public class LibraryScreen : MonoBehaviour
         nextPage.image.color = so.colors[4];
         previousPage.image.color = so.colors[4];
 
-        //new game button
+        //header
         newGame.image.color = so.colors[1];
-        
-        //searchBar
         searchTitle.image.color = so.colors[3];
+        title.text = so.title;
         
         //scroll
         scroll.color = so.colors[1];
         scrollBack.color = so.colors[3];
 
-        popUp.sprite = so.popup;
-        title.text = so.title;
+        //deletePanel
+        confirmDialog.SetPanelColors(so.colors[0], so.colors[3]);
     }
 
     public void InstantiateGamesList(ImageSeqList list)
@@ -101,6 +95,7 @@ public class LibraryScreen : MonoBehaviour
 
     public void OnDeleteGame(int id, GameComponent comp, string title)
     {
+        confirmDialog.SetNewDelete(ConfirmDeleteGame,DontDeleteGame,title);
         confirmDialog.gameObject.SetActive(true);
         gameId = id;
         this.comp = comp;
@@ -109,7 +104,6 @@ public class LibraryScreen : MonoBehaviour
 
     public void ConfirmDeleteGame()
     {
-        confirmDialog.gameObject.SetActive(false);
         APICommunication.Instance.StartDeleteData(gameId, this, gameTitle);
         gameId = -1;
         comp = null;
@@ -118,7 +112,6 @@ public class LibraryScreen : MonoBehaviour
     
     public void DontDeleteGame()
     {
-        confirmDialog.gameObject.SetActive(false);
         gameId = -1;
         this.comp =null;
     }
