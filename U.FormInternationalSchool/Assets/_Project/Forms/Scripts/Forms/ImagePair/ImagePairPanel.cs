@@ -19,7 +19,7 @@ public class ImagePairPanel : MonoBehaviour
     [SerializeField] private Button denyButton;
     [SerializeField] private TextMeshProUGUI alertMessage;
     [SerializeField] private LayoutGroup layoutGroup;
-
+    [SerializeField] private LayoutGroup layoutGroup2;
     public char[] idsList = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' };
 
     private int previousDropdown;
@@ -40,7 +40,8 @@ public class ImagePairPanel : MonoBehaviour
     public void OnDropDownChangeValue(int newValue)
     {
         int completed = CompletedPairs();
-        int value = pairQtt.value + 2;
+        int value = 0;
+        int.TryParse(pairQtt.options[newValue].text, out value);
         if (completed > value)
         {
             alertMessage.text =
@@ -65,19 +66,20 @@ public class ImagePairPanel : MonoBehaviour
             }
         }
 
-        previousDropdown = pairQtt.value + 2;
+        int.TryParse(pairQtt.options[pairQtt.value].text, out previousDropdown);
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.GetComponent<ImagePair>().Activate(i < previousDropdown);
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup.transform as RectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup2.transform as RectTransform);
     }
     
 
     private void ResetDropdown()
     {
-        pairQtt.value = previousDropdown;
+        pairQtt.value = GetDropdownIndex(previousDropdown);
     }
 
     public int CompletedPairs()
@@ -96,8 +98,9 @@ public class ImagePairPanel : MonoBehaviour
 
     public bool AllPairsFilled()
     {
-        Debug.LogError("completed pairs: " + CompletedPairs() + " value no pair qtt " + (pairQtt.value+2) );
-        return CompletedPairs() == pairQtt.value + 2;
+        var pair = 0;
+        int.TryParse(pairQtt.options[pairQtt.value].text, out pair);
+        return CompletedPairs() == pair;
     }
 
     public List<File> GetAllFiles()
@@ -127,12 +130,17 @@ public class ImagePairPanel : MonoBehaviour
 
     public void FillImages(List<string[]> urls,Action<UploadFileElement, string, string> action)
     {
-        pairQtt.SetValueWithoutNotify(urls.Count -2);
+        pairQtt.SetValueWithoutNotify(GetDropdownIndex(urls.Count));
         ShowDropdownQtt();
         for (int i = 0; i< urls.Count;i++)
         {
             pairs[i].FillImage(urls[i],action);
         }
+    }
+    
+    private int GetDropdownIndex(int qtt)
+    {
+        return pairQtt.options.FindIndex(x => x.text == qtt.ToString());
     }
 
 

@@ -24,6 +24,7 @@ public class MemoryPanel : MonoBehaviour
     [SerializeField] private Button denyButton;
     [SerializeField] private TextMeshProUGUI alertMessage;
     [SerializeField] private LayoutGroup layoutGroup;
+    [SerializeField] private LayoutGroup layoutGroup2;
     [SerializeField] private GridLayoutGroup gridLayout;
     [HideInInspector]
     public char[] idsList = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R' };
@@ -83,6 +84,7 @@ public class MemoryPanel : MonoBehaviour
         gridLayout.constraintCount = previousDropdown == 6 || previousDropdown == 12 || previousDropdown == 18 ? 3 : 2;
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup.transform as RectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup2.transform as RectTransform);
     }
     
 
