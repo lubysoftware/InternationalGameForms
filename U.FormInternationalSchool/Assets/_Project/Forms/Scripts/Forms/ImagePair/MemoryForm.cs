@@ -186,6 +186,7 @@ public class MemoryForm : FormScreen
 
         panel.FillImages(urls, FillUploadFiles);
         loadFileQtt = loadFileQtt + 1 + urls.Count * 2;
+        UpdateStarsPoints();
         CheckIfMaxQtt();
     }
 
