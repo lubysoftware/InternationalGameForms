@@ -30,6 +30,8 @@ public class MemoryPanel : MonoBehaviour
 
     private int previousDropdown;
 
+    private string pairTitle = "Imagem par ";
+
     private void Start()
     {
         confirmButton.onClick.AddListener(ShowDropdownQtt);
@@ -38,6 +40,7 @@ public class MemoryPanel : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).GetComponent<ImagePair>().SetId(idsList[i], false);
+            transform.GetChild(i).GetComponent<ImagePair>().ShowTitle(pairTitle + (i +1));
         }
     }
 
@@ -74,6 +77,7 @@ public class MemoryPanel : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.GetComponent<ImagePair>().Activate(i < previousDropdown);
+            transform.GetChild(i).GetComponent<ImagePair>().ShowTitle(pairTitle + (i+1));
         }
 
         gridLayout.constraintCount = previousDropdown == 6 || previousDropdown == 12 || previousDropdown == 18 ? 3 : 2;
@@ -147,7 +151,6 @@ public class MemoryPanel : MonoBehaviour
 
     private int GetDropdownIndex(int qtt)
     {
-        Debug.LogError("index: "+ pairQtt.options.FindIndex(x => x.text == qtt.ToString()));
         return pairQtt.options.FindIndex(x => x.text == qtt.ToString());
     }
 

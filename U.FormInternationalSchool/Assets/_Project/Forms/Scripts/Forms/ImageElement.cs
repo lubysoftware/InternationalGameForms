@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 public class ImageElement : UploadFileElement
 {
     public bool IsActive = false;
-    
+    [SerializeField] private bool managedByParent = true;
     public event Action<bool> OnUploadFile;
     public event Action<int, bool> OnUploadFileIndex;
     public event Action<ImageElement> OnDelete;
@@ -32,6 +33,8 @@ public class ImageElement : UploadFileElement
         base.FilesWereOpenedEventHandler(files);
         OnUploadFile?.Invoke(IsActive);
         OnUploadFileIndex?.Invoke(Index,IsActive);
+        if(!managedByParent)
+            Init();
     }
 
     protected override void CleanupButtonOnClickHandler()
@@ -47,5 +50,12 @@ public class ImageElement : UploadFileElement
         IsActive = false;
         IsFilled = false;
         OnDelete?.Invoke(this);
+    }
+    
+    public override void FinishedDownloadFileData(Texture2D texture)
+    {
+        base.FinishedDownloadFileData(texture);
+        if(!managedByParent)
+            Init();
     }
 }

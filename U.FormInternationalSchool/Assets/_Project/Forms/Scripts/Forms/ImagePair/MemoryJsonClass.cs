@@ -48,7 +48,7 @@ public class MemoryJsonGet
     public bool deleted;
     public List<SupportMaterialGet> SupportMaterial;
     public int matchCardId;
-    public int failPenalty;
+    public string backImageUrl;
     public List<MatchPairGet> cardPairs;
 }
 

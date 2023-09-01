@@ -28,7 +28,7 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private UploadFileElement backgroundImage;
     [SerializeField] protected UploadFileElement backgroundMusic;
     [SerializeField] private Toggle timer;
-    [SerializeField] private TMP_InputField timeMin, timeSec;
+    [SerializeField] protected TMP_InputField timeMin, timeSec;
     [SerializeField] private Button openMaterialSupportPanel;
     [FormerlySerializedAs("supprotMaterialPanel")] [SerializeField] private SupportMaterialCreation supportMaterialPanel;
     [SerializeField] private TMP_InputField timerBonus;
@@ -46,7 +46,7 @@ public class FormScreen : MonoBehaviour
     private Dictionary<string, string> urlDict = new Dictionary<string, string>();
     private List<string> fields = new() { Constants.IMAGE_TITLE, Constants.MUSIC_BACK, Constants.IMAGE_BACK ,Constants.AUDIO_PT,Constants.AUDIO_EN };
 
-    private int timeInSec = 0;
+    protected int timeInSec = 0;
     private int bonusTimer = 0;
     private int supportMaterialImgsQtt = 0;
 
@@ -178,31 +178,13 @@ public class FormScreen : MonoBehaviour
                 return;
             }
 
-            int min, sec = -1;
-            int.TryParse(timeMin.text, out min);
-            int.TryParse(timeSec.text, out sec);
-            if (min + sec <= 0)
+            if (!CalculateTimeInSec())
             {
-                ShowError("Tempo do timer", ErrorType.GREATER_THAN, new int[]{0});
                 return;
             }
-            if (min < 0)
-            {
-                ShowError("Minutos do timer", ErrorType.GREATER_OR_EQUAL, new int[]{0});
-                return;
-            }
-
-            if (sec < 0 || sec > 59)
-            {
-                ShowError("Segundos do timer", ErrorType.BETWEEN, new int[]{0,59});
-                return;
-            }
-
-            timeInSec = min * 60 + sec;
         }
         else
         {
-            
             timeInSec = 0;
         }
 
@@ -216,6 +198,32 @@ public class FormScreen : MonoBehaviour
         
         CheckGameFields();
 
+    }
+
+    protected bool CalculateTimeInSec()
+    {
+        int min, sec = -1;
+        int.TryParse(timeMin.text, out min);
+        int.TryParse(timeSec.text, out sec);
+        if (min + sec <= 0)
+        {
+            ShowError("Tempo do timer", ErrorType.GREATER_THAN, new int[]{0});
+            return false;
+        }
+        if (min < 0)
+        {
+            ShowError("Minutos do timer", ErrorType.GREATER_OR_EQUAL, new int[]{0});
+            return false;
+        }
+
+        if (sec < 0 || sec > 59)
+        {
+            ShowError("Segundos do timer", ErrorType.BETWEEN, new int[]{0,59});
+            return false;
+        }
+
+        timeInSec = min * 60 + sec;
+        return true;
     }
 
     protected void FillBaseData(BaseJsonGet baseForm)

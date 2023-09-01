@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using JetBrains.Annotations;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ public class ImagePair : MonoBehaviour
 {
     [SerializeField] private ImageFrame[] frames;
     public char Id;
+    [SerializeField]
+    private TextMeshProUGUI titleText;
 
     private void Start()
     {
@@ -89,6 +92,11 @@ public class ImagePair : MonoBehaviour
         {
             frames[i].SetCharIndex(Id,i, showIndex);
         }
+    }
+
+    public void ShowTitle(string title)
+    {
+        titleText.text = title;
     }
 
     public void ClearPair()

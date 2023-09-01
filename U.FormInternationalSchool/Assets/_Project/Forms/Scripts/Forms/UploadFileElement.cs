@@ -244,7 +244,7 @@ public class UploadFileElement : MonoBehaviour
         }
     }
 
-    public void FinishedDownloadFileData(Texture2D texture)
+    public virtual void FinishedDownloadFileData(Texture2D texture)
     {
         Sprite s = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height),
             new Vector2(0.5f, 0.5f));
