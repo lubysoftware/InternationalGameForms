@@ -645,6 +645,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3193497841733514129}
     m_Modifications:
+    - target: {fileID: 912559323167381878, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 912559323167381878, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 912559323167381878, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 912559323167381878, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1945715973250529245, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1945715973250529245, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3253683555510038040, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3253683555510038040, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3253683555510038040, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3253683555510038040, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5718813677354473300, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
       propertyPath: m_Name
       value: PontuacaoArea
@@ -723,6 +763,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5986691274027191733, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7340873494549183644, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7340873494549183644, guid: ff842fddd217f80479cf26bdebac006a, type: 3}
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

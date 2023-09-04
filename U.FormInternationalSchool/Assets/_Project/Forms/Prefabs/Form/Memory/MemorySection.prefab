@@ -207,9 +207,9 @@ RectTransform:
   - {fileID: 7788372823312264795}
   m_Father: {fileID: 3772681248485292463}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -345.902}
   m_SizeDelta: {x: 735, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &781123762394756441
@@ -295,6 +295,7 @@ MonoBehaviour:
   denyButton: {fileID: 0}
   alertMessage: {fileID: 0}
   layoutGroup: {fileID: 3361538396908488741}
+  layoutGroup2: {fileID: 0}
   gridLayout: {fileID: 781123762394756441}
   idsList: 4100420043004400450046004700480049004a004b004c004d004e004f00500051005200
 --- !u!1 &180832325736784092

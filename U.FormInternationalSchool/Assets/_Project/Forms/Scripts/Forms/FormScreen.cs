@@ -568,7 +568,7 @@ public class FormScreen : MonoBehaviour
     #endregion
     
     
-    protected void ShowError(string field, ErrorType type, int[] values)
+    public void ShowError(string field, ErrorType type, int[] values)
     {
         string error = "error";
         switch (type)
