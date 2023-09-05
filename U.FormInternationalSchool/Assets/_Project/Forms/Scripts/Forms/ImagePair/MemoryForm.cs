@@ -16,9 +16,9 @@ public class MemoryForm : FormScreen
     private int pairsQtt;
     private Dictionary<char, List<string>> filledImages;
     [SerializeField] private ImageFrame backCardImage;
-    [SerializeField] private TMP_InputField oneStar;
-    [SerializeField] private TMP_InputField twoStars;
-    [SerializeField] private TMP_InputField threeStars;
+    [SerializeField] private TextMeshProUGUI oneStar;
+    [SerializeField] private TextMeshProUGUI twoStars;
+    [SerializeField] private TextMeshProUGUI threeStars;
 
     private string backImagePath = "";
 
@@ -194,20 +194,30 @@ public class MemoryForm : FormScreen
     {
         if (CalculateTimeInSec())
         {
-
-            Debug.LogError(timeInSec );
             FillTimerText(oneStar,timeInSec * 0.3f);
             FillTimerText(twoStars,timeInSec * 0.7f);
             FillTimerText(threeStars, timeInSec);
         }
     }
 
-    private void FillTimerText(TMP_InputField inputField, float time)
+    private void FillTimerText(TextMeshProUGUI field, float time)
     {
-        Debug.LogError("time? " +(int) time);
+        int hour = 0;
         int min = (int)time / 60;
         int sec = (int)time - min * 60;
-        inputField.text =  String.Format("{0:00}:{1:00}", min,sec);
+        if (min >= 60)
+        {
+            hour = min / 60;
+            min = min - hour * 60;
+        }
+        if (hour > 0)
+        {
+            field.text =  String.Format("{0:00}:{1:00}:{2:00}", hour,min,sec);
+        }
+        else
+        {
+            field.text =  String.Format("{0:00}:{1:00}", min,sec);
+        }
     }
 
 }
