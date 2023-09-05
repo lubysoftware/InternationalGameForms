@@ -84,7 +84,7 @@ public class CellItem : MonoBehaviour
 
     public bool CanReplace(string word)
     {
-        return words.Count == 1 && word == words[0];
+        return words.Count == 1 && word.ToUpperInvariant() == words[0].ToUpperInvariant();
     }
 
     public void UpdateId(int number)

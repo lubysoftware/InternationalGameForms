@@ -86,6 +86,7 @@ public class NewWordInput : MonoBehaviour
                     word = wordText.text;
                     isHorizontal = isHorizontalToggle.isOn;
                     SetInteractable(false);
+                    CrosswordPanel.Instance.CancelEditing(this);
                 }
             }
         }

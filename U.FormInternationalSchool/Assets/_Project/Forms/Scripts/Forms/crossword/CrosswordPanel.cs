@@ -39,13 +39,6 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
 
     private NewWordInput editingInput = null;
 
-    public struct Word
-    {
-        public string word;
-        public bool isHorizontal;
-        public List<CellItem> cells;
-    }
-    
     public enum CrosswordError
     {
         FIT,

@@ -43,7 +43,7 @@ public class WordsGrid : MonoBehaviour
                 return true;
             }
 
-            if (letter == cellsDictionary[coord].Letter)
+            if (letter.ToString().ToUpperInvariant() == cellsDictionary[coord].Letter.ToString().ToUpperInvariant())
             {
                 return true;
             }
