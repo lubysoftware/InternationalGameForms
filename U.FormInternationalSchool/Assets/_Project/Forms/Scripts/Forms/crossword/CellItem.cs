@@ -33,6 +33,7 @@ public class CellItem : MonoBehaviour
         public char row;
         public int column;
     }
+    
 
     private void Start()
     {
@@ -54,7 +55,7 @@ public class CellItem : MonoBehaviour
     public void FillCell(char letter, string word, int number)
     {
         Letter = letter;
-        if (id.text.IsNullEmptyOrWhitespace())
+        if (number > 0)
         {
             UpdateId(number);
         }
@@ -84,7 +85,7 @@ public class CellItem : MonoBehaviour
 
     public bool CanReplace(string word)
     {
-        return words.Count == 1 && word.ToUpperInvariant() == words[0].ToUpperInvariant();
+        return words != null && words.Count == 1 && word.ToUpperInvariant() == words[0].ToUpperInvariant();
     }
 
     public void UpdateId(int number)

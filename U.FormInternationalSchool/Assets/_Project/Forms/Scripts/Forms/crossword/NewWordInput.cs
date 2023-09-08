@@ -7,6 +7,7 @@ using LubyLib.Core.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
 using Toggle = UnityEngine.UI.Toggle;
@@ -36,11 +37,16 @@ public class NewWordInput : MonoBehaviour
     [SerializeField] private Button deleteButton;
     public int Index;
 
-    public event Action<NewWordInput> OnDelete;
+    public event Action<NewWordInput, bool> OnDelete;
 
-    public CellItem.Coord c;
-    public bool isHorizontal;
-    public string word;
+    public WordInfo Info;
+    public struct WordInfo
+    {
+        public CellItem.Coord Coord;
+        public bool IsHorizontal;
+        public string Word;
+    }
+    
 
     void Start()
     {
@@ -80,11 +86,17 @@ public class NewWordInput : MonoBehaviour
                     row = dropRow,
                     column = dropColumn
                 };
-                if(CrosswordPanel.Instance.CheckWord(coord,wordText.text,isHorizontalToggle.isOn, word, Index))
+                WordInfo newInfo = new WordInfo()
                 {
-                    c = coord;
-                    word = wordText.text;
-                    isHorizontal = isHorizontalToggle.isOn;
+                    Coord = coord,
+                    Word = wordText.text,
+                    IsHorizontal = isHorizontalToggle.isOn
+                };
+                if(CrosswordPanel.Instance.CheckWord(newInfo, Info.Word, Index))
+                {
+                    Info.Coord = coord;
+                    Info.Word = wordText.text;
+                    Info.IsHorizontal = isHorizontalToggle.isOn;
                     SetInteractable(false);
                     CrosswordPanel.Instance.CancelEditing(this);
                 }
@@ -99,15 +111,15 @@ public class NewWordInput : MonoBehaviour
         CrosswordPanel.Instance.CancelEditing(this);
     }
 
-    private void SetData(CellItem.Coord coord, string word, bool isHorizontal)
+    private void SetData(WordInfo info)
     {
-        rowDrop.SetValueWithoutNotify( rowDrop.options.FindIndex(x => x.text == coord.row.ToString()));
-        columnDrop.SetValueWithoutNotify( columnDrop.options.FindIndex(x => x.text == coord.column.ToString()));
-        wordText.text = word;
-        isHorizontalToggle.SetIsOnWithoutNotify(isHorizontal);
-        c = coord;
-        this.word = word;
-        this.isHorizontal = isHorizontal;
+        rowDrop.SetValueWithoutNotify( rowDrop.options.FindIndex(x => x.text == info.Coord.row.ToString()));
+        columnDrop.SetValueWithoutNotify( columnDrop.options.FindIndex(x => x.text == info.Coord.column.ToString()));
+        wordText.text = info.Word;
+        isHorizontalToggle.SetIsOnWithoutNotify(info.IsHorizontal);
+        Info.Coord = info.Coord;
+        Info.Word = info.Word;
+        Info.IsHorizontal = info.IsHorizontal;
     }
 
     public void SetCoords(CellItem.Coord coord)
@@ -118,13 +130,14 @@ public class NewWordInput : MonoBehaviour
 
     private void ResetData()
     {
-        SetData(c,word,isHorizontal);
+        SetData(Info);
     }
 
-    public void Init(int index, CellItem.Coord coord, string word, bool isHorizontal)
+    public void Init(int index, WordInfo info)
     {
         SetIndex(index);
-        SetData(coord,word,isHorizontal);
+        
+        SetData(info);
     }
 
     public void SetIndex(int index)
@@ -135,7 +148,7 @@ public class NewWordInput : MonoBehaviour
 
     private void OnDeleteButton()
     {
-        OnDelete?.Invoke(this);
+        OnDelete?.Invoke(this, true);
     }
     
     private void SetInteractable(bool status)
@@ -144,6 +157,15 @@ public class NewWordInput : MonoBehaviour
         rowDrop.interactable = status;
         columnDrop.interactable = status;
         isHorizontalToggle.interactable = status;
+        isHorizontalToggle.graphic.color = status? new Color(1, 1, 1, 1f) : new Color(0.78f, 0.78f, 0.78f, 0.5f);
+        if (isHorizontalToggle.isOn)
+        {
+            isHorizontalToggle.targetGraphic.color = status? new Color(1, 1, 1, 1f) : new Color(1, 1, 1, 0f);
+        }
+        else
+        {
+            isHorizontalToggle.targetGraphic.color = status? new Color(1, 1, 1, 1f) : new Color(0.78f, 0.78f, 0.78f, 0.5f);
+        }
         checkButton.gameObject.SetActive(status);
         cancelButton.gameObject.SetActive(status);
         editButton.gameObject.SetActive(!status);

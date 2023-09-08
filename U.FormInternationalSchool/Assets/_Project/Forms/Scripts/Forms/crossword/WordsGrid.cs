@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using LubyLib.Core.Extensions;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.Serialization;
@@ -47,26 +48,26 @@ public class WordsGrid : MonoBehaviour
             {
                 return true;
             }
-            else
-            {
+
+            if(previousWord != null && !previousWord.IsNullEmptyOrWhitespace())
                 return cellsDictionary[coord].CanReplace(previousWord);
-            }
+            
         }
 
         return false;
     }
 
-    public bool CheckInterval(CellItem.Coord firstCoord, string word, bool isHorizontal, string previousWord)
+    public bool CheckInterval(NewWordInput.WordInfo info, string previousWord)
     {
-        if (isHorizontal)
+        if (info.IsHorizontal)
         {
-            for (int i = 0; i < word.Length; i++)
+            for (int i = 0; i < info.Word.Length; i++)
             {
                 CellItem.Coord currentCoord = new CellItem.Coord(){
-                        row = firstCoord.row,
-                        column = firstCoord.column + i
+                        row = info.Coord.row,
+                        column = info.Coord.column + i
                 };
-                if (!CheckCellAvailability(currentCoord, word[i], previousWord))
+                if (!CheckCellAvailability(currentCoord, info.Word[i], previousWord))
                 {
                     return false;
                 }
@@ -74,15 +75,15 @@ public class WordsGrid : MonoBehaviour
         }
         else
         {
-            int j = idsRow.ToList().FindIndex(x => x == firstCoord.row);
-            for (int i = 0; i < word.Length; i++)
+            int j = idsRow.ToList().FindIndex(x => x == info.Coord.row);
+            for (int i = 0; i < info.Word.Length; i++)
             {
                 CellItem.Coord currentCoord = new CellItem.Coord()
                 {
                     row = idsRow[j+i],
-                    column = firstCoord.column
+                    column = info.Coord.column
                 };
-                if (!CheckCellAvailability(currentCoord, word[i], word))
+                if (!CheckCellAvailability(currentCoord, info.Word[i],info.Word))
                 {
                     return false;
                 }
@@ -92,80 +93,80 @@ public class WordsGrid : MonoBehaviour
         return true;
     }
 
-    public bool CheckIfFitOnGrid(CellItem.Coord firstCoord, int wordLength, bool isHorizontal)
+    public bool CheckIfFitOnGrid(NewWordInput.WordInfo info)
     {
         CellItem.Coord lastCoord = new CellItem.Coord();
-        if (isHorizontal)
+        if (info.IsHorizontal)
         {
             lastCoord = new CellItem.Coord()
             {
-                row = firstCoord.row,
-                column = firstCoord.column + wordLength - 1
+                row = info.Coord.row,
+                column = info.Coord.column + info.Word.Length - 1
             };
             return cellsDictionary.ContainsKey(lastCoord);
         }
         
-        int j = idsRow.ToList().FindIndex(x => x == firstCoord.row);
+        int j = idsRow.ToList().FindIndex(x => x == info.Coord.row);
        
-        if (j + wordLength - 1 > idsRow.Length) return false;
+        if (j + info.Word.Length - 1 > idsRow.Length) return false;
        
         return true;
     }
 
-    public void FillInterval(CellItem.Coord firstCoord, string word, bool isHorizontal, int index)
+    public void FillInterval(NewWordInput.WordInfo info, int index)
     {
-        if (isHorizontal)
+        if (info.IsHorizontal)
         {
-            for (int i = 0; i < word.Length; i++)
+            for (int i = 0; i < info.Word.Length; i++)
             {
                 CellItem.Coord currentCoord = new CellItem.Coord(){
-                    row = firstCoord.row,
-                    column = firstCoord.column + i
+                    row = info.Coord.row,
+                    column =info.Coord.column + i
                 };
                 
-                cellsDictionary[currentCoord].FillCell(word[i], word, i == 0 ? index : -1);
+                cellsDictionary[currentCoord].FillCell(info.Word[i], info.Word, i == 0 ? index : -1);
             }
         }
         else
         {
-            int j = idsRow.ToList().FindIndex(x => x == firstCoord.row);
-            for (int i = 0; i < word.Length; i++)
+            int j = idsRow.ToList().FindIndex(x => x == info.Coord.row);
+            for (int i = 0; i < info.Word.Length; i++)
             {
                 CellItem.Coord currentCoord = new CellItem.Coord()
                 {
                     row = idsRow[j+i],
-                    column = firstCoord.column
+                    column = info.Coord.column
                 };
 
-                cellsDictionary[currentCoord].FillCell(word[i], word,  i == 0 ? index : -1);
+                cellsDictionary[currentCoord].FillCell(info.Word[i], info.Word,  i == 0 ? index : -1);
             }
         }
     }
     
-    public void ClearInterval(CellItem.Coord firstCoord, string word, bool isHorizontal)
+    public void ClearInterval(NewWordInput.WordInfo info)
     {
-        if (isHorizontal)
+        if (info.IsHorizontal)
         {
-            for (int i = 0; i < word.Length; i++)
+            for (int i = 0; i < info.Word.Length; i++)
             {
                 CellItem.Coord currentCoord = new CellItem.Coord(){
-                    row = firstCoord.row,
-                    column = firstCoord.column + i
+                    row = info.Coord.row,
+                    column =info.Coord.column + i
                 };
-                cellsDictionary[currentCoord].ClearCell(word);
+                cellsDictionary[currentCoord].ClearCell(info.Word);
             }
         }
         else
         {
-            int j = idsRow.ToList().FindIndex(x => x == firstCoord.row);
-            for (int i = 0; i < word.Length; i++)
+            int j = idsRow.ToList().FindIndex(x => x == info.Coord.row);
+            for (int i = 0; i < info.Word.Length; i++)
             {
                 CellItem.Coord currentCoord = new CellItem.Coord()
                 {
                     row = idsRow[j+i],
-                    column = firstCoord.column
+                    column = info.Coord.column
                 };
-                cellsDictionary[currentCoord].ClearCell(word);
+                cellsDictionary[currentCoord].ClearCell(info.Word);
             }
         }
     }

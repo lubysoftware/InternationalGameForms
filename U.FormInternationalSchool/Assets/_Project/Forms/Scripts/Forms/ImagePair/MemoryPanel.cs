@@ -81,7 +81,7 @@ public class MemoryPanel : MonoBehaviour
             transform.GetChild(i).GetComponent<ImagePair>().ShowTitle(pairTitle + (i+1));
         }
 
-        gridLayout.constraintCount = previousDropdown == 6 || previousDropdown == 12 || previousDropdown == 18 ? 3 : 2;
+        gridLayout.constraintCount = previousDropdown == 2 || previousDropdown == 4 || previousDropdown == 8  ? 2 : 3;
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup.transform as RectTransform);
         LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup2.transform as RectTransform);
