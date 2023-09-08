@@ -1300,8 +1300,6 @@ MonoBehaviour:
   editButton: {fileID: 5974726846074221249}
   deleteButton: {fileID: 3245541914320047906}
   Index: 0
-  isHorizontal: 0
-  word: 
 --- !u!114 &38750147262961061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1760,8 +1758,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 38934be79241c674894f8f5512aaab34, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 12f3d070233fdac4ead09b586c9ae87b, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -4082,8 +4080,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 38934be79241c674894f8f5512aaab34, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 12f3d070233fdac4ead09b586c9ae87b, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
