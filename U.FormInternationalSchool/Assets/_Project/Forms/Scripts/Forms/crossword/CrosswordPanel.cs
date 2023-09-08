@@ -232,7 +232,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
     {
         int max = maxItems[Utils.BoolToInt(isImage)];
         gridLayout.constraintCount = Utils.BoolToInt(isImage) + 1;
-        if (this.isImage)
+        if (isImage)
         {
             gridLayout.cellSize = new Vector2(400, 250);
         }
