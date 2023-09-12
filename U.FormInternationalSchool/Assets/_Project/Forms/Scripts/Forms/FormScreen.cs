@@ -300,7 +300,6 @@ public class FormScreen : MonoBehaviour
         urlDict.Clear();
         if (titleImage.UploadedFile != null)
         {
-            Debug.LogError("name: "+ titleImage.UploadedFile.fileInfo.name +" fullname: "+ titleImage.UploadedFile.fileInfo.fullName + " extension: " + titleImage.UploadedFile.fileInfo.extension);
             newUrlFiles.TryAdd(fields[0],titleImage.UploadedFile.fileInfo.name);
             files.Add(titleImage.UploadedFile);
         }
@@ -431,7 +430,7 @@ public class FormScreen : MonoBehaviour
 
     public virtual void SerializeBaseFormData(string[] urls)
     {
-        Debug.LogError("serialize base" + urls);
+        Debug.LogError("serialize base");
         List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
         if (urls != null)
         {
@@ -566,7 +565,6 @@ public class FormScreen : MonoBehaviour
     
 
     #endregion
-    
     
     public void ShowError(string field, ErrorType type, int[] values)
     {

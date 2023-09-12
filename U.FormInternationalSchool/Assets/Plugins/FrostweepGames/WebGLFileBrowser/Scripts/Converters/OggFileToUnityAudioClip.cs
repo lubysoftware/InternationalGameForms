@@ -18,7 +18,7 @@ namespace FrostweepGames.Plugins.WebGLFileBrowser
         {
             using (var vorbis = new NVorbis.VorbisReader(new MemoryStream(fileBytes, false)))
             {
-                Debug.Log($"Found ogg ch={vorbis.Channels} freq={vorbis.SampleRate} samp={vorbis.TotalSamples}");
+               // Debug.Log($"Found ogg ch={vorbis.Channels} freq={vorbis.SampleRate} samp={vorbis.TotalSamples}");
                 float[] _audioBuffer = new float[vorbis.TotalSamples]; // Just dump everything
                 int read = vorbis.ReadSamples(_audioBuffer, 0, (int)vorbis.TotalSamples);
                 AudioClip audioClip = AudioClip.Create(name, (int)(vorbis.TotalSamples / vorbis.Channels), vorbis.Channels, vorbis.SampleRate, false);

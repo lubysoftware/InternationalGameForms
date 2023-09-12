@@ -1299,7 +1299,13 @@ MonoBehaviour:
   cancelButton: {fileID: 4961036014343686120}
   editButton: {fileID: 5974726846074221249}
   deleteButton: {fileID: 3245541914320047906}
+  isImageType: 0
+  overlay: {fileID: 0}
   Index: 0
+  Info:
+    index: 0
+    IsHorizontal: 0
+    Word: 
 --- !u!114 &38750147262961061
 MonoBehaviour:
   m_ObjectHideFlags: 0

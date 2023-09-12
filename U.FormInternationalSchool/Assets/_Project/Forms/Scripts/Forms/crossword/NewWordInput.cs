@@ -10,6 +10,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
+using Image = UnityEngine.UI.Image;
 using Toggle = UnityEngine.UI.Toggle;
 
 public class NewWordInput : MonoBehaviour
@@ -35,13 +36,21 @@ public class NewWordInput : MonoBehaviour
     [SerializeField] private Button editButton;
 
     [SerializeField] private Button deleteButton;
+
+    [SerializeField] private bool isImageType;
     public int Index;
 
     public event Action<NewWordInput, bool> OnDelete;
 
+    public ImageFrame imageComp => image;
+    public bool IsFilled => isImageType ? image.Image.IsFilled || image.Image.UploadedFile != null : !tipText.text.IsNullEmptyOrWhitespace();
+    
+    
     public WordInfo Info;
+    [Serializable]
     public struct WordInfo
     {
+        public int index;
         public CellItem.Coord Coord;
         public bool IsHorizontal;
         public string Word;
@@ -88,12 +97,14 @@ public class NewWordInput : MonoBehaviour
                 };
                 WordInfo newInfo = new WordInfo()
                 {
+                    index = Index,
                     Coord = coord,
                     Word = wordText.text,
                     IsHorizontal = isHorizontalToggle.isOn
                 };
-                if(CrosswordPanel.Instance.CheckWord(newInfo, Info.Word, Index))
+                if(CrosswordPanel.Instance.CheckWord(newInfo, Info.Word, true))
                 {
+                    Info.index = Index;
                     Info.Coord = coord;
                     Info.Word = wordText.text;
                     Info.IsHorizontal = isHorizontalToggle.isOn;
@@ -117,9 +128,7 @@ public class NewWordInput : MonoBehaviour
         columnDrop.SetValueWithoutNotify( columnDrop.options.FindIndex(x => x.text == info.Coord.column.ToString()));
         wordText.text = info.Word;
         isHorizontalToggle.SetIsOnWithoutNotify(info.IsHorizontal);
-        Info.Coord = info.Coord;
-        Info.Word = info.Word;
-        Info.IsHorizontal = info.IsHorizontal;
+        Info = info;
     }
 
     public void SetCoords(CellItem.Coord coord)
@@ -136,7 +145,6 @@ public class NewWordInput : MonoBehaviour
     public void Init(int index, WordInfo info)
     {
         SetIndex(index);
-        
         SetData(info);
     }
 
@@ -177,9 +185,20 @@ public class NewWordInput : MonoBehaviour
         SetInteractable(true);
         CrosswordPanel.Instance.SetEdit(this);
     }
-    public void ChangeType(bool isImage)
+
+    public void SetTipText(string tip)
     {
-        tipText.gameObject.SetActive(!isImage);
-        image.gameObject.SetActive(isImage);
+        tipText.text = tip;
+    }
+
+    public string GetTipText()
+    {
+        return tipText.text;
+    }
+
+    public void EditStatus(bool status)
+    {
+        editButton.interactable = status;
+        deleteButton.interactable = status;
     }
 }

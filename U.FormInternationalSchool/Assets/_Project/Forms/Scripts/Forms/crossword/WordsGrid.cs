@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class WordsGrid : MonoBehaviour
 {
-    public char[] idsRow = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
+    public static char[] idsRow = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
     [SerializeField] private int cellsQtt = 100;
     [SerializeField] private CellItem cell;
     [SerializeField] private LayoutGroup layoutGroup;
@@ -83,7 +83,7 @@ public class WordsGrid : MonoBehaviour
                     row = idsRow[j+i],
                     column = info.Coord.column
                 };
-                if (!CheckCellAvailability(currentCoord, info.Word[i],info.Word))
+                if (!CheckCellAvailability(currentCoord, info.Word[i],previousWord))
                 {
                     return false;
                 }

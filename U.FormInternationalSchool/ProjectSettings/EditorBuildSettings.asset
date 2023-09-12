@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Forms/Scenes/Form_Memory.unity
     guid: 4e6dc84c3f1523e499c426acea6dd543
+  - enabled: 1
+    path: Assets/_Project/Forms/Scenes/Form_Crossword.unity
+    guid: 5b3cc934e82f3ed41b49c1e1d70bc1ee
   m_configObjects: {}

@@ -120,19 +120,6 @@ public class UploadFileElement : MonoBehaviour
         {
             var file = _loadedFiles[0];
 
-            if (isImage)
-            {
-                if (_loadedFiles.Length > 1)
-                {
-                    Debug.LogError($"Loaded files amount: {files.Length}\n");
-                }
-
-                foreach (var loadedFile in _loadedFiles)
-                {
-                    Debug.LogError($"Name: {loadedFile.fileInfo.name}{loadedFile.fileInfo.extension}");
-                }
-            }
-
             if (deleteFile != null)
                 deleteFile.gameObject.SetActive(true);
 
@@ -169,7 +156,7 @@ public class UploadFileElement : MonoBehaviour
       */
                     if (file.IsAudio(AudioType.OGG) || file.IsAudio(AudioType.OGGVORBIS))
                     {
-                        Debug.Log("File is OGG. " + file.fileInfo.extension);
+                       // Debug.Log("File is OGG. " + file.fileInfo.extension);
                         AudioClip clip = file.ToAudioClip();
 
                         WebGLFileBrowser.RegisterFileObject(clip);

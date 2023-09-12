@@ -2976,6 +2976,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: NewWord_Image
       objectReference: {fileID: 0}
+    - target: {fileID: 3828278962835058723, guid: 550d9231b5d559840b1ab3c442da6daf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4272730202745163488, guid: 550d9231b5d559840b1ab3c442da6daf, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -3188,6 +3192,10 @@ PrefabInstance:
       propertyPath: columnDrop
       value: 
       objectReference: {fileID: 5130027714256674847}
+    - target: {fileID: 7374998357212310677, guid: 550d9231b5d559840b1ab3c442da6daf, type: 3}
+      propertyPath: isImageType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7374998357212310677, guid: 550d9231b5d559840b1ab3c442da6daf, type: 3}
       propertyPath: isHorizontalToggle
       value: 
