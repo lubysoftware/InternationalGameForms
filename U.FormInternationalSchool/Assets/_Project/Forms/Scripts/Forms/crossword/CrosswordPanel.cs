@@ -378,7 +378,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
         {
             NewWordInput.WordInfo info = new NewWordInput.WordInfo()
             {
-                Coord = new CellItem.Coord(){row = WordsGrid.idsRow[words[i].posX], column = words[i].posY},
+                Coord = new CellItem.Coord(){row = WordsGrid.idsRow[words[i].posX], column = words[i].posY +1},
                 Word = words[i].answer,
                 IsHorizontal = words[i].orientation == "HORIZONTAL",
                 index = i+1
@@ -407,8 +407,11 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
 
     public void SetImageToggle(bool status)
     {
-        isImage.SetIsOnWithoutNotify(status);
-        gridLayout.constraintCount = Utils.BoolToInt(isImage) + 1;
+        isImage.isOn =status;
+        if (status)
+        {
+            gridLayout.constraintCount = 2;
+        }
         if (status)
         {
             gridLayout.cellSize = new Vector2(400, 250);

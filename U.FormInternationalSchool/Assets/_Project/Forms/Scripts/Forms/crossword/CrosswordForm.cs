@@ -96,7 +96,7 @@ public class CrosswordForm : FormScreen
             foreach(var input in filledImages) 
             {
                 int row = WordsGrid.idsRow.ToList().FindIndex(x => x == input.Key.Coord.row);
-                listWords.Add(new Words() { question = input.Value, answer = input.Key.Word, posY = input.Key.Coord.column, posX = row, orientation = input.Key.IsHorizontal? "HORIZONTAL": "VERTICAL"});
+                listWords.Add(new Words() { question = input.Value, answer = input.Key.Word, posY = input.Key.Coord.column - 1, posX = row, orientation = input.Key.IsHorizontal? "HORIZONTAL": "VERTICAL"});
             }
         }
         else
@@ -107,13 +107,13 @@ public class CrosswordForm : FormScreen
                 int row = WordsGrid.idsRow.ToList().FindIndex(x => x == input.Info.Coord.row);
                 if (filledImages.ContainsKey(input.Info))
                 {
-                    listWords.Add(new Words() { question = filledImages[input.Info], answer = input.Info.Word, posY = input.Info.Coord.column, posX = row, orientation = input.Info.IsHorizontal? "HORIZONTAL": "VERTICAL"});
+                    listWords.Add(new Words() { question = filledImages[input.Info], answer = input.Info.Word, posY = input.Info.Coord.column -1, posX = row, orientation = input.Info.IsHorizontal? "HORIZONTAL": "VERTICAL"});
                 }
                 else
                 {
                     if (urls.Length > urlIndex)
                     {
-                        listWords.Add(new Words() { question = urls[urlIndex], answer = input.Info.Word, posY = input.Info.Coord.column, posX = row, orientation = input.Info.IsHorizontal? "HORIZONTAL": "VERTICAL"});
+                        listWords.Add(new Words() { question = urls[urlIndex], answer = input.Info.Word, posY = input.Info.Coord.column -1, posX = row, orientation = input.Info.IsHorizontal? "HORIZONTAL": "VERTICAL"});
                         urlIndex++;
                     }
                 }
