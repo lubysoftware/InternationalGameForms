@@ -68,7 +68,7 @@ public class LibraryScreen : MonoBehaviour
         confirmDialog.SetPanelColors(so.colors[0], so.colors[3]);
     }
 
-    public void InstantiateGamesList(ImageSeqList list)
+    public void InstantiateGamesList(GameList list)
     {
         page = list.meta.page;
         nextPage.interactable = list.meta.countItems > page * list.meta.perPage;

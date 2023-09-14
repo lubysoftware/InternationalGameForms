@@ -178,8 +178,10 @@ public class FormScreen : MonoBehaviour
                 return;
             }
 
-            if (!CalculateTimeInSec())
+            timeInSec = CalculateTimeInSec("do jogo", timeMin.text, timeSec.text, false);
+            if (timeInSec == -1)
             {
+                timeInSec = 0;
                 return;
             }
         }
@@ -200,33 +202,46 @@ public class FormScreen : MonoBehaviour
 
     }
 
-    protected bool CalculateTimeInSec()
+    protected int CalculateTimeInSec(string name, string minText, string secText, bool allowZero )
     {
         int min, sec = -1;
-        int.TryParse(timeMin.text, out min);
-        int.TryParse(timeSec.text, out sec);
-        if (min + sec <= 0)
+        int timeTotal = 0;
+        int.TryParse(minText, out min);
+        int.TryParse(secText, out sec);
+        if (!allowZero)
         {
-            ShowError("Tempo do timer", ErrorType.GREATER_THAN, new int[]{0});
-            return false;
+            if (min + sec <= 0)
+            {
+                ShowError("Tempo do timer " + name, ErrorType.GREATER_THAN, new int[]{0});
+                return -1;
+            }
         }
+        else
+        {
+            if (min + sec < 0)
+            {
+                ShowError("Tempo do timer " + name, ErrorType.GREATER_OR_EQUAL, new int[]{0});
+                return -1;
+            }
+        }
+        
         if (min < 0)
         {
-            ShowError("Minutos do timer", ErrorType.GREATER_OR_EQUAL, new int[]{0});
-            return false;
+            ShowError("Minutos do timer " + name, ErrorType.GREATER_OR_EQUAL, new int[]{0});
+            return -1;
         }
 
         if (sec < 0 || sec > 59)
         {
-            ShowError("Segundos do timer", ErrorType.BETWEEN, new int[]{0,59});
-            return false;
+            ShowError("Segundos do timer " + name, ErrorType.BETWEEN, new int[]{0,59});
+            return -1;
         }
 
-        timeInSec = min * 60 + sec;
-        return true;
+        timeTotal = min * 60 + sec;
+        return timeTotal;
     }
 
-    protected void FillBaseData(BaseJsonGet baseForm)
+    protected void FillBaseData(BaseGameJson baseForm)
     {
         title.text = baseForm.gameTitle;
         statement_EN.text = baseForm.questionStatementEnglishVersion;

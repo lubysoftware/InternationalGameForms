@@ -26,7 +26,7 @@ public class MemoryForm : FormScreen
     {
         if (text != null)
         {
-            FillBaseData(JsonConvert.DeserializeObject<BaseJsonGet>(text));
+            FillBaseData(JsonConvert.DeserializeObject<BaseGameJson>(text));
             FillGameData(JsonConvert.DeserializeObject<MemoryJsonGet>(text));
         }
     }
@@ -81,7 +81,7 @@ public class MemoryForm : FormScreen
     {
         if (backCardImage.Image.UploadedFile == null && backCardImage.Image.IsFilled == false)
         {
-            ShowError("Imagem de verso da carta deve ser preenchida.", ErrorType.EMPTY, null);
+            ShowError("Imagem de verso da carta", ErrorType.EMPTY, null);
             return;
         }
 
@@ -192,8 +192,10 @@ public class MemoryForm : FormScreen
 
     public void UpdateStarsPoints()
     {
-        if (CalculateTimeInSec())
+        int time = CalculateTimeInSec("do jogo", timeMin.text, timeSec.text, false);
+        if (time >= 0)
         {
+            timeInSec = time;
             FillTimerText(oneStar,timeInSec * 0.3f);
             FillTimerText(twoStars,timeInSec * 0.7f);
             FillTimerText(threeStars, timeInSec);

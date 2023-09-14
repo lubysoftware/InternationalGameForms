@@ -38,9 +38,9 @@ public class APICommunication : SimpleSingleton<APICommunication>
 		}
 		else
 		{
-			ImageSeqList seqList = JsonConvert.DeserializeObject<ImageSeqList>(www.downloadHandler.text);
+			GameList gameList = JsonConvert.DeserializeObject<GameList>(www.downloadHandler.text);
 			//ImageSeqList seqList = JsonUtility.FromJson<ImageSeqList>(www.downloadHandler.text);
-			library.InstantiateGamesList(seqList);
+			library.InstantiateGamesList(gameList);
 		}
 	}
 	

@@ -73,7 +73,7 @@ public class MemoryPanel : MonoBehaviour
                 index++;
             }
         }
-
+        
         int.TryParse(pairQtt.options[pairQtt.value].text, out previousDropdown);
         for (int i = 0; i < transform.childCount; i++)
         {

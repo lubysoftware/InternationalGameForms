@@ -4,30 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class MemoryJsonClass
-{
-    public int id;
-    public string gameType;
-    public string gameTitle;
-    public string gameTitleImageUrl;
-    public string backgroundUrl;
-    public string backgroundMusicUrl;
-    public string questionStatementEnglishAudioUrl;
-    public string questionStatementPortugueseAudioUrl;
-    public string questionStatementPortugueseVersion;
-    public string questionStatementEnglishVersion;
-    public bool hasSupportMaterial;
-    public bool hasTimer;
-    public int timer;
-    public int bonusTimer;
-    public string created_at;
-    public string updated_at;
-    public bool deleted;
-    public List<SupportMaterialGet> SupportMaterial;
-}
-
-[Serializable]
-public class MemoryJsonGet 
+public class PuzzleJsonGet 
 {
     public int id;
     public string gameType;
@@ -47,13 +24,16 @@ public class MemoryJsonGet
     public string updated_at;
     public bool deleted;
     public List<SupportMaterialGet> SupportMaterial;
-    public int matchCardId;
-    public string backImageUrl;
-    public List<MatchPairGet> cardPairs;
+    public int puzzleId;
+    public string imageUrl;
+    public int pieceCount;
+    public int tipShowTime;
+    public int tipCoolDown;
+    public int tipCount;
 }
-
+    
 [Serializable]
-public class MatchPairGet
+public class PuzzleGet
 {
     public int id;
     public int matchCardId;
@@ -64,9 +44,4 @@ public class MatchPairGet
     public bool deleted;
 }
 
-public class MatchCardList
-{
-    public Meta meta;
-    public List<ImagePairJsonClass> data;
-}
 

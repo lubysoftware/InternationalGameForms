@@ -26,7 +26,7 @@ public class CrosswordForm : FormScreen
     {
         if (text != null)
         {
-            FillBaseData(JsonConvert.DeserializeObject<BaseJsonGet>(text));
+            FillBaseData(JsonConvert.DeserializeObject<BaseGameJson>(text));
             FillGameData(JsonConvert.DeserializeObject<CrosswordJsonGet>(text));
         }
     }
