@@ -27,7 +27,7 @@ public class PuzzleForm : FormScreen
     private int tipTimeInSec = 0;
     private int cooldownTimeInSec = 0;
 
-    private string puzzleImagePath = "";
+    private string puzzleImagePath ;
 
     public override void FinishDownloadingGame(string text)
     {
@@ -52,8 +52,8 @@ public class PuzzleForm : FormScreen
         {
             if (puzzleImage.IsFilled)
             {
-                SerializeGameData(null);
                 puzzleImagePath = puzzleImage.url;
+                SerializeGameData(null);
             }
             else
             {
@@ -168,11 +168,11 @@ public class PuzzleForm : FormScreen
             int coolSec = 0;
             if (json.tipCoolDown > 0)
             {
-                coolMin = json.tipShowTime / 60;
-                coolSec = json.tipShowTime - min * 60;
+                coolMin = json.tipCoolDown / 60;
+                coolSec = json.tipCoolDown - coolMin * 60;
             }
-            timeTipMin.text =  String.Format("{0:00}", coolMin);
-            timeTipSec.text = String.Format("{0:00}", coolSec);
+            timeCooldownMin.text =  String.Format("{0:00}", coolMin);
+            timeCooldownSec.text = String.Format("{0:00}", coolSec);
         }
         
         loadFileQtt = loadFileQtt + 1;
