@@ -110,7 +110,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         List<IMultipartFormSection> form = new List<IMultipartFormSection>();
         foreach (var file in fileList)
         {
-            Debug.LogError("Send files: file name " + file.fileInfo.fullName + " . extension: " +
+            Debug.Log("Send files: file name " + file.fileInfo.fullName + " . extension: " +
                            file.fileInfo.extension);
             if (file.fileInfo.extension == "ogg" || file.fileInfo.extension == ".ogg")
             {

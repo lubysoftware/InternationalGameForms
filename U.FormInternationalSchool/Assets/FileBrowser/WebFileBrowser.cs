@@ -58,7 +58,6 @@ public class WebFileBrowser : IFileBrowser
     
     private void OnClosePanel()
     {
-        Debug.LogError("Popup closed");
         UnsubscribeEvents();
     }
 }

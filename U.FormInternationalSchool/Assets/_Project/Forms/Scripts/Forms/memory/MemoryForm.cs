@@ -105,7 +105,7 @@ public class MemoryForm : FormScreen
         }
 
         List<Pair> listPair = new List<Pair>();
-        if (filledImages.Count == pairsQtt || urls == null)
+        if (urls == null)
         {
             for (int i = 0; i < pairsQtt; i++)
             {
@@ -145,8 +145,6 @@ public class MemoryForm : FormScreen
                     listPair.Add(new Pair() { firstImageUrl = urls[urlIndex], secondImageUrl = urls[urlIndex + 1] });
                     urlIndex += 2;
                 }
-
-                Debug.LogError("url index " + urlIndex + " completed pairs? " + panel.CompletedPairs());
             }
         }
 
@@ -163,7 +161,7 @@ public class MemoryForm : FormScreen
 
 
         string json = JsonConvert.SerializeObject(completeForm);
-        Debug.LogError(json);
+        Debug.Log(json);
         if (isEdit)
         {
             SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.text, this);

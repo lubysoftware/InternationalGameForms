@@ -35,7 +35,7 @@ public class UploadFileElement : MonoBehaviour
 
     private IFileBrowser _fileBrowser;
 
-    public File UploadedFile => _loadedFiles != null ? _loadedFiles[0] : null;
+    public File UploadedFile => _loadedFiles != null && _loadedFiles.Length > 0 && _loadedFiles[0].data != null? _loadedFiles[0] : null;
 
     public event Action<UploadFileElement> OnFill;
 
@@ -109,7 +109,7 @@ public class UploadFileElement : MonoBehaviour
         }
 
         IsFilled = false;
-        WebGLFileBrowser.FreeMemory(); // free used memory and destroy created content
+     //   WebGLFileBrowser.FreeMemory(); // free used memory and destroy created content
     }
 
 

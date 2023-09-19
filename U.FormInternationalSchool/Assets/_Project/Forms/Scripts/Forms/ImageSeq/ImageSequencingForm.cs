@@ -77,7 +77,7 @@ public class ImageSequencingForm : FormScreen
 
     public override void SerializeGameData(string[] urls)
     {
-        Debug.LogError("serialize game" + urls);
+        Debug.Log("serialize game" + urls);
 
         List<Sequence> listSeq = new List<Sequence>();
         if (filledImages.Count == imageSeqQtt)
@@ -140,7 +140,6 @@ public class ImageSequencingForm : FormScreen
         sequenceQtt = json.sequenceUnits.Count;
         loadFileQtt = loadFileQtt + sequenceQtt;
         CheckIfMaxQtt();
-        Debug.LogError("qtt "+loadFileQtt);
     }
 }
 

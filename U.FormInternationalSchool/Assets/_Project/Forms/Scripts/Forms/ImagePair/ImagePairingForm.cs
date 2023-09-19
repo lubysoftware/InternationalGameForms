@@ -70,7 +70,7 @@ public class ImagePairingForm : FormScreen
 
     public override void SerializeGameData(string[] urls)
     {
-        Debug.LogError("serialize game " + urls);
+        Debug.Log("serialize game " + urls);
 
         List<Pair> listPair = new List<Pair>();
         if (filledImages.Count == pairsQtt || urls == null)
@@ -104,7 +104,6 @@ public class ImagePairingForm : FormScreen
                     listPair.Add(new Pair() { firstImageUrl = urls[urlIndex], secondImageUrl = urls[urlIndex + 1] });
                     urlIndex +=2;
                 }
-                Debug.LogError("url index " + urlIndex + " completed pairs? " +  panel.CompletedPairs());
             }
         }
        

@@ -109,7 +109,6 @@ public class MemoryPanel : MonoBehaviour
 
     public bool AllPairsFilled()
     {
-        Debug.LogError("completed pairs: " + CompletedPairs() + " value no pair qtt " + (pairQtt.options[pairQtt.value].text) );
         var pair = 0;
         int.TryParse(pairQtt.options[pairQtt.value].text, out pair);
         return CompletedPairs() == pair;
@@ -120,7 +119,7 @@ public class MemoryPanel : MonoBehaviour
         List<File> files = new List<File>();
         foreach (ImagePair pair in pairs)
         {
-            if(pair.GetFiles() != null && pair.GetFiles().Count == 2)
+            if(pair.GetFiles() != null && pair.GetFiles().Count>0)
                 files.AddRange(pair.GetFiles());
         }
         
@@ -142,7 +141,6 @@ public class MemoryPanel : MonoBehaviour
 
     public void FillImages(List<string[]> urls,Action<UploadFileElement, string, string> action)
     {
-        Debug.LogError(urls.Count);
         pairQtt.SetValueWithoutNotify(GetDropdownIndex(urls.Count));
         ShowDropdownQtt();
         for (int i = 0; i< urls.Count;i++)
