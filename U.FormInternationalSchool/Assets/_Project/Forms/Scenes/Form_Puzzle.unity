@@ -1226,6 +1226,26 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5852647784546515632, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: inputFieldList.Array.size
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5852647784546515632, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: inputFieldList.Array.data[6]
+      value: 
+      objectReference: {fileID: 1238235421}
+    - target: {fileID: 5852647784546515632, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: inputFieldList.Array.data[7]
+      value: 
+      objectReference: {fileID: 1350764649}
+    - target: {fileID: 5852647784546515632, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: inputFieldList.Array.data[8]
+      value: 
+      objectReference: {fileID: 1502726900}
+    - target: {fileID: 5852647784546515632, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: inputFieldList.Array.data[9]
+      value: 
+      objectReference: {fileID: 1322232318}
     - target: {fileID: 5898455667548418893, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
       propertyPath: m_Sprite
       value: 

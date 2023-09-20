@@ -2439,7 +2439,7 @@ GameObject:
   - component: {fileID: 2898098810499771936}
   - component: {fileID: 185799299768460127}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: Min_InputField (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3820,7 +3820,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 5681050381262933948}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.4622212
+  m_Size: 0.46217695
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4040,7 +4040,7 @@ GameObject:
   - component: {fileID: 4042093495027716214}
   - component: {fileID: 364494064745325360}
   m_Layer: 5
-  m_Name: InputField (TMP) (1)
+  m_Name: Sec_InputField (TMP) (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4389,6 +4389,7 @@ GameObject:
   - component: {fileID: 9118524129299123342}
   - component: {fileID: 4546449772848263334}
   - component: {fileID: 6687252240218638325}
+  - component: {fileID: 5852647784546515632}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -4500,6 +4501,25 @@ MonoBehaviour:
   so: {fileID: 0}
   panel: {fileID: 0}
   failsPenalty: {fileID: 0}
+--- !u!114 &5852647784546515632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8785443591067919502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6d4a8b8dfb538a4e98c0edd17d1acd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputFieldList:
+  - {fileID: 2291289504408384611}
+  - {fileID: 5693954360706550786}
+  - {fileID: 385698313770775990}
+  - {fileID: 185799299768460127}
+  - {fileID: 364494064745325360}
+  - {fileID: 6039478667826820759}
 --- !u!1001 &2194872284356579106
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5060,6 +5080,10 @@ PrefabInstance:
     - target: {fileID: 7390900529067085399, guid: cb3ecb47ce563784cb2b43d899e8e7c5, type: 3}
       propertyPath: m_text
       value: Enunciado em PT
+      objectReference: {fileID: 0}
+    - target: {fileID: 7742867157306768370, guid: cb3ecb47ce563784cb2b43d899e8e7c5, type: 3}
+      propertyPath: m_Name
+      value: EnPT_InputField (TMP)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -5869,6 +5893,10 @@ PrefabInstance:
     - target: {fileID: 7390900529067085399, guid: cb3ecb47ce563784cb2b43d899e8e7c5, type: 3}
       propertyPath: m_text
       value: Identificador do jogo
+      objectReference: {fileID: 0}
+    - target: {fileID: 7742867157306768370, guid: cb3ecb47ce563784cb2b43d899e8e7c5, type: 3}
+      propertyPath: m_Name
+      value: Title_InputField
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7012,6 +7040,10 @@ PrefabInstance:
       propertyPath: m_text
       value: Enunciado em EN
       objectReference: {fileID: 0}
+    - target: {fileID: 7742867157306768370, guid: cb3ecb47ce563784cb2b43d899e8e7c5, type: 3}
+      propertyPath: m_Name
+      value: EnEN_InputField (TMP)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 5997046486494249127, guid: cb3ecb47ce563784cb2b43d899e8e7c5, type: 3}
@@ -7225,6 +7257,10 @@ PrefabInstance:
     - target: {fileID: 7390900529067085399, guid: cb3ecb47ce563784cb2b43d899e8e7c5, type: 3}
       propertyPath: m_text
       value: Pontos
+      objectReference: {fileID: 0}
+    - target: {fileID: 7742867157306768370, guid: cb3ecb47ce563784cb2b43d899e8e7c5, type: 3}
+      propertyPath: m_Name
+      value: Bonus_InputField (TMP)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
