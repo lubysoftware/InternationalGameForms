@@ -276,7 +276,13 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
         }
         if (wordInputs.Count > max)
         {
-            alertMessage.text = String.Format("Confirma alterar o tipo de dica e descartar {0} palavras já cadastradas?", wordInputs.Count -  max);
+            int qtt = wordInputs.Count - max;
+            string word = "palavras";
+            if (qtt == 1)
+            {
+                word = "palavra";
+            }
+            alertMessage.text = String.Format("Confirma alterar o tipo de dica e descartar {0} {1} já cadastradas?", wordInputs.Count -  max, word);
             confirmChangePanel.gameObject.SetActive(true);
         }
         else

@@ -44,8 +44,16 @@ public class ImagePairPanel : MonoBehaviour
         int.TryParse(pairQtt.options[newValue].text, out value);
         if (completed > value)
         {
-            alertMessage.text =
-                String.Format("Deseja excluir os últimos {1} pares preenchidos?", value, completed - value);
+            int qtt = completed - value;
+            if (qtt == 1)
+            {
+                alertMessage.text = "Deseja excluir o último par preenchido?";
+            }
+            else
+            {
+                alertMessage.text =
+                    String.Format("Deseja excluir os últimos {0} pares preenchidos?",qtt);
+            }
             confirmReducePanel.gameObject.SetActive(true);
             return;
         }

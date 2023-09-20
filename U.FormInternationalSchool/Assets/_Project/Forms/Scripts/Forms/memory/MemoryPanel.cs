@@ -50,11 +50,19 @@ public class MemoryPanel : MonoBehaviour
         int completed = CompletedPairs();
         int value = 0;
         int.TryParse(pairQtt.options[newValue].text, out value);
-        Debug.LogError("new value: " + value);
+        Debug.Log("new value: " + value);
         if (completed > value)
         {
-            alertMessage.text =
-                String.Format("Deseja excluir os últimos {0} pares preenchidos?", completed - value);
+            int qtt = completed - value;
+            if (qtt == 1)
+            {
+                alertMessage.text = "Deseja excluir o último par preenchido?";
+            }
+            else
+            {
+                alertMessage.text =
+                    String.Format("Deseja excluir os últimos {0} pares preenchidos?",qtt);
+            }
             confirmReducePanel.gameObject.SetActive(true);
             return;
         }
