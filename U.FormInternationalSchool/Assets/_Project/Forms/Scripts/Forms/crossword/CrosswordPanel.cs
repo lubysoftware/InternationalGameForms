@@ -14,7 +14,7 @@ using Toggle = UnityEngine.UI.Toggle;
 
 public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
 {
-    
+
     [SerializeField] private FormScreen form;
     [SerializeField] private WordsGrid grid;
     [SerializeField] private NewWordInput[] wordInput;
@@ -23,36 +23,38 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
     [SerializeField] private Toggle isImage;
     [SerializeField] private int[] maxItems;
 
-    [Space(15)]
-    [Header("Warning panel")]
-    [SerializeField] private Transform confirmChangePanel;
+    [Space(15)] [Header("Warning panel")] [SerializeField]
+    private Transform confirmChangePanel;
+
     [SerializeField] private Button confirmButton;
     [SerializeField] private Button denyButton;
     [SerializeField] private TextMeshProUGUI alertMessage;
-    [Space(15)]
-    [Header("New word fields")]
-    [SerializeField] private TMP_Dropdown row;
+
+    [Space(15)] [Header("New word fields")] [SerializeField]
+    private TMP_Dropdown row;
+
     [SerializeField] private TMP_Dropdown column;
     [SerializeField] private TMP_InputField wordText;
     [SerializeField] private Toggle isHorizontalToggle;
-    [Space(15)]
-    [Header("Layouts")]
-    [SerializeField] private LayoutGroup layout;
+
+    [Space(15)] [Header("Layouts")] [SerializeField]
+    private LayoutGroup layout;
+
     [SerializeField] private LayoutGroup layout2;
     [SerializeField] private GridLayoutGroup gridLayout;
-   
+
     private List<NewWordInput> wordInputs;
-    private Dictionary<int,NewWordInput.WordInfo> wordInfos;
+    private Dictionary<int, NewWordInput.WordInfo> wordInfos;
 
     public NewWordInput editingInput = null;
-    
+
     public bool IsImage => isImage.isOn;
     public int WordsQtt => wordInputs.Count;
 
     public enum CrosswordError
     {
         FIT,
-        MATCH, 
+        MATCH,
         BIG,
         EMPTY
     }
@@ -64,7 +66,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
         newWordButton.onClick.AddListener(InsertNewWord);
         isImage.onValueChanged.AddListener(OnChangeTipType);
         wordInputs = new List<NewWordInput>();
-        wordInfos = new Dictionary<int,NewWordInput.WordInfo>();
+        wordInfos = new Dictionary<int, NewWordInput.WordInfo>();
     }
 
     public bool CheckWord(NewWordInput.WordInfo info, string previousWord, bool addInfo)
@@ -80,7 +82,8 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
             SetError(CrosswordError.FIT, null);
             return false;
         }
-        if(!grid.CheckInterval(info, previousWord))
+
+        if (!grid.CheckInterval(info, previousWord))
         {
             SetError(CrosswordError.MATCH, null);
             return false;
@@ -94,11 +97,12 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
         }
         else
         {
-            if(addInfo)
-                wordInfos.Add(info.index,info);
+            if (addInfo)
+                wordInfos.Add(info.index, info);
         }
+
         grid.FillInterval(info, info.index);
-        
+
         return true;
     }
 
@@ -134,6 +138,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
             SetError(CrosswordError.EMPTY, null);
             return;
         }
+
         if (wordInputs.Count < max)
         {
             char dropRow = '-';
@@ -153,22 +158,22 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
                     Word = wordText.text,
                     Coord = coord,
                     IsHorizontal = isHorizontalToggle.isOn,
-                    index = wordInputs.Count +1
+                    index = wordInputs.Count + 1
                 };
-                CreateNewWord(info, true);   
+                CreateNewWord(info, true);
             }
-            
+
         }
     }
 
     private NewWordInput CreateNewWord(NewWordInput.WordInfo info, bool addInfo)
     {
         int max = maxItems[Utils.BoolToInt(isImage.isOn)];
-        if(CheckWord(info, null,addInfo))
+        if (CheckWord(info, null, addInfo))
         {
             NewWordInput input = Instantiate(wordInput[Utils.BoolToInt(isImage.isOn)], wordsContainer);
             wordInputs.Add(input);
-            input.Init(wordInputs.Count,info);
+            input.Init(wordInputs.Count, info);
 
             row.SetValueWithoutNotify(0);
             column.SetValueWithoutNotify(0);
@@ -180,6 +185,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
             {
                 newWordButton.interactable = false;
             }
+
             UpdateCanvas();
             form.GetComponent<CrosswordForm>().UpdatePoints();
             return input;
@@ -205,6 +211,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
                 inp.EditStatus(false);
             }
         }
+
         SetNewWordInteractable(false);
     }
 
@@ -214,6 +221,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
         {
             inp.EditStatus(true);
         }
+
         SetNewWordInteractable(true);
         if (editingInput == input)
         {
@@ -235,14 +243,14 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
 
     public void SetCoords(CellItem.Coord coord)
     {
-        row.SetValueWithoutNotify( row.options.FindIndex(x => x.text == coord.row.ToString()));
-        column.SetValueWithoutNotify( column.options.FindIndex(x => x.text == coord.column.ToString()));
+        row.SetValueWithoutNotify(row.options.FindIndex(x => x.text == coord.row.ToString()));
+        column.SetValueWithoutNotify(column.options.FindIndex(x => x.text == coord.column.ToString()));
     }
-    
+
     private void OnDeleteWord(NewWordInput input, bool deleteInfo)
     {
         input.OnDelete -= OnDeleteWord;
-        if(deleteInfo)
+        if (deleteInfo)
             wordInfos.Remove(input.Index);
         for (int i = input.Index; i < wordInputs.Count; i++)
         {
@@ -250,10 +258,11 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
             NewWordInput inp = wordInputs[i];
             wordInfos.Remove(inp.Index);
             inp.Info.index = i;
-            wordInfos.Add(i,inp.Info);
+            wordInfos.Add(i, inp.Info);
             inp.SetIndex(i);
             grid.UpdateWordIndex(inp.Info.Coord, i);
         }
+
         Destroy(input.gameObject);
         wordInputs.Remove(input);
         grid.ClearInterval(input.Info);
@@ -266,14 +275,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
     {
         int max = maxItems[Utils.BoolToInt(isImage)];
         gridLayout.constraintCount = Utils.BoolToInt(isImage) + 1;
-        if (isImage)
-        {
-            gridLayout.cellSize = new Vector2(400, 250);
-        }
-        else
-        {
-            gridLayout.cellSize = new Vector2(700, 200);
-        }
+
         if (wordInputs.Count > max)
         {
             int qtt = wordInputs.Count - max;
@@ -282,18 +284,33 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
             {
                 word = "palavra";
             }
-            alertMessage.text = String.Format("Confirma alterar o tipo de dica e descartar {0} {1} já cadastradas?", wordInputs.Count -  max, word);
+
+            alertMessage.text = String.Format("Confirma alterar o tipo de dica e descartar {0} {1} já cadastradas?",
+                wordInputs.Count - max, word);
             confirmChangePanel.gameObject.SetActive(true);
         }
         else
         {
             ChangeTipType();
         }
-        
+
+    }
+
+    public void CancelChangeTipType()
+    {
+        isImage.isOn = !isImage.isOn;
     }
 
     private void ChangeTipType()
     {
+        if (isImage)
+        {
+            gridLayout.cellSize = new Vector2(400, 250);
+        }
+        else
+        {
+            gridLayout.cellSize = new Vector2(700, 200);
+        }
         int max = maxItems[Utils.BoolToInt(isImage.isOn)];
 
         for (int i = wordInputs.Count - 1; i >= 0; i--)

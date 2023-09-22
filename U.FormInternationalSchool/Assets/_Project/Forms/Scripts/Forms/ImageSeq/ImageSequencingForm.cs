@@ -21,6 +21,19 @@ public class ImageSequencingForm : FormScreen
 
     private int sequenceQtt;
 
+    
+    protected override void Start()
+    {
+        base.Start();
+        isEdit = false;
+        SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
+        if (!isEdit)
+        {
+            loadFileQtt=1;
+            FillUploadFiles( backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/0c917c36-1e93-489a-a4d0-e4327cffc752_name.001_img_sequencing.ogg");
+        }
+    }
+    
     public override void FinishDownloadingGame(string text)
     {
         if (text != null)

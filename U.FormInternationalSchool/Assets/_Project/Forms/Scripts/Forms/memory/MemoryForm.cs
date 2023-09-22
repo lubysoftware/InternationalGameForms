@@ -22,6 +22,20 @@ public class MemoryForm : FormScreen
 
     private string backImagePath = "";
 
+
+    protected override void Start()
+    {
+        base.Start();
+        isEdit = false;
+        SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
+        if (!isEdit)
+        {
+            loadFileQtt=2;
+            FillUploadFiles( backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/6c3eafb6-76af-4cd4-a467-c3edcaf68161_name.007_memory.ogg");
+            FillUploadFiles( backCardImage.Image,"back_card","https://stg1atividades.blob.core.windows.net/arquivos/e708b2c7-725c-45ee-be93-79ac9ef04b47_name.verso.png");
+        }
+    }
+
     public override void FinishDownloadingGame(string text)
     {
         if (text != null)

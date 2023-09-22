@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LubyLib.Core;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
@@ -17,6 +18,18 @@ public class CrosswordForm : FormScreen
 
     private int wordImagesQtt;
 
+    protected override void Start()
+    {
+        base.Start();
+        isEdit = false;
+        SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
+        if (!isEdit)
+        {
+            loadFileQtt=1;
+            FillUploadFiles( backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/97bf793e-3497-44e5-a698-5890314692db_name.005_crosswords.ogg");
+        }
+    }
+    
     public override void FinishDownloadingGame(string text)
     {
         if (text != null)
@@ -25,8 +38,7 @@ public class CrosswordForm : FormScreen
             FillGameData(JsonConvert.DeserializeObject<CrosswordJsonGet>(text));
         }
     }
-
-
+    
     protected override void SendGameFiles()
     {
         Debug.LogError("send game files");

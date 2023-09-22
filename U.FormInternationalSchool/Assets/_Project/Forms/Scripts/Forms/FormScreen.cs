@@ -74,12 +74,6 @@ public class FormScreen : MonoBehaviour
             SceneDataCarrier.GetData(Constants.GAME_EDIT, out id);
             SendFilesToAPI.Instance.StartDownloadGame(this, so.url, id);
         }
-        else
-        {
-            loadFileQtt = 1;
-            FillUploadFiles( backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/8cda25d0-167c-48dc-8cfb-606a0511823d.ogg");
-            // StopLoading();
-        }
     }
 
     public virtual void FinishDownloadingGame(string text)

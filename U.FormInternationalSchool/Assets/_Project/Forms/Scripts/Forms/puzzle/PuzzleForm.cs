@@ -29,6 +29,19 @@ public class PuzzleForm : FormScreen
 
     private string puzzleImagePath ;
 
+
+    
+    protected override void Start()
+    {
+        base.Start();
+        isEdit = false;
+        SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
+        if (!isEdit)
+        {
+            loadFileQtt=1;
+            FillUploadFiles( backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/3cd23a4c-f710-454e-9a2f-7244cadbadc7_name.006_puzzle.ogg");
+        }
+    }
     public override void FinishDownloadingGame(string text)
     {
         if (text != null)

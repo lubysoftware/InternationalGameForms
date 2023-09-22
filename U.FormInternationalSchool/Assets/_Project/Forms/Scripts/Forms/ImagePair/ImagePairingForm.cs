@@ -15,6 +15,18 @@ public class ImagePairingForm : FormScreen
     private int pairsQtt;
     private Dictionary<char,List<string>> filledImages;
     private int failsPenaltyValue = 0;
+    
+    protected override void Start()
+    {
+        base.Start();
+        isEdit = false;
+        SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
+        if (!isEdit)
+        {
+            loadFileQtt=1;
+            FillUploadFiles(backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/1e793b75-8a67-4dbd-8bf8-38ffc8e99beb_name.002_img_pairing.ogg");
+        }
+    }
     public override void FinishDownloadingGame(string text)
     {
         if (text != null)
