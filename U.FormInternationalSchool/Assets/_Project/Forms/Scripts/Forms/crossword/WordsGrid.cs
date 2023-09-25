@@ -108,7 +108,7 @@ public class WordsGrid : MonoBehaviour
         
         int j = idsRow.ToList().FindIndex(x => x == info.Coord.row);
        
-        if (j + info.Word.Length - 1 > idsRow.Length) return false;
+        if (j + info.Word.Length - 1 > idsRow.Length-1) return false;
        
         return true;
     }
