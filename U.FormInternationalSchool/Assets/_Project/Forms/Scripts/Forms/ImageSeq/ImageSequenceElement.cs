@@ -1,12 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using FrostweepGames.Plugins.WebGLFileBrowser;
-using TMPro;
-using UnityEditor.Experimental;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class ImageSequenceElement : ImageElement, IEndDragHandler,IDragHandler
 {

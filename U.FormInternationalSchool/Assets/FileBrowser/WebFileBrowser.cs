@@ -1,6 +1,5 @@
 using System;
 using FrostweepGames.Plugins.WebGLFileBrowser;
-using UnityEngine;
 
 public class WebFileBrowser : IFileBrowser
 {

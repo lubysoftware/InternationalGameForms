@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
-using System;
-using System.Collections;
 using System.IO;
-using UnityEngine.Networking;
 
 
 namespace FrostweepGames.Plugins.WebGLFileBrowser

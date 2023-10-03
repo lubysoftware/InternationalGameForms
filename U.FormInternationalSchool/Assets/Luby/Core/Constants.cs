@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace LubyLib.Core
 {
     public static class Constants

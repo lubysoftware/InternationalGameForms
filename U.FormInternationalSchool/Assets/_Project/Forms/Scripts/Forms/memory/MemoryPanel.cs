@@ -1,16 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
-using Image = UnityEngine.UI.Image;
 
 public class MemoryPanel : MonoBehaviour
 {

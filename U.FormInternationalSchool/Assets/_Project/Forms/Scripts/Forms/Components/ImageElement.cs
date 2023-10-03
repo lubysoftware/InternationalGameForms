@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 
 public class ImageElement : UploadFileElement
 {

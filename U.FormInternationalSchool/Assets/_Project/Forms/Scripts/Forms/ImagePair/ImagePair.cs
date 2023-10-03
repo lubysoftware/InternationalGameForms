@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using FrostweepGames.Plugins.WebGLFileBrowser;
-using JetBrains.Annotations;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ImagePair : MonoBehaviour

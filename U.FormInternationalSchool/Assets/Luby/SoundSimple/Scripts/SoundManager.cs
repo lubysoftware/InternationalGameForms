@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 using LubyLib.Core;
 using UnityEngine.Audio;
 using Random = UnityEngine.Random;

@@ -7,9 +7,7 @@ using FrostweepGames.Plugins.WebGLFileBrowser;
 using UnityEngine;
 using UnityEngine.Networking;
 using LubyLib.Core.Singletons;
-using Newtonsoft.Json;
 using Proyecto26;
-using Unity.VisualScripting;
 using AudioType = UnityEngine.AudioType;
 
 public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>

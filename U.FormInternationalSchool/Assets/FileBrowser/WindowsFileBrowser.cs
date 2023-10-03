@@ -1,3 +1,5 @@
+#if !UNITY_WEBGL
+
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -70,3 +72,4 @@ public class WindowsFileBrowser : IFileBrowser
         onSuccess.Invoke(files);
     }
 }
+#endif

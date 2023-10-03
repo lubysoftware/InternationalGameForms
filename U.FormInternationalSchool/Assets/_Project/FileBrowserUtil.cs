@@ -1,9 +1,10 @@
+#if !UNITY_WEBGL
 using System;
 using System.Collections;
 using System.IO;
 using LubyLib.Core.Singletons;
-using SimpleFileBrowser;
 using UnityEngine;
+using SimpleFileBrowser;
 
 public class FileBrowserUtil : SimpleSingleton<FileBrowserUtil>
 {
@@ -73,3 +74,4 @@ public class FileBrowserUtil : SimpleSingleton<FileBrowserUtil>
         }
     }
 }
+#endif

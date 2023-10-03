@@ -1,16 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using System.Drawing.Drawing2D;
 using LubyLib.Core.Extensions;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
-using Image = UnityEngine.UI.Image;
 using Toggle = UnityEngine.UI.Toggle;
 
 public class NewWordInput : MonoBehaviour

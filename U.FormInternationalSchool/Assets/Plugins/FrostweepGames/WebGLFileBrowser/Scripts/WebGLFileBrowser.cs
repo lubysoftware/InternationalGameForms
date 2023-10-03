@@ -4,9 +4,7 @@ using System.Linq;
 #if (UNITY_WEBGL || FG_FB_WEBGL) && !UNITY_EDITOR
 using System.Linq;
 #endif
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Networking;
 #if (UNITY_WEBGL || FG_FB_WEBGL) && !UNITY_EDITOR
 using System.Runtime.InteropServices;
 #endif
