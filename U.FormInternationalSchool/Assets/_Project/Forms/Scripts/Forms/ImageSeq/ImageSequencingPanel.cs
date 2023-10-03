@@ -181,13 +181,19 @@ public class ImageSequencingPanel : MonoBehaviour
 
             element.transform.SetParent(transform.GetChild(newChildPosition));
             element.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            
         }
         else
         {
             element.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         }
 
+        for(int i=0; i < transform.childCount; i++)
+        {
+            if (i < counter -1)
+            {
+                transform.GetChild(i).GetComponent<ImageFrame>().SetActiveState(true);
+            }
+        }
     }
 
 }

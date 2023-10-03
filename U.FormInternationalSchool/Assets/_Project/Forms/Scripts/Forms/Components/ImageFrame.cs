@@ -57,8 +57,8 @@ public class ImageFrame : MonoBehaviour
 
     public void OnDeleteButton()
     {
-        Image.Delete();
         SetActiveState(false);
+        Image.Delete();
     }
 
     private void OnUpdateButton()
