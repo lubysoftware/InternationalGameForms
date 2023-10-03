@@ -92,7 +92,7 @@ public class PuzzleForm : FormScreen
             }
 
             tipTimeInSec = CalculateTimeInSec("de dicas", timeTipMin.text, timeTipSec.text, false);
-            if (timeInSec == -1)
+            if (tipTimeInSec == -1)
             {
                 tipTimeInSec = 0;
                 return;
@@ -104,8 +104,8 @@ public class PuzzleForm : FormScreen
                 return;
             }
 
-            cooldownTimeInSec = CalculateTimeInSec("de intervalo de dicas", timeCooldownMin.text, timeCooldownSec.text, true);
-            if (timeInSec == -1)
+            cooldownTimeInSec = CalculateTimeInSec("de intervalo", timeCooldownMin.text, timeCooldownSec.text, true);
+            if (cooldownTimeInSec == -1)
             {
                 cooldownTimeInSec = 0;
                 return;
