@@ -159,7 +159,7 @@ public class ImageSequencingPanel : MonoBehaviour
                             current.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
                         }
                     }else{
-                        Debug.LogError("nao tem filho");
+                        Debug.Log("nao tem filho");
                     }
                 }
             }
@@ -174,7 +174,7 @@ public class ImageSequencingPanel : MonoBehaviour
                         current.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 
                     }else{
-                        Debug.LogError("nao tem filho");
+                        Debug.Log("nao tem filho");
                     }
                 }
             }

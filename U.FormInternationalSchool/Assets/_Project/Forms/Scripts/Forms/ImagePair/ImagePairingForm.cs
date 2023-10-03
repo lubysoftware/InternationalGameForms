@@ -132,7 +132,7 @@ public class ImagePairingForm : FormScreen
 
        
         string json = JsonConvert.SerializeObject(completeForm);
-        Debug.LogError(json);
+        Debug.Log(json);
         if (isEdit)
         {
             SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.text, this);

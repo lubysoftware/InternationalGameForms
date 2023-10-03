@@ -110,7 +110,7 @@ public class MemoryForm : FormScreen
 
     public override void SerializeGameData(string[] urls)
     {
-        Debug.LogError("serialize game " + urls);
+        Debug.Log("serialize game " + urls);
         int urlIndex = 0;
         if (backImagePath.IsNullEmptyOrWhitespace())
         {

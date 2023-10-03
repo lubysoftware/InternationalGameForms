@@ -41,7 +41,7 @@ public class CrosswordForm : FormScreen
     
     protected override void SendGameFiles()
     {
-        Debug.LogError("send game files");
+        Debug.Log("send game files");
         wordsQtt = panel.WordsQtt;
         if (wordsQtt < 1)
         {
@@ -51,7 +51,6 @@ public class CrosswordForm : FormScreen
         {
             if (panel.IsImage)
             {
-                Debug.LogError("is image");
                 filledImages = panel.FilledImage();
                 if (panel.GetImages() != null && panel.GetImages().Count > 0)
                 {
@@ -64,7 +63,6 @@ public class CrosswordForm : FormScreen
             }
             else
             {
-                Debug.LogError("is text");
                 filledImages = panel.FilledInputs();
                 SerializeGameData(filledImages.Values.ToArray());
             }
@@ -96,7 +94,7 @@ public class CrosswordForm : FormScreen
 
     public override void SerializeGameData(string[] urls)
     {
-        Debug.LogError("serialize game" + urls.Length);
+        Debug.Log("serialize game" + urls.Length);
         List<Words> listWords = new List<Words>();
         if (filledImages.Count == wordsQtt)
         {

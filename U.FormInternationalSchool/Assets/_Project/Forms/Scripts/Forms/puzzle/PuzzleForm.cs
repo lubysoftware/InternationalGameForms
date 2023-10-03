@@ -122,7 +122,7 @@ public class PuzzleForm : FormScreen
 
     public override void SerializeGameData(string[] urls)
     {
-        Debug.LogError("serialize game " + urls);
+        Debug.Log("serialize game " + urls);
 
         if (puzzleImagePath.IsNullEmptyOrWhitespace())
         {
@@ -151,7 +151,7 @@ public class PuzzleForm : FormScreen
 
 
         string json = JsonConvert.SerializeObject(completeForm);
-        Debug.LogError(json);
+        Debug.Log(json);
         if (isEdit)
         {
             SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.text, this);
