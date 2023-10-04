@@ -91,7 +91,7 @@ public class MemoryForm : FormScreen
         }
     }
 
-    protected override void CheckGameFields()
+    protected override void CheckEmptyGameFields()
     {
         if (backCardImage.Image.UploadedFile == null && backCardImage.Image.IsFilled == false)
         {

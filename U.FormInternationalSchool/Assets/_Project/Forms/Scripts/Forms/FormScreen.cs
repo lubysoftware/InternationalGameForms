@@ -39,6 +39,8 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private LoadingDots loading;
     [SerializeField] private Button backButton;
 
+    [SerializeField] private Sprite[] inputImages;
+
     protected FormBase game = new FormBase();
     
     private Dictionary<string, string> newUrlFiles = new Dictionary<string, string>();
@@ -62,6 +64,9 @@ public class FormScreen : MonoBehaviour
     [SerializeField]
     protected GameTypeSO so;
 
+    protected bool hasEmptyError;
+    protected bool hasValidationError;
+    
     protected virtual void Start()
     {
         sendForm.onClick.AddListener(SendFormData);
@@ -109,91 +114,144 @@ public class FormScreen : MonoBehaviour
         if (!canClick) return;
         loading.gameObject.SetActive(true);
         SetCanClick(false);
-        CheckBaseFormFields();
+        CheckEmptyBaseFormFields();
     }
 
     #region BASE_FORM
 
-    private void CheckBaseFormFields()
+    private void CheckEmptyBaseFormFields()
     {
+        hasEmptyError = false;
+        
         if (title.text.IsNullEmptyOrWhitespace())
         {
-            ShowError("Identificador do jogo", ErrorType.EMPTY, null);
-            return;
+            SetInputColor(title, true);
+            hasEmptyError = true;
+        }
+        else
+        {
+            SetInputColor(title, false);
+        }
+        
+        if (statement_EN.text.IsNullEmptyOrWhitespace())
+        {
+            SetInputColor(statement_EN, true);
+            hasEmptyError = true;
+        } else
+        {
+            SetInputColor(statement_EN, false);
         }
 
+        if (statement_PT.text.IsNullEmptyOrWhitespace() )
+        {
+            SetInputColor(statement_PT, true);
+            hasEmptyError = true;
+        }else
+        {
+            SetInputColor(statement_PT, false);
+        }
+        
+
+        if (timer.isOn)
+        {
+            if (timeMin.text.IsNullEmptyOrWhitespace())
+            {
+                SetInputColor(timeMin, true);
+                hasEmptyError = true;
+            }else
+            {
+                SetInputColor(timeMin, false);
+            }
+            
+            if (timerBonus.text.IsNullEmptyOrWhitespace())
+            {
+                SetInputColor(timerBonus, true);
+                hasEmptyError = true;
+            }else
+            {
+                SetInputColor(timerBonus, false);
+            }
+        }
+        else
+        {
+            timeInSec = 0;
+            bonusTimer = 0;
+        }
+
+        CheckEmptyGameFields();
+
+    }
+    
+    protected virtual void ValidateFields()
+    {
+        hasValidationError = false;
+        Debug.LogError("teste");
+        if (!CheckBonusTimer())
+        {
+            hasValidationError = true;
+            return;
+        }
+        
         if (titleImage.UploadedFile == null && titleImage.IsFilled == false)
         {
-            ShowError("Imagem de título do jogo", ErrorType.EMPTY, null);
+            Debug.LogError("teste title imahe");
+            ShowError("Imagem de título", ErrorType.EMPTY, null);
+            hasValidationError = true;
             return;
         }
 
         if (backgroundMusic.UploadedFile == null && backgroundMusic.IsFilled == false)
         {
+            hasValidationError = true;
             ShowError("Música de fundo", ErrorType.EMPTY, null);
-            return;
-        }
-
-        if (statement_EN.text.IsNullEmptyOrWhitespace())
-        {
-            ShowError("Enunciado em Inglês", ErrorType.EMPTY, null);
             return;
         }
         
         if (audioStatement_EN.UploadedFile == null && audioStatement_PT.IsFilled == false)
         {
+            hasValidationError = true;
             ShowError("Áudio do enunciado em Inglês", ErrorType.EMPTY, null);
-            return;
-        }
-        
-        if (statement_PT.text.IsNullEmptyOrWhitespace() )
-        {
-            ShowError("Enunciado em Português", ErrorType.EMPTY, null);
             return;
         }
         
         if (audioStatement_PT.UploadedFile == null && audioStatement_PT.IsFilled == false)
         {
+            hasValidationError = true;
             ShowError("Áudio do enunciado em Português", ErrorType.EMPTY, null);
             return;
         }
         
         if (backgroundImage.UploadedFile == null && backgroundImage.IsFilled == false)
         {
+            hasValidationError = true;
             ShowError("Imagem de fundo", ErrorType.EMPTY, null);
             return;
         }
-
+        
         if (timer.isOn)
         {
-            if (timeMin.text.IsNullEmptyOrWhitespace())
-            {
-                ShowError("Minutos do timer", ErrorType.EMPTY, null);
-                return;
-            }
-
             timeInSec = CalculateTimeInSec("do jogo", timeMin.text, timeSec.text, false);
             if (timeInSec == -1)
             {
+                hasValidationError = true;
                 timeInSec = 0;
-                return;
             }
         }
-        else
+    }
+    
+    public bool CheckFailsPenalty(TMP_InputField input)
+    {
+        int failsPenalty = 0;
+        int.TryParse(input.text, out failsPenalty);
+        if (failsPenalty <= 0)
         {
-            timeInSec = 0;
+            ShowError("Pontuação descontada por erro", ErrorType.GREATER_THAN, new int[]{0});
+            SetInputColor(input, true);
+            return false;
         }
-
-        bonusTimer = 0;
-        int.TryParse(timerBonus.text, out bonusTimer);
-        if (bonusTimer < 0 || bonusTimer > 100)
-        {
-            ShowError("Bônus do timer", ErrorType.BETWEEN, new int[]{0,100});
-            return;
-        }
+        SetInputColor(input, false);
         
-        CheckGameFields();
-
+        return true;
     }
 
     protected int CalculateTimeInSec(string name, string minText, string secText, bool allowZero )
@@ -233,6 +291,25 @@ public class FormScreen : MonoBehaviour
 
         timeTotal = min * 60 + sec;
         return timeTotal;
+    }
+
+    public void CallCheckBonus()
+    {
+        CheckBonusTimer();
+    }
+    
+    protected bool CheckBonusTimer()
+    {
+        bonusTimer = 0;
+        int.TryParse(timerBonus.text, out bonusTimer);
+        if (bonusTimer < 0 || bonusTimer > 100)
+        {
+            ShowError("Bônus do timer", ErrorType.BETWEEN, new int[]{0,100});
+            SetInputColor(timerBonus,true);
+            return false;
+        }
+        SetInputColor(timerBonus,false);
+        return true;
     }
 
     protected void FillBaseData(BaseGameJson baseForm)
@@ -557,10 +634,12 @@ public class FormScreen : MonoBehaviour
 
     #region GAME_FORM
 
-    protected virtual void CheckGameFields()
+    protected virtual void CheckEmptyGameFields()
     {
         
     }
+    
+    
     protected virtual void SendGameFiles()
     {
         
@@ -580,6 +659,9 @@ public class FormScreen : MonoBehaviour
         string error = "error";
         switch (type)
         {
+            case ErrorType.ALL_FIELDS:
+                error = "Todos os campos obrigatórios devem ser preenchidos.";
+                break;
             case ErrorType.EMPTY:
                 error = String.Format("O campo {0} deve ser preenchido.",field);
                 break;
@@ -604,7 +686,12 @@ public class FormScreen : MonoBehaviour
         errorPanel.gameObject.SetActive(true);
         SaveDataFail();
     }
-    
+
+    protected void SetInputColor(TMP_InputField inputField, bool isError)
+    {
+        inputField.image.sprite = inputImages[Utils.BoolToInt(isError)];
+    }
+
 
 }
 
@@ -615,7 +702,8 @@ public enum ErrorType
     LESS_THAN,
     GREATER_OR_EQUAL,
     BETWEEN, 
-    CUSTOM
+    CUSTOM,
+    ALL_FIELDS
 }
 
 [Serializable]

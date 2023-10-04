@@ -75,7 +75,7 @@ public class PuzzleForm : FormScreen
         }
     }
 
-    protected override void CheckGameFields()
+    protected override void CheckEmptyGameFields()
     {
         if (puzzleImage.UploadedFile == null && puzzleImage.IsFilled == false)
         {

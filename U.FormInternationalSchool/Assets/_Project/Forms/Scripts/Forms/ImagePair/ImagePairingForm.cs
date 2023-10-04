@@ -56,7 +56,7 @@ public class ImagePairingForm : FormScreen
         }
     }
     
-    protected override void CheckGameFields()
+    protected override void CheckEmptyGameFields()
     {
         if (failsPenalty.text.IsNullEmptyOrWhitespace())
         {

@@ -64,18 +64,44 @@ public class ImageSequencingForm : FormScreen
         }
     }
     
-    protected override void CheckGameFields()
+    protected override void CheckEmptyGameFields()
     {
         if (failsPenalty.text.IsNullEmptyOrWhitespace())
         {
-            ShowError("Pontuação descontada por erro", ErrorType.EMPTY, null);
-            return;
+            SetInputColor(failsPenalty, true);
+            hasEmptyError = true;
+        }else
+        {
+            SetInputColor(failsPenalty, false);
         }
 
-        int.TryParse(failsPenalty.text, out failsPenaltyValue);
-        if (failsPenaltyValue <= 0)
+        if (hasEmptyError)
         {
-            ShowError("Pontuação descontada por erro", ErrorType.GREATER_THAN, new int[]{0});
+            ShowError("", ErrorType.ALL_FIELDS, null);
+            return;
+        }
+        
+        ValidateFields();
+    }
+    
+    public void CallCheckFails()
+    {
+        CheckFailsPenalty(failsPenalty);
+    }
+    
+    protected override void ValidateFields()
+    {
+        base.ValidateFields();
+        if (hasValidationError)
+        {
+            return;
+        }
+        if (CheckFailsPenalty(failsPenalty))
+        {
+            int.TryParse(failsPenalty.text, out failsPenaltyValue);
+        }
+        else
+        {
             return;
         }
 

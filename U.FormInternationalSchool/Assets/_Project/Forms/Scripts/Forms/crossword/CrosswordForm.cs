@@ -69,7 +69,7 @@ public class CrosswordForm : FormScreen
         }
     }
     
-    protected override void CheckGameFields()
+    protected override void CheckEmptyGameFields()
     {
         if (panel.WordsQtt < 1)
         {
