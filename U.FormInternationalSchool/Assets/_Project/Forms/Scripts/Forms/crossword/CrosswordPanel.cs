@@ -303,7 +303,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
 
     private void ChangeTipType()
     {
-        if (isImage)
+        if (isImage.isOn)
         {
             gridLayout.cellSize = new Vector2(400, 250);
         }
