@@ -62,4 +62,9 @@ public class TabNavigation : MonoBehaviour
             }
         }
     }
+
+    public void SetIndex(int index)
+    {
+        currentIndex = index;
+    }
 }

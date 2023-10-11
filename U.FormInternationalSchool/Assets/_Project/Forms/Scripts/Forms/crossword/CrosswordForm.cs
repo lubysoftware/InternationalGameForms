@@ -10,7 +10,7 @@ using FileIO = System.IO.File;
 public class CrosswordForm : FormScreen
 {
     [SerializeField] private CrosswordPanel panel;
-    [SerializeField] private TMP_InputField pointPerWord;
+    [SerializeField] private InputElement pointPerWord;
 
     private int wordsQtt;
     private Dictionary<NewWordInput.WordInfo, string> filledImages;
@@ -71,6 +71,24 @@ public class CrosswordForm : FormScreen
     
     protected override void CheckEmptyGameFields()
     {
+        if (emptyField.Count > 0)
+        {
+            if (emptyField.Count == 1)
+            {
+                ShowError(emptyField[0], ErrorType.EMPTY, null);
+                return;
+            }
+
+            ShowError("", ErrorType.ALL_FIELDS, null);
+            return;
+        }
+        ValidateFields();
+    }
+    
+    protected virtual void ValidateFields()
+    {
+        base.ValidateFields();
+        if (hasValidationError) return;
         if (panel.WordsQtt < 1)
         {
             ShowError("O grid de palavras deve conter no mínimo uma palavra.", ErrorType.CUSTOM, null);
@@ -79,7 +97,7 @@ public class CrosswordForm : FormScreen
 
         if (panel.editingInput != null)
         {
-            ShowError("Finalize a edição do input "+ panel.editingInput.Index+".", ErrorType.CUSTOM, null);
+            ShowError("Finalize a edição da palavra "+ panel.editingInput.Index+".", ErrorType.CUSTOM, null);
             return;
         }
 
@@ -88,7 +106,6 @@ public class CrosswordForm : FormScreen
             ShowError("Todas as palavras devem ter as dicas preenchidas.", ErrorType.CUSTOM, null);
             return;
         }
-        
         SendBaseFormFiles();
     }
 
@@ -139,17 +156,17 @@ public class CrosswordForm : FormScreen
         string json = JsonConvert.SerializeObject(completeForm);
         if (isEdit)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.text, this);
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this);
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.text, this);
+            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this);
         }
     }
 
     private void FillGameData(CrosswordJsonGet json)
     {
-        pointPerWord.text = (100/json.words.Count).ToString();
+        pointPerWord.InputField.text = (100/json.words.Count).ToString();
         bool isImage = json.questionType == "IMAGE";
         panel.SetImageToggle(isImage);
         panel.FillData(json.words,FillUploadFiles,isImage);
@@ -161,7 +178,7 @@ public class CrosswordForm : FormScreen
 
     public void UpdatePoints()
     {
-        pointPerWord.text = panel.WordsQtt > 0 ? (100/panel.WordsQtt).ToString():0.ToString();
+        pointPerWord.InputField.text = panel.WordsQtt > 0 ? (100/panel.WordsQtt).ToString():0.ToString();
     }
 }
 

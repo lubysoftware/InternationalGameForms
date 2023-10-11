@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 31953917771882529}
-  disabledColor: {r: 1, g: 0.9906527, b: 0, a: 1}
+  disabledColor: {r: 0.83137256, g: 0.7490196, b: 0.019607844, a: 1}
   activatedColor: {r: 0, g: 0, b: 0, a: 1}
   emptyTextBackgroundColor: {r: 1, g: 0.9372549, b: 0.75686276, a: 1}
   background: {fileID: 8914044524712637329}

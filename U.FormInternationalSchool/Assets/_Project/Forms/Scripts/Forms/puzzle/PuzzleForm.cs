@@ -21,8 +21,8 @@ public class PuzzleForm : FormScreen
     [SerializeField] private TextMeshProUGUI twoStars;
     [SerializeField] private TextMeshProUGUI threeStars;
     [SerializeField] private Toggle tips;
-    [SerializeField] protected TMP_InputField timeCooldownMin, timeCooldownSec;
-    [SerializeField] protected TMP_InputField timeTipMin, timeTipSec;
+    [SerializeField] protected InputElement timeCooldownMin, timeCooldownSec;
+    [SerializeField] protected InputElement timeTipMin, timeTipSec;
 
     private int tipTimeInSec = 0;
     private int cooldownTimeInSec = 0;
@@ -79,19 +79,47 @@ public class PuzzleForm : FormScreen
     {
         if (puzzleImage.UploadedFile == null && puzzleImage.IsFilled == false)
         {
-            ShowError("Imagem do quebra-cabeça.", ErrorType.EMPTY, null);
-            return;
+            puzzleImage.ActivateErrorMode();
+            emptyField.Add("Imagem do quebra cabeça");
         }
 
         if (tips.isOn)
         {
-            if (timeTipMin.text.IsNullEmptyOrWhitespace())
+            if (timeTipMin.InputField.text.IsNullEmptyOrWhitespace())
             {
-                ShowError("Minutos do timer de dicas", ErrorType.EMPTY, null);
+                timeTipMin.ActivateErrorMode();
+                emptyField.Add("Minutos do timer de dicas");
+            }
+        }
+        else
+        {
+            tipTimeInSec = 0;
+            cooldownTimeInSec = 0;
+        }
+        
+        if (emptyField.Count > 0)
+        {
+            if (emptyField.Count == 1)
+            {
+                ShowError(emptyField[0], ErrorType.EMPTY, null);
                 return;
             }
 
-            tipTimeInSec = CalculateTimeInSec("de dicas", timeTipMin.text, timeTipSec.text, false);
+            ShowError("", ErrorType.ALL_FIELDS, null);
+            return;
+        }
+
+        ValidateFields();
+    }
+
+    protected override void ValidateFields()
+    {
+        base.ValidateFields();
+        if (hasValidationError) return;
+        
+        if (tips.isOn)
+        {
+            tipTimeInSec = CalculateTimeInSec("de dicas", timeTipMin, timeTipSec, false);
             if (tipTimeInSec == -1)
             {
                 tipTimeInSec = 0;
@@ -100,11 +128,12 @@ public class PuzzleForm : FormScreen
 
             if (tipTimeInSec > timeInSec)
             {
+                timeTipMin.ActivateErrorMode();
                 ShowError("O timer de dicas não deve possuir um tempo maior que o tempo total do jogo.", ErrorType.CUSTOM, null);
                 return;
             }
 
-            cooldownTimeInSec = CalculateTimeInSec("de intervalo", timeCooldownMin.text, timeCooldownSec.text, true);
+            cooldownTimeInSec = CalculateTimeInSec("de intervalo", timeCooldownMin, timeCooldownSec, true);
             if (cooldownTimeInSec == -1)
             {
                 cooldownTimeInSec = 0;
@@ -154,11 +183,11 @@ public class PuzzleForm : FormScreen
         Debug.Log(json);
         if (isEdit)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.text, this);
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this);
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.text, this);
+            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this);
         }
     }
 
@@ -174,8 +203,8 @@ public class PuzzleForm : FormScreen
             tips.onValueChanged.Invoke(hasTips);
             int min = json.tipShowTime / 60;
             int sec = json.tipShowTime - min * 60;
-            timeTipMin.text = String.Format("{0:00}", min);
-            timeTipSec.text = String.Format("{0:00}", sec);
+            timeTipMin.InputField.text = String.Format("{0:00}", min);
+            timeTipSec.InputField.text = String.Format("{0:00}", sec);
 
             int coolMin = 0;
             int coolSec = 0;
@@ -184,8 +213,8 @@ public class PuzzleForm : FormScreen
                 coolMin = json.tipCoolDown / 60;
                 coolSec = json.tipCoolDown - coolMin * 60;
             }
-            timeCooldownMin.text =  String.Format("{0:00}", coolMin);
-            timeCooldownSec.text = String.Format("{0:00}", coolSec);
+            timeCooldownMin.InputField.text =  String.Format("{0:00}", coolMin);
+            timeCooldownSec.InputField.text = String.Format("{0:00}", coolSec);
         }
         
         loadFileQtt = loadFileQtt + 1;
@@ -195,7 +224,7 @@ public class PuzzleForm : FormScreen
 
     public void UpdateStarsPoints()
     {
-        int time = CalculateTimeInSec("do jogo", timeMin.text, timeSec.text, false);
+        int time = CalculateTimeInSec("do jogo", timeMin, timeSec, false);
         if (time >= 0)
         {
             timeInSec = time;

@@ -7,12 +7,13 @@ using LubyLib.Core.Extensions;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using FileIO = System.IO.File;
 
 public class ImageSequencingForm : FormScreen
 {
     [SerializeField] private ImageSequencingPanel panel;
-    [SerializeField] private TMP_InputField failsPenalty;
+    [SerializeField] private InputElement failsPenalty;
 
     private int imageSeqQtt;
     private Dictionary<int, string> filledImages;
@@ -66,27 +67,32 @@ public class ImageSequencingForm : FormScreen
     
     protected override void CheckEmptyGameFields()
     {
-        if (failsPenalty.text.IsNullEmptyOrWhitespace())
+        if (failsPenalty.InputField.text.IsNullEmptyOrWhitespace())
         {
-            SetInputColor(failsPenalty, true);
-            hasEmptyError = true;
+            failsPenalty.ActivateErrorMode();
+            emptyField.Add("Pontuação descontada por erro");
         }else
         {
-            SetInputColor(failsPenalty, false);
+           DeactivateErrorInput(failsPenalty);
         }
 
-        if (hasEmptyError)
+        if (emptyField.Count > 0)
         {
+            if (emptyField.Count == 1)
+            {
+                ShowError(emptyField[0], ErrorType.EMPTY, null);
+                return;
+            }
+            
             ShowError("", ErrorType.ALL_FIELDS, null);
             return;
         }
-        
         ValidateFields();
     }
     
     public void CallCheckFails()
     {
-        CheckFailsPenalty(failsPenalty);
+        CheckGreatherThanZero(failsPenalty, "Pontuação descontada por erro");
     }
     
     protected override void ValidateFields()
@@ -96,21 +102,19 @@ public class ImageSequencingForm : FormScreen
         {
             return;
         }
-        if (CheckFailsPenalty(failsPenalty))
+        if (CheckGreatherThanZero(failsPenalty, "Pontuação descontada por erro"))
         {
-            int.TryParse(failsPenalty.text, out failsPenaltyValue);
+            int.TryParse(failsPenalty.InputField.text, out failsPenaltyValue);
         }
         else
         {
             return;
         }
-
         if (panel.ImageQtt() < 2)
         {
             ShowError("O sequenciamento de imagens deve conter no mínimo duas imagens.", ErrorType.CUSTOM, null);
             return;
         }
-        
         SendBaseFormFiles();
     }
 
@@ -164,17 +168,17 @@ public class ImageSequencingForm : FormScreen
         string json = JsonConvert.SerializeObject(completeForm);
         if (isEdit)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.text, this);
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this);
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.text, this);
+            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this);
         }
     }
 
     private void FillGameData(ImageSeqJsonGet json)
     {
-        failsPenalty.text = json.failPenalty.ToString();
+        failsPenalty.InputField.text = json.failPenalty.ToString();
         panel.FillImages(json.sequenceUnits, FillUploadFiles);
         sequenceQtt = json.sequenceUnits.Count;
         loadFileQtt = loadFileQtt + sequenceQtt;

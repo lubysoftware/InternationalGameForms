@@ -11,7 +11,7 @@ using UnityEngine;
 public class ImagePairingForm : FormScreen
 {
     [SerializeField] private ImagePairPanel panel;
-    [SerializeField] private TMP_InputField failsPenalty;
+    [SerializeField] private InputElement failsPenalty;
     private int pairsQtt;
     private Dictionary<char,List<string>> filledImages;
     private int failsPenaltyValue = 0;
@@ -56,21 +56,22 @@ public class ImagePairingForm : FormScreen
         }
     }
     
-    protected override void CheckEmptyGameFields()
+    protected override void ValidateFields()
     {
-        if (failsPenalty.text.IsNullEmptyOrWhitespace())
+        base.ValidateFields();
+        if (hasValidationError)
         {
-            ShowError("Pontuação descontada por erro", ErrorType.EMPTY, null);
             return;
         }
-
-        int.TryParse(failsPenalty.text, out failsPenaltyValue);
-        if (failsPenaltyValue <= 0)
+        if (CheckGreatherThanZero(failsPenalty, "Pontuação descontada por erro"))
         {
-            ShowError("Pontuação descontada por erro", ErrorType.GREATER_THAN, new int[]{0});
+            int.TryParse(failsPenalty.InputField.text, out failsPenaltyValue);
+        }
+        else
+        {
             return;
         }
-
+        
         if (!panel.AllPairsFilled())
         {
             ShowError("Todos os pares devem ser preenchidos.", ErrorType.CUSTOM, null);
@@ -78,6 +79,37 @@ public class ImagePairingForm : FormScreen
         }
         
         SendBaseFormFiles();
+    }
+    
+    protected override void CheckEmptyGameFields()
+    {
+        if (failsPenalty.InputField.text.IsNullEmptyOrWhitespace())
+        {
+            failsPenalty.ActivateErrorMode();
+            emptyField.Add("Pontuação descontada por erro");
+        }else
+        {
+            DeactivateErrorInput(failsPenalty);
+        }
+
+        if (emptyField.Count > 0)
+        {
+            if (emptyField.Count == 1)
+            {
+                ShowError(emptyField[0], ErrorType.EMPTY, null);
+                return;
+            }
+            
+            ShowError("", ErrorType.ALL_FIELDS, null);
+            return;
+        }
+
+        ValidateFields();
+    }
+    
+    public void CallCheckFails()
+    {
+        CheckGreatherThanZero(failsPenalty, "Pontuação descontada por erro");
     }
 
     public override void SerializeGameData(string[] urls)
@@ -135,17 +167,17 @@ public class ImagePairingForm : FormScreen
         Debug.Log(json);
         if (isEdit)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.text, this);
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this);
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.text, this);
+            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this);
         }
     }
 
     private void FillGameData(ImagePairJsonGet json)
     {
-        failsPenalty.text = json.failPenalty.ToString();
+        failsPenalty.InputField.text = json.failPenalty.ToString();
         List<string[]> urls = new List<string[]>();
         for (int i = 0; i < json.paringUnits.Count; i++)
         {

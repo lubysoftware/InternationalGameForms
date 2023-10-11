@@ -13,7 +13,7 @@ using Button = UnityEngine.UI.Button;
 using Image = UnityEngine.UI.Image;
 using Toggle = UnityEngine.UI.Toggle;
 
-public class NewWordInput : MonoBehaviour
+public class NewWordInput : InputElement
 {
     [SerializeField] private TMP_InputField wordText;
 
@@ -38,6 +38,12 @@ public class NewWordInput : MonoBehaviour
     [SerializeField] private Button deleteButton;
 
     [SerializeField] private bool isImageType;
+
+    [SerializeField] private Image background;
+
+    [SerializeField] private Sprite[] backgroundSprites;
+
+    [SerializeField] private Sprite inputText;
     public int Index;
 
     public event Action<NewWordInput, bool> OnDelete;
@@ -200,5 +206,22 @@ public class NewWordInput : MonoBehaviour
     {
         editButton.interactable = status;
         deleteButton.interactable = status;
+    }
+    
+    public override void ActivateErrorMode(bool cleanInput = false)
+    {
+        base.ActivateErrorMode(cleanInput);
+        background.sprite = backgroundSprites[1];
+    }
+
+    public void DeactivateErrorMode(bool changeSprite = true)
+    {
+       base.DeactivateErrorMode(inputText, changeSprite);
+       DeactivateBackground();
+    }
+    
+    public void DeactivateBackground()
+    {
+        background.sprite = backgroundSprites[0];
     }
 }

@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using AudioType = FrostweepGames.Plugins.WebGLFileBrowser.AudioType;
 
-public class UploadFileElement : MonoBehaviour
+public class UploadFileElement : InputElement
 {
     [SerializeField] protected Button uploadFileButton;
     [SerializeField] protected TextMeshProUGUI fileData;
@@ -23,6 +23,7 @@ public class UploadFileElement : MonoBehaviour
     [SerializeField] private Button playAudio;
     [SerializeField] private Button pauseAudio;
     [SerializeField] protected Sprite previewImage;
+    [SerializeField] private bool hasErrorMode = true;
 
     public string url;
     public bool IsFilled;
@@ -109,6 +110,7 @@ public class UploadFileElement : MonoBehaviour
         }
 
         IsFilled = false;
+        AddErrorMessage();
      //   WebGLFileBrowser.FreeMemory(); // free used memory and destroy created content
     }
 
@@ -142,7 +144,13 @@ public class UploadFileElement : MonoBehaviour
 
                         WebGLFileBrowser
                             .RegisterFileObject(file
-                                .ToSprite()); // add sprite with texture to cache list. should be used with  fileBrowserFreeMemory() when its no need anymore
+                                .ToSprite()); 
+                        // add sprite with texture to cache list. should be used with  fileBrowserFreeMemory() when its no need anymore
+                        if (hasErrorMode)
+                        {
+                            RemoveErrorMessage();
+                            DeactivateErrorMode(null,false);
+                        }
                     }
                 }
                 else
@@ -166,17 +174,25 @@ public class UploadFileElement : MonoBehaviour
                         playAudio.gameObject.SetActive(true);
                         pauseAudio.gameObject.SetActive(true);
                         fileField.gameObject.SetActive(true);
+                        if (hasErrorMode)
+                        {
+                            RemoveErrorMessage();
+                            DeactivateErrorMode(null);
+                        }
                     }
                     else
                     {
                         Debug.LogError("Não é OGG. " + file.fileInfo.extension);
                     }
                 }
+                
+                
             }
             else
             {
                 Debug.LogError("loaded files count = 0");
             }
+            
         }
         else
         {
@@ -238,6 +254,7 @@ public class UploadFileElement : MonoBehaviour
         showImage.sprite = s;
         showImage.gameObject.SetActive(true);
         IsFilled = true;
+        RemoveErrorMessage();
         if (deleteFile != null)
             deleteFile.gameObject.SetActive(true);
         OnFill?.Invoke(this);
@@ -251,6 +268,7 @@ public class UploadFileElement : MonoBehaviour
         playAudio.gameObject.SetActive(true);
         pauseAudio.gameObject.SetActive(true);
         IsFilled = true;
+        RemoveErrorMessage();
         if (deleteFile != null)
             deleteFile.gameObject.SetActive(true);
         OnFill?.Invoke(this);

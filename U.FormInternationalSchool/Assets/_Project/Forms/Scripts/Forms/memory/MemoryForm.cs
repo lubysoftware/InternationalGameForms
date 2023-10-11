@@ -30,9 +30,11 @@ public class MemoryForm : FormScreen
         SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
         if (!isEdit)
         {
-            loadFileQtt=2;
-            FillUploadFiles( backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/6c3eafb6-76af-4cd4-a467-c3edcaf68161_name.007_memory.ogg");
-            FillUploadFiles( backCardImage.Image,"back_card","https://stg1atividades.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
+            loadFileQtt = 2;
+            FillUploadFiles(backgroundMusic, "music_theme",
+                "https://stg1atividades.blob.core.windows.net/arquivos/6c3eafb6-76af-4cd4-a467-c3edcaf68161_name.007_memory.ogg");
+            FillUploadFiles(backCardImage.Image, "back_card",
+                "https://stg1atividades.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
         }
     }
 
@@ -95,16 +97,34 @@ public class MemoryForm : FormScreen
     {
         if (backCardImage.Image.UploadedFile == null && backCardImage.Image.IsFilled == false)
         {
-            ShowError("Imagem de verso da carta", ErrorType.EMPTY, null);
+            backCardImage.GetComponentInChildren<InputElement>().ActivateErrorMode();
+            emptyField.Add("Imagem de verso da carta");
+        }
+
+        if (emptyField.Count > 0)
+        {
+            if (emptyField.Count == 1)
+            {
+                ShowError(emptyField[0], ErrorType.EMPTY, null);
+                return;
+            }
+
+            ShowError("", ErrorType.ALL_FIELDS, null);
             return;
         }
 
+        ValidateFields();
+    }
+
+    protected virtual void ValidateFields()
+    {
+        base.ValidateFields();
+        if (hasValidationError) return;
         if (!panel.AllPairsFilled())
         {
             ShowError("Todos os pares devem ser preenchidos.", ErrorType.CUSTOM, null);
             return;
         }
-
         SendBaseFormFiles();
     }
 
@@ -178,11 +198,11 @@ public class MemoryForm : FormScreen
         Debug.Log(json);
         if (isEdit)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.text, this);
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this);
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.text, this);
+            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this);
         }
     }
 
@@ -204,7 +224,7 @@ public class MemoryForm : FormScreen
 
     public void UpdateStarsPoints()
     {
-        int time = CalculateTimeInSec("do jogo", timeMin.text, timeSec.text, false);
+        int time = CalculateTimeInSec("do jogo", timeMin, timeSec, false);
         if (time >= 0)
         {
             timeInSec = time;

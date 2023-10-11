@@ -341,6 +341,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42e1b5a299d17714aaa4f82b464676e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  errorMessage: {fileID: 0}
+  errorSymbol: {fileID: 0}
+  fieldErrorMode: {fileID: 0}
+  fieldNormalMode: {fileID: 0}
+  field: {fileID: 0}
   uploadFileButton: {fileID: 1255507521763536830}
   fileData: {fileID: 7873968391590350334}
   fileField: {fileID: 3311652427033501950}
@@ -351,9 +356,11 @@ MonoBehaviour:
   playAudio: {fileID: 0}
   pauseAudio: {fileID: 7882641738757567379}
   previewImage: {fileID: 21300000, guid: 938e948f747ebb348a18f0ed13d9cee0, type: 3}
+  hasErrorMode: 0
   url: 
   IsFilled: 0
   IsActive: 0
+  managedByParent: 1
 --- !u!224 &3311652427033501950 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4496966145680507445, guid: b9a8f6c01dfd2b14cb27116c0201e334, type: 3}

@@ -372,15 +372,17 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
 
     public bool IsAllFilled()
     {
+        bool status = true;
         foreach (var input in wordInputs)
         {
             if (!input.IsFilled)
             {
-                return false;
+                input.ActivateErrorMode();
+                status = false;
             }
         }
 
-        return true;
+        return status;
     }
 
     public Dictionary<NewWordInput.WordInfo, string> FilledInputs()
