@@ -11,7 +11,6 @@ public class ImageFrameDragDrop : ImageFrame, IPointerEnterHandler, IPointerExit
 {
    [SerializeField] private TMP_Dropdown groupSelection;
    [SerializeField] private GameObject overlay;
-   [SerializeField] private Canvas canvas;
    [SerializeField] private Vector3 previousPosition;
    [SerializeField] private RectTransform collisionRect;
 
@@ -51,6 +50,7 @@ public class ImageFrameDragDrop : ImageFrame, IPointerEnterHandler, IPointerExit
       else
       {
          gameObject.SetActive(false);
+         groupSelection.value = -1;
          OnDeleteButton();
       }
    }
@@ -88,19 +88,24 @@ public class ImageFrameDragDrop : ImageFrame, IPointerEnterHandler, IPointerExit
    
    public void OnEndDrag(PointerEventData eventData)
    {
-      if (!DragDropPanel.Instance.CanDropHere(Image.showImage.gameObject.GetComponent<RectTransform>(), transform.GetSiblingIndex()))
+      if (!DragDropPanel.Instance.CanDropHere(collisionRect, transform.GetSiblingIndex()))
       {
          gameObject.transform.localPosition = previousPosition;
+      }
+      else
+      {
+         Debug.LogError(transform.localPosition);
       }
    }
 
    public void OnDrag(PointerEventData eventData)
    {
-      gameObject.GetComponent<RectTransform>().anchoredPosition += eventData.delta/canvas.scaleFactor;
+      gameObject.GetComponent<RectTransform>().anchoredPosition += eventData.delta/DragDropPanel.Instance.canvas.scaleFactor;
    }
 
    public void OnBeginDrag(PointerEventData eventData)
    {
+      transform.SetAsLastSibling();
       previousPosition = GetComponent<RectTransform>().localPosition;
    }
    
@@ -108,7 +113,7 @@ public class ImageFrameDragDrop : ImageFrame, IPointerEnterHandler, IPointerExit
    {
       foreach (var pos in corners.ToList())
       {
-         if (RectTransformUtility.RectangleContainsScreenPoint(Image.showImage.gameObject.GetComponent<RectTransform>(), pos))
+         if (RectTransformUtility.RectangleContainsScreenPoint(collisionRect, pos))
          {
             Debug.LogError(this.name);
             return false;
@@ -116,5 +121,20 @@ public class ImageFrameDragDrop : ImageFrame, IPointerEnterHandler, IPointerExit
       }
 
       return true;
+   }
+
+   public void GroupOptionsStatus(bool status)
+   {
+      groupSelection.gameObject.SetActive(status);
+   }
+
+   public void SetGroup(string group)
+   {
+      groupSelection.value = GetDropdownIndex(group);
+   }
+   
+   private int GetDropdownIndex(string group)
+   {
+      return groupSelection.options.FindIndex(x => x.text == group);
    }
 }

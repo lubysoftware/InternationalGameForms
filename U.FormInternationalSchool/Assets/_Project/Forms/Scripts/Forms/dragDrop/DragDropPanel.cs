@@ -6,6 +6,7 @@ using FrostweepGames.Plugins.WebGLFileBrowser;
 using LubyLib.Core.Singletons;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -16,6 +17,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
     [SerializeField] private Sprite emptyGrid;
     [SerializeField] private UploadFileElement dragBackInput;
     [SerializeField] private ImageFrameDragDrop imageFramePrefab;
+    [SerializeField] private ImageFrameDragDrop textFramePrefab;
     [SerializeField] private TMP_Dropdown imageQtt;
     
     [SerializeField] private Transform confirmReducePanel;
@@ -24,14 +26,34 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
     [SerializeField] private Button denyButton;
     [SerializeField] private TextMeshProUGUI alertMessage;
     [SerializeField] private Transform positionsContainer;
+
+    [SerializeField] private Toggle isTextToggle;
+    [SerializeField] private Toggle isGroupToggle;
     
-    private int previousDropdown;
+    [SerializeField] private List<TMP_Dropdown.OptionData> imageOptions;
+    [SerializeField] private List<TMP_Dropdown.OptionData> textOptions;
+    
+    public int previousDropdown;
+
+    private List<FilledElements> filledEls;
+
+    public Canvas canvas;
+
+    private bool isCanceling;
+    
+    
+    public struct FilledElements
+    {
+        public int group;
+        public Vector3 position;
+        public string image;
+    }
     void Start()
     {
         dragBackInput.OnChangeFile += UpdateGridImage;
-        confirmButton.onClick.AddListener(ShowDropdownQtt);
-        denyButton.onClick.AddListener(ResetDropdown);
+       
         imageQtt.onValueChanged.AddListener(OnDropDownChangeValue);
+       
     }
 
     private void UpdateGridImage(bool isFilled)
@@ -56,6 +78,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
                 alertMessage.text =
                     String.Format("Deseja excluir os últimos {0} pares preenchidos?",qtt);
             }
+            SetConfirmPanelListeners(ShowDropdownQtt,ResetDropdown);
             confirmReducePanel.gameObject.SetActive(true);
             return;
         }
@@ -65,6 +88,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
 
     private void ShowDropdownQtt()
     {
+        confirmReducePanel.gameObject.SetActive(false);
         int index = 0;
         for (int i = 0; i < gridBackground.transform.childCount; i++)
         {
@@ -90,12 +114,13 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
             if(updateLayout)
                 gridBackground.transform.GetChild(i).localPosition = positionsContainer.GetChild(i).localPosition;
         }
-        
+
     }
     
 
     private void ResetDropdown()
     {
+        confirmReducePanel.gameObject.SetActive(false);
         imageQtt.value = GetDropdownIndex(previousDropdown);
     }
 
@@ -124,12 +149,44 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
     {
         return imageQtt.options.FindIndex(x => x.text == qtt.ToString());
     }
+    
+    public Dictionary<int,string> FilledImages()
+    {
+        Dictionary<int, string> listFilledImages = new Dictionary<int, string>();
+        foreach (Transform child in transform)
+        {
+            ImageElement el = child.GetComponent<ImageFrameDragDrop>().Image;
+            if (el.IsActive && el.UploadedFile == null)
+            {
+                if (el.IsFilled)
+                {
+                    listFilledImages.Add(el.Index, el.url);
+                }
+            }
+        }
+
+        return listFilledImages;
+    }
+    
+    public List<File> GetImages()
+    {
+        List<File> listImages = new List<File>();
+        foreach (Transform child in transform)
+        {
+            ImageElement el = child.GetComponent<ImageFrameDragDrop>().Image;
+            if (el.IsActive && el.UploadedFile != null)
+            {
+                listImages.Add(el.UploadedFile);
+            }
+        }
+        return listImages;
+    }
 
     public bool CanDropHere(RectTransform rt, int index)
     {
-        Vector3[] v = new Vector3[4];
-        rt.GetWorldCorners(v);
-        foreach (var pos in v.ToList())
+        Vector3[] cornersArray = new Vector3[4];
+        rt.GetWorldCorners(cornersArray);
+        foreach (var pos in cornersArray.ToList())
         {
             if (!RectTransformUtility.RectangleContainsScreenPoint(gridBackground.GetComponent<RectTransform>(), pos))
             {
@@ -141,7 +198,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
                 if (i == index) break;
                 if (gridBackground.transform.GetChild(i).gameObject.activeInHierarchy)
                 {
-                    if (!gridBackground.transform.GetChild(i).GetComponent<ImageFrameDragDrop>().CanDropHere(v))
+                    if (!gridBackground.transform.GetChild(i).GetComponent<ImageFrameDragDrop>().CanDropHere(cornersArray))
                     {
                         return false;
                     }
@@ -151,8 +208,121 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
 
         return true;
     }
-    
 
+    public void UpdateDropdownOptions()
+    {
+        if (isCanceling)
+        {
+            isCanceling = false;
+            return;
+        }
+        int completed = CompletedImages();
+        if (completed > 0)
+        {
+            alertMessage.text = "Deseja alterar o tipo de input e descartar os elementos preenchidos?";
+            SetConfirmPanelListeners(InstantiateNewElements,CancelChangeInputType);
+            confirmReducePanel.gameObject.SetActive(true);
+            return;
+        }
+
+       InstantiateNewElements();
+
+    }
+    
+    public void CancelChangeInputType()
+    {
+        isCanceling = true;
+        confirmReducePanel.gameObject.SetActive(false);
+        isTextToggle.isOn = !isTextToggle.isOn;
+    }
+
+    public void UpdateGroupOptions()
+    {
+        for (int i = 0; i < gridBackground.transform.childCount; i++)
+        {
+            gridBackground.transform.GetChild(i).GetComponent<ImageFrameDragDrop>()
+                .GroupOptionsStatus(isGroupToggle.isOn);
+        }
+    }
+
+    private void InstantiateNewElements()
+    {
+        confirmReducePanel.gameObject.SetActive(false);
+        imageQtt.options.Clear(); 
+        imageQtt.options.AddRange(isTextToggle.isOn ? textOptions: imageOptions);
+        imageQtt.SetValueWithoutNotify(0);
+        if (gridBackground.transform.childCount > 0)
+        {
+            foreach (Transform child in gridBackground.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        ImageFrameDragDrop prefab = isTextToggle.isOn ? textFramePrefab : imageFramePrefab;
+        int qtt = 0;
+        int.TryParse(imageQtt.options.Last().text, out qtt);
+
+        for (int i = 0; i < textOptions.Count; i++)
+        {
+            ImageFrameDragDrop imageFrameDragDrop = Instantiate(prefab, gridBackground.transform);
+            imageFrameDragDrop.transform.localPosition = positionsContainer.GetChild(i).localPosition;
+            imageFrameDragDrop.GroupOptionsStatus(isGroupToggle.isOn);
+            imageFrameDragDrop.Activate(i == 0);
+        }
+        
+    }
+
+    public void InstantiateFilledElements(List<DraggableItem> filledEls)
+    {
+        imageQtt.options.Clear(); 
+        imageQtt.options.AddRange(isTextToggle.isOn ? textOptions: imageOptions);
+        imageQtt.SetValueWithoutNotify(0);
+        ImageFrameDragDrop prefab = isTextToggle.isOn ? textFramePrefab : imageFramePrefab;
+        
+        foreach (DraggableItem el in filledEls)
+        {
+            ImageFrameDragDrop imageFrameDragDrop = Instantiate(prefab, gridBackground.transform);
+            imageFrameDragDrop.transform.localPosition = new Vector3(el.spawnPointX,el.spawnPointY);
+            imageFrameDragDrop.Image.FillData("drag", el.imageUrl);
+            if (el.dragType != "UNIQUE")
+            {
+                imageFrameDragDrop.SetGroup(el.dragType);
+            }
+            imageFrameDragDrop.GroupOptionsStatus(isGroupToggle.isOn);
+        }
+    }
+
+    private void SetConfirmPanelListeners(UnityAction confirm, UnityAction deny)
+    {
+        confirmButton.onClick.RemoveAllListeners();
+        denyButton.onClick.RemoveAllListeners();
+        confirmButton.onClick.AddListener(confirm);
+        denyButton.onClick.AddListener(deny);
+    }
+
+    public bool BackImageIsFilled()
+    {
+        if (dragBackInput.UploadedFile == null && !dragBackInput.IsFilled)
+        {
+            dragBackInput.ActivateErrorMode();
+        }
+        dragBackInput.DeactivateErrorMode(null);  
+      
+        return true;
+    }
+
+    public UploadFileElement BackImage()
+    {
+        return dragBackInput;
+    }
+    
+    public void FillToggles(bool isText, bool isGroup)
+    {
+        isTextToggle.isOn = isText;
+        isGroupToggle.isOn = isGroup;
+    }
+    
 
 
 }

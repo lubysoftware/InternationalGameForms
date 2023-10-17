@@ -21,6 +21,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
     [SerializeField] private Button newWordButton;
     [SerializeField] private Transform wordsContainer;
     [SerializeField] private Toggle isImage;
+    [SerializeField] private Toggle isText;
     [SerializeField] private int[] maxItems;
 
     [Space(15)] [Header("Warning panel")] [SerializeField]
