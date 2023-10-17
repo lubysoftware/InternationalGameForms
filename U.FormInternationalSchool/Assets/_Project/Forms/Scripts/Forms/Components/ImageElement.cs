@@ -15,6 +15,7 @@ public class ImageElement : UploadFileElement
     public event Action<ImageElement> OnDelete;
 
     public int Index => transform.GetComponentInParent<ImageFrame>().Index;
+    
 
     public void AddImage()
     {

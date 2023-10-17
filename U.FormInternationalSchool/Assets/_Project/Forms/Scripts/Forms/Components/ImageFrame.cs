@@ -9,15 +9,15 @@ public class ImageFrame : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI indextext;
 
-    [SerializeField] private Button updateImg;
+    [SerializeField] protected Button updateImg;
 
-    [SerializeField] private Button delete;
+    [SerializeField] protected Button delete;
 
     [SerializeField] private Transform indexField;
 
-    [SerializeField] private bool isActive;
+    [SerializeField] protected bool isActive;
 
-    [SerializeField] private Button newImageButton;
+    [SerializeField] protected Button newImageButton;
 
     private int index;
 
@@ -28,7 +28,7 @@ public class ImageFrame : MonoBehaviour
 
     public ImageElement Image => transform.GetComponentInChildren<ImageElement>();
 
-    void Start()
+    protected virtual void Start()
     {
         updateImg.onClick.AddListener(OnUpdateButton);
         delete.onClick.AddListener(OnDeleteButton);
@@ -55,18 +55,18 @@ public class ImageFrame : MonoBehaviour
         indextext.text = letter + (index + 1).ToString();
     }
 
-    public void OnDeleteButton()
+    public virtual void OnDeleteButton()
     {
         SetActiveState(false);
         Image.Delete();
     }
 
-    private void OnUpdateButton()
+    protected virtual void OnUpdateButton()
     {
         Image.AddImage();
     }
 
-    public void SetActiveState(bool state)
+    public virtual void SetActiveState(bool state)
     {
         isActive = state;
         delete.gameObject.SetActive(state);

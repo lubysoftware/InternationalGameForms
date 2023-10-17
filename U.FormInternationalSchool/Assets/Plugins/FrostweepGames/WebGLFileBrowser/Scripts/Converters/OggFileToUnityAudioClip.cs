@@ -25,7 +25,7 @@ namespace FrostweepGames.Plugins.WebGLFileBrowser
                 audioClip.SetData(_audioBuffer, 0);
                 return audioClip;
             }
-
+            
             return null;
         }
     }

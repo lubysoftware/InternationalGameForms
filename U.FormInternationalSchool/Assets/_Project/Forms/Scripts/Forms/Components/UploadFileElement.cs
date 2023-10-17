@@ -16,7 +16,7 @@ public class UploadFileElement : InputElement
     [SerializeField] protected TextMeshProUGUI fileData;
     [SerializeField] protected Transform fileField;
     [SerializeField] protected Button deleteFile;
-    [SerializeField] protected Image showImage;
+    [SerializeField] public Image showImage;
     [SerializeField] private bool isMultipleFiles = false;
     private AudioSource _audioSource;
     [SerializeField] protected bool isImage;
@@ -39,6 +39,7 @@ public class UploadFileElement : InputElement
     public File UploadedFile => _loadedFiles != null && _loadedFiles.Length > 0 && _loadedFiles[0].data != null? _loadedFiles[0] : null;
 
     public event Action<UploadFileElement> OnFill;
+    public event Action<bool> OnChangeFile;
 
     protected virtual void Start()
     {
@@ -111,6 +112,7 @@ public class UploadFileElement : InputElement
 
         IsFilled = false;
         AddErrorMessage();
+        OnChangeFile?.Invoke(false);
      //   WebGLFileBrowser.FreeMemory(); // free used memory and destroy created content
     }
 
@@ -185,7 +187,7 @@ public class UploadFileElement : InputElement
                         Debug.LogError("Não é OGG. " + file.fileInfo.extension);
                     }
                 }
-                
+                OnChangeFile?.Invoke(true);
                 
             }
             else
@@ -254,6 +256,7 @@ public class UploadFileElement : InputElement
         showImage.sprite = s;
         showImage.gameObject.SetActive(true);
         IsFilled = true;
+        OnChangeFile?.Invoke(IsFilled);
         RemoveErrorMessage();
         if (deleteFile != null)
             deleteFile.gameObject.SetActive(true);
@@ -268,6 +271,7 @@ public class UploadFileElement : InputElement
         playAudio.gameObject.SetActive(true);
         pauseAudio.gameObject.SetActive(true);
         IsFilled = true;
+        OnChangeFile?.Invoke(true);
         RemoveErrorMessage();
         if (deleteFile != null)
             deleteFile.gameObject.SetActive(true);
