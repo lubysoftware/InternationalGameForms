@@ -40,7 +40,11 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
     public Canvas canvas;
 
     private bool isCanceling;
-    
+
+    private bool isGridSubscribed = false;
+
+    public bool IsGroup => isGroupToggle.isOn;
+    public bool IsText => isTextToggle.isOn;
     
     public struct FilledElements
     {
@@ -50,7 +54,11 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
     }
     void Start()
     {
-        dragBackInput.OnChangeFile += UpdateGridImage;
+        if(!isGridSubscribed) 
+        {
+            dragBackInput.OnChangeFile += UpdateGridImage;
+            isGridSubscribed = true;
+        }
        
         imageQtt.onValueChanged.AddListener(OnDropDownChangeValue);
        
@@ -58,7 +66,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
 
     private void UpdateGridImage(bool isFilled)
     {
-        gridBackground.sprite = isFilled? dragBackInput.UploadedFile.ToSprite():emptyGrid;
+        gridBackground.sprite = isFilled? dragBackInput.showImage.sprite:emptyGrid;
     }
 
    public void OnDropDownChangeValue(int newValue)
@@ -92,7 +100,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
         int index = 0;
         for (int i = 0; i < gridBackground.transform.childCount; i++)
         {
-            if (gridBackground.transform.GetChild(i).GetComponent<ImageFrameDragDrop>().IsCompleted())
+            if (gridBackground.transform.GetChild(i).GetComponent<ImageFrameDragDrop>().HasImage())
             {
                 gridBackground.transform.GetChild(i).SetSiblingIndex(index);
                 index++;
@@ -129,7 +137,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
         int counter = 0;
         for (int i = 0; i < gridBackground.transform.childCount; i++)
         {
-            if (gridBackground.transform.GetChild(i).GetComponent<ImageFrameDragDrop>().IsCompleted())
+            if (gridBackground.transform.GetChild(i).GetComponent<ImageFrameDragDrop>().HasImage())
             {
                 counter++;
             }
@@ -153,7 +161,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
     public Dictionary<int,string> FilledImages()
     {
         Dictionary<int, string> listFilledImages = new Dictionary<int, string>();
-        foreach (Transform child in transform)
+        foreach (Transform child in gridBackground.transform)
         {
             ImageElement el = child.GetComponent<ImageFrameDragDrop>().Image;
             if (el.IsActive && el.UploadedFile == null)
@@ -171,7 +179,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
     public List<File> GetImages()
     {
         List<File> listImages = new List<File>();
-        foreach (Transform child in transform)
+        foreach (Transform child in gridBackground.transform)
         {
             ImageElement el = child.GetComponent<ImageFrameDragDrop>().Image;
             if (el.IsActive && el.UploadedFile != null)
@@ -269,27 +277,50 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
             imageFrameDragDrop.transform.localPosition = positionsContainer.GetChild(i).localPosition;
             imageFrameDragDrop.GroupOptionsStatus(isGroupToggle.isOn);
             imageFrameDragDrop.Activate(i == 0);
+            imageFrameDragDrop.SetIndex(i);
         }
         
     }
 
-    public void InstantiateFilledElements(List<DraggableItem> filledEls)
+    public void InstantiateFilledElements(List<DraggableItemJson> filledEls, Action<UploadFileElement> onLoad)
     {
         imageQtt.options.Clear(); 
         imageQtt.options.AddRange(isTextToggle.isOn ? textOptions: imageOptions);
         imageQtt.SetValueWithoutNotify(0);
         ImageFrameDragDrop prefab = isTextToggle.isOn ? textFramePrefab : imageFramePrefab;
-        
-        foreach (DraggableItem el in filledEls)
+        if (gridBackground.transform.childCount > 0)
         {
-            ImageFrameDragDrop imageFrameDragDrop = Instantiate(prefab, gridBackground.transform);
-            imageFrameDragDrop.transform.localPosition = new Vector3(el.spawnPointX,el.spawnPointY);
-            imageFrameDragDrop.Image.FillData("drag", el.imageUrl);
-            if (el.dragType != "UNIQUE")
+            foreach (Transform child in gridBackground.transform)
             {
-                imageFrameDragDrop.SetGroup(el.dragType);
+                Destroy(child.gameObject);
             }
-            imageFrameDragDrop.GroupOptionsStatus(isGroupToggle.isOn);
+        }
+        
+        for (int i = 0; i < textOptions.Count; i++)
+        {
+            if (filledEls.Count > i)
+            {
+                ImageFrameDragDrop imageFrameDragDrop = Instantiate(prefab, gridBackground.transform);
+                imageFrameDragDrop.transform.localPosition =
+                    new Vector3(filledEls[i].spawnPointX, filledEls[i].spawnPointY);
+                imageFrameDragDrop.Image.OnFill += onLoad;
+                imageFrameDragDrop.Image.FillData("drag", filledEls[i].imageUrl);
+                if (isGroupToggle.isOn)
+                {
+                    imageFrameDragDrop.SetGroup(filledEls[i].groupId.ToString());
+                }
+                imageFrameDragDrop.GroupOptionsStatus(isGroupToggle.isOn);
+                imageFrameDragDrop.Activate(true);
+                imageFrameDragDrop.SetIndex(i);
+            }
+            else
+            {
+                ImageFrameDragDrop imageFrameDragDrop = Instantiate(prefab, gridBackground.transform);
+                imageFrameDragDrop.transform.localPosition = positionsContainer.GetChild(i).localPosition;
+                imageFrameDragDrop.GroupOptionsStatus(isGroupToggle.isOn);
+                imageFrameDragDrop.Activate(false);
+                imageFrameDragDrop.SetIndex(i);
+            }
         }
     }
 
@@ -306,6 +337,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
         if (dragBackInput.UploadedFile == null && !dragBackInput.IsFilled)
         {
             dragBackInput.ActivateErrorMode();
+            return false;
         }
         dragBackInput.DeactivateErrorMode(null);  
       
@@ -314,6 +346,11 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
 
     public UploadFileElement BackImage()
     {
+        if (!isGridSubscribed)
+        {
+            dragBackInput.OnChangeFile += UpdateGridImage;
+            isGridSubscribed = true;
+        }
         return dragBackInput;
     }
     
@@ -322,7 +359,47 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
         isTextToggle.isOn = isText;
         isGroupToggle.isOn = isGroup;
     }
-    
 
+
+    public bool CheckIfAllElementsAreFullyComplete()
+    {
+        foreach (Transform child in gridBackground.transform)
+        {
+            if (child.gameObject.activeInHierarchy)
+            {
+                ImageFrameDragDrop img = child.GetComponent<ImageFrameDragDrop>();
+                if (isGroupToggle.isOn)
+                {
+                    if (!img.HasGroup())
+                    {
+                        return false;
+                    }
+                }
+
+                if (!img.HasImage())
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public List<DraggableItem> GetAllDraggableItems()
+    {
+        List<DraggableItem> list = new List<DraggableItem>();
+        foreach (Transform child in gridBackground.transform)
+        {
+            if (child.gameObject.activeInHierarchy)
+            {
+                ImageFrameDragDrop img = child.GetComponent<ImageFrameDragDrop>();
+                
+                list.Add( img.GetItem(isGroupToggle.isOn));
+            }
+        }
+
+        return list;
+    }
 
 }

@@ -10,8 +10,16 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 834317375646320382, guid: a06fc8bd300d20045bfcc79d2b4af3ae, type: 3}
       propertyPath: m_Name
-      value: CreateInput_puzzle
+      value: CreateInput_drag_drop
       objectReference: {fileID: 0}
+    - target: {fileID: 2807538459181176102, guid: a06fc8bd300d20045bfcc79d2b4af3ae, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 54e0e25662b107b46a0213f810d507d5, type: 3}
+    - target: {fileID: 3496705064580153771, guid: a06fc8bd300d20045bfcc79d2b4af3ae, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ac006722768211d4688e29a7ab40d204, type: 3}
     - target: {fileID: 4063723008595654915, guid: a06fc8bd300d20045bfcc79d2b4af3ae, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -92,6 +100,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4555586448543112899, guid: a06fc8bd300d20045bfcc79d2b4af3ae, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4a724e2d62f231847aaf8588ce4fd60f, type: 3}
+    - target: {fileID: 4892589388435704171, guid: a06fc8bd300d20045bfcc79d2b4af3ae, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 666fd8843e46df14bb3a7b3890de7cd8, type: 3}
+    - target: {fileID: 6345857567977551053, guid: a06fc8bd300d20045bfcc79d2b4af3ae, type: 3}
+      propertyPath: hasErrorMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6345857567977551053, guid: a06fc8bd300d20045bfcc79d2b4af3ae, type: 3}
+      propertyPath: previewImage
+      value: 
+      objectReference: {fileID: 21300000, guid: 1f08b5bb79803f04c8df1c8f4703f47b, type: 3}
+    - target: {fileID: 6546820885229878313, guid: a06fc8bd300d20045bfcc79d2b4af3ae, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8cd62fdd46fd6df4c879de27ffbfded6, type: 3}
+    - target: {fileID: 6937764798567587248, guid: a06fc8bd300d20045bfcc79d2b4af3ae, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 1f08b5bb79803f04c8df1c8f4703f47b, type: 3}
+    - target: {fileID: 7970736033425836570, guid: a06fc8bd300d20045bfcc79d2b4af3ae, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c33cf34c7e29eb9478dd4df02ef2d421, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

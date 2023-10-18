@@ -25,19 +25,10 @@ public class DragDropJsonGet : MonoBehaviour
     public List<SupportMaterialGet> SupportMaterial;
     public int dragnDropId;
     public string dropPlaceBackgroundUrl;
-    public List<DraggableItem> draggableItem;
-}
-    
-[Serializable]
-public class DragDropGet
-{
-    public int id;
-    public int matchCardId;
-    public string firstImageUrl;
-    public string secondImageUrl;
-    public string created_at;
-    public string updated_at;
-    public bool deleted;
+    public string materialType;
+    public string dragType;
+    public int failPenalty;
+    public List<DraggableItemJson> draggableItem;
 }
 
 [Serializable]
@@ -45,7 +36,7 @@ public class DragItemGet
 {
     public int id;
     public int dragndropId;
-    public string dragType;
+    public int groupId;
     public float spawnPointX;
     public float spawnPointY;
     public string created_at;

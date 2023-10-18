@@ -662,6 +662,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5b95f070702ad446819f1ff7dfbb0bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  errorMessage: {fileID: 0}
+  errorSymbol: {fileID: 0}
+  fieldErrorMode: {fileID: 0}
+  fieldNormalMode: {fileID: 0}
+  field: {fileID: 0}
   uploadFileButton: {fileID: 8978968780137976422}
   fileData: {fileID: 4987876302654434897}
   fileField: {fileID: 398799243790222161}
@@ -672,6 +677,7 @@ MonoBehaviour:
   playAudio: {fileID: 0}
   pauseAudio: {fileID: 0}
   previewImage: {fileID: 21300000, guid: 40a6050022735cd4e9da5535a6ea4b57, type: 3}
+  hasErrorMode: 1
   url: 
   IsFilled: 0
 --- !u!82 &7358298018513873925

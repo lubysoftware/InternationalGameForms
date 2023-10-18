@@ -33,7 +33,7 @@ public class ImageFrameDragDrop : ImageFrame, IPointerEnterHandler, IPointerExit
          newImageButton.gameObject.SetActive(!state);
    }
 
-   public bool IsCompleted()
+   public bool HasImage()
    {
       if (!IsActive || (Image.UploadedFile == null && !Image.IsFilled))
          return false;
@@ -41,6 +41,11 @@ public class ImageFrameDragDrop : ImageFrame, IPointerEnterHandler, IPointerExit
       return true;
    }
 
+   public bool HasGroup()
+   {
+      return groupSelection.value != -1;
+   }
+   
    public void Activate(bool status)
    {
       if (status)
@@ -92,10 +97,6 @@ public class ImageFrameDragDrop : ImageFrame, IPointerEnterHandler, IPointerExit
       {
          gameObject.transform.localPosition = previousPosition;
       }
-      else
-      {
-         Debug.LogError(transform.localPosition);
-      }
    }
 
    public void OnDrag(PointerEventData eventData)
@@ -123,6 +124,12 @@ public class ImageFrameDragDrop : ImageFrame, IPointerEnterHandler, IPointerExit
       return true;
    }
 
+   public override void SetIndex(int index)
+   {
+      this.index = index;
+     // SetActiveState(false);
+   }
+   
    public void GroupOptionsStatus(bool status)
    {
       groupSelection.gameObject.SetActive(status);
@@ -136,5 +143,22 @@ public class ImageFrameDragDrop : ImageFrame, IPointerEnterHandler, IPointerExit
    private int GetDropdownIndex(string group)
    {
       return groupSelection.options.FindIndex(x => x.text == group);
+   }
+
+   public DraggableItem GetItem(bool isGroup)
+   {
+      int group = Index;
+      if (isGroup)
+      {
+         int.TryParse(groupSelection.options[groupSelection.value].text, out group);
+      }
+
+      return  new DraggableItem()
+      {
+         groupId = group,
+         spawnPointX = GetComponent<RectTransform>().localPosition.x,
+         spawnPointY = GetComponent<RectTransform>().localPosition.y,
+         image = Image.UploadedFile
+      };
    }
 }

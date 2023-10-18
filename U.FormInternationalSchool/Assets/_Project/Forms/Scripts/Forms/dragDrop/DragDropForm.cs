@@ -23,6 +23,10 @@ public class DragDropForm : FormScreen
 
     private int elementsQtt;
 
+    private List<DraggableItem> items; 
+    private int uploadedFilesElementsQtt = 0;
+    
+    private string backImagePath = "";
 
     protected override void Start()
     {
@@ -49,16 +53,51 @@ public class DragDropForm : FormScreen
 
     protected override void SendGameFiles()
     {
+        Debug.LogError("send game");
         filledImages = panel.FilledImages();
         imageQtt = panel.previousDropdown;
+        items = panel.GetAllDraggableItems();
+        List<File> filesToSend = new List<File>();
 
-        if (panel.GetImages() != null && panel.GetImages().Count > 0)
+        if (panel.BackImage().UploadedFile != null)
         {
-            SendFilesToAPI.Instance.StartUploadFiles(this, panel.GetImages(), false);
+            filesToSend.Add(panel.BackImage().UploadedFile);
+            backImagePath = "";
         }
         else
         {
-            SerializeGameData(filledImages.Values.ToArray());
+            if (panel.BackImage().IsFilled)
+            {
+                backImagePath = panel.BackImage().url;
+            }
+            else
+            {
+                ShowError("Imagem de fundo do grid", ErrorType.EMPTY, null);
+                return;
+            }
+        }
+        
+        if (items != null && items.Count > 0)
+        {
+            foreach (DraggableItem item in items)
+            {
+                if (item.image != null)
+                {
+                    filesToSend.Add(item.image);
+                    uploadedFilesElementsQtt++;
+                }
+            }
+        }
+        
+        
+        if (panel.GetImages() != null && panel.GetImages().Count > 0)
+        {
+            Debug.LogError("upload game");
+            SendFilesToAPI.Instance.StartUploadFiles(this, filesToSend, false);
+        }
+        else
+        {
+            SerializeGameData(null);
         }
 
     }
@@ -117,7 +156,7 @@ public class DragDropForm : FormScreen
             return;
         }
 
-        if (!panel.AllImagesFilled())
+        if (!panel.CheckIfAllElementsAreFullyComplete())
         {
             ShowError("Todos os elementos devem ser preenchidos.", ErrorType.CUSTOM, null);
             return;
@@ -129,46 +168,52 @@ public class DragDropForm : FormScreen
     public override void SerializeGameData(string[] urls)
     {
         Debug.Log("serialize game" + urls);
-
-        /*List<DraggableItem> listSeq = new List<DraggableItem>();
-        if (filledImages.Count == imageQtt)
+        
+        int urlIndex = 0;
+        if (backImagePath.IsNullEmptyOrWhitespace())
         {
-            if (urls != null)
+            backImagePath = urls[0];
+            urlIndex = 1;
+        }
+
+        List<DraggableItemJson> listDraggableItems = new List<DraggableItemJson>();
+        if (urls == null)
+        {
+            for (int i = 0; i < filledImages.Count; i++)
             {
-                for (int i = 0; i < urls.Length; i++)
-                {
-                    listSeq.Add(new DraggableItem() { spawnPointX = i, imageUrl = urls[i] });
-                }
+                listDraggableItems.Add(new DraggableItemJson() { spawnPointX = items[i].spawnPointX, spawnPointY = items[i].spawnPointY, imageUrl = filledImages[i], groupId = items[i].groupId});
             }
         }
         else
         {
-            int urlIndex = 0;
             for (int i = 0; i < imageQtt; i++)
             {
                 if (filledImages.ContainsKey(i))
                 {
-                    listSeq.Add(new DraggableItem() { position = i, imageUrl = filledImages[i] });
+                    listDraggableItems.Add(new DraggableItemJson() { spawnPointX = items[i].spawnPointX, spawnPointY = items[i].spawnPointY, imageUrl = filledImages[i], groupId = items[i].groupId});
                 }
                 else
                 {
                     if (urls.Length > urlIndex)
                     {
-                        listSeq.Add(new DraggableItem() { position = i, imageUrl = urls[urlIndex] });
+                        listDraggableItems.Add(new DraggableItemJson() { spawnPointX = items[i].spawnPointX, spawnPointY = items[i].spawnPointY, imageUrl = urls[urlIndex],groupId = items[i].groupId });
                         urlIndex++;
                     }
                 }
             }
-        }*/
+        }
 
 
-       /* FormDragDrop completeForm = new FormDragDrop()
+        FormDragDrop completeForm = new FormDragDrop()
         {
             game = this.game,
             gameData = new DragDrop()
             {
-                dropPlaceBackgroundUrl = "url",
-                draggableItems = new List<DraggableItem>(){
+                dropPlaceBackgroundUrl = backImagePath,
+                failPenalty = failsPenaltyValue,
+                materialType = panel.IsText? "TEXT":"IMAGE",
+                dragType = panel.IsGroup? "CATEGORY":"UNIQUE",
+                draggableItems = listDraggableItems,
             }
         };
 
@@ -181,19 +226,20 @@ public class DragDropForm : FormScreen
         else
         {
             SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this);
-        }*/
+        }
     }
 
 
     private void FillGameData(DragDropJsonGet json)
     {
-        //failsPenalty.InputField.text = json.failPenalty.ToString();
+        failsPenalty.InputField.text = json.failPenalty.ToString();
         FillUploadFiles(panel.BackImage(), "grid_image", json.dropPlaceBackgroundUrl);
         panel.previousDropdown = json.draggableItem.Count;
-        panel.FillToggles(false,json.draggableItem[0].dragType == "UNIQUE");
-        panel.InstantiateFilledElements(json.draggableItem);
+        panel.FillToggles(json.materialType == "TEXT",json.dragType == "CATEGORY");
+        panel.InstantiateFilledElements(json.draggableItem, OnLoadFile);
         elementsQtt = json.draggableItem.Count;
-        loadFileQtt = loadFileQtt + elementsQtt;
+        loadFileQtt = loadFileQtt + elementsQtt + 1;
+        currentLoad += elementsQtt;
         CheckIfMaxQtt();
     }
 
@@ -205,7 +251,10 @@ public class DragDropForm : FormScreen
 public class DragDrop
 {
     public string dropPlaceBackgroundUrl;
-    public List<DraggableItem> draggableItems;
+    public int failPenalty;
+    public string materialType;
+    public string dragType;    
+    public List<DraggableItemJson> draggableItems;
 }
 
 
@@ -219,8 +268,16 @@ public class FormDragDrop
 [Serializable]
 public struct DraggableItem
 {
-    public string dragType;
-    public string imageUrl;
+    public int groupId;
     public float spawnPointX;
     public float spawnPointY;
+    public File image;
+}
+
+public struct DraggableItemJson
+{
+    public int groupId;
+    public float spawnPointX;
+    public float spawnPointY;
+    public string imageUrl;
 }

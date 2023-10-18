@@ -256,7 +256,7 @@ public class UploadFileElement : InputElement
         showImage.sprite = s;
         showImage.gameObject.SetActive(true);
         IsFilled = true;
-        OnChangeFile?.Invoke(IsFilled);
+        OnChangeFile?.Invoke(true);
         RemoveErrorMessage();
         if (deleteFile != null)
             deleteFile.gameObject.SetActive(true);

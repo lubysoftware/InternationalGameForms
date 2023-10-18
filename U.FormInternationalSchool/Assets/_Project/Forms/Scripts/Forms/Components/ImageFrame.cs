@@ -19,7 +19,7 @@ public class ImageFrame : MonoBehaviour
 
     [SerializeField] protected Button newImageButton;
 
-    private int index;
+    protected int index;
 
     public int Index => index;
 
@@ -34,7 +34,7 @@ public class ImageFrame : MonoBehaviour
         delete.onClick.AddListener(OnDeleteButton);
     }
 
-    public void SetIndex(int index)
+    public virtual void SetIndex(int index)
     {
         this.index = index;
         indextext.text = (index + 1).ToString();

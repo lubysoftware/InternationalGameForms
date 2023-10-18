@@ -382,7 +382,7 @@ public class FormScreen : MonoBehaviour
         }
     }
 
-    private void OnLoadFile(UploadFileElement el)
+    public void OnLoadFile(UploadFileElement el)
     {
         loadFileQtt--;
         currentLoad--;
@@ -391,6 +391,7 @@ public class FormScreen : MonoBehaviour
     
     protected void SendBaseFormFiles()
     {
+        Debug.LogError("send base");
         supportMaterialImgsQtt = 0;
         List<File> files = new List<File>();
         newUrlFiles.Clear();
@@ -515,6 +516,7 @@ public class FormScreen : MonoBehaviour
         {
             if (files.Count > 0)
             {
+                Debug.LogError("upload base");
                 SendFilesToAPI.Instance.StartUploadFiles(this,files, true);
             }
             else

@@ -38,7 +38,8 @@ public class InputElement : MonoBehaviour
     public virtual void DeactivateErrorMode(Sprite normal,bool changeSprite = true)
     {
         RemoveErrorMessage();
-        errorSymbol.gameObject.SetActive(false);
+        if(errorSymbol != null)
+          errorSymbol.gameObject.SetActive(false);
         if (changeSprite)
             field.sprite = normal != null? normal : fieldNormalMode;
     }
