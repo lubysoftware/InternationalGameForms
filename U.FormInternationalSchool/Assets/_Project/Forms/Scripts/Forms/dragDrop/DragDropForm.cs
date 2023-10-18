@@ -158,7 +158,12 @@ public class DragDropForm : FormScreen
 
         if (!panel.CheckIfAllElementsAreFullyComplete())
         {
-            ShowError("Todos os elementos devem ser preenchidos.", ErrorType.CUSTOM, null);
+            string errormessage = "Todos os elementos devem ser preenchidos.";
+            if (panel.IsGroup)
+            {
+                errormessage = "Todos os elementos devem ter imagem e número do grupo preenchidos.";
+            }
+            ShowError(errormessage, ErrorType.CUSTOM, null);
             return;
         }
 
