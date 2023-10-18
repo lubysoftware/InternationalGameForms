@@ -63,7 +63,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
     private void Start()
     {
         confirmButton.onClick.AddListener(ChangeTipType);
-        denyButton.onClick.AddListener(ResetToggle);
+        denyButton.onClick.AddListener(CancelChangeTipType);
         newWordButton.onClick.AddListener(InsertNewWord);
         isImage.onValueChanged.AddListener(OnChangeTipType);
         wordInputs = new List<NewWordInput>();
@@ -272,10 +272,9 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
         Invoke(nameof(UpdateCanvas), 0.1f);
     }
 
-    private void OnChangeTipType(bool isImage)
+    private void OnChangeTipType(bool status)
     {
-        int max = maxItems[Utils.BoolToInt(isImage)];
-        gridLayout.constraintCount = Utils.BoolToInt(isImage) + 1;
+        int max = maxItems[Utils.BoolToInt(isImage.isOn)];
 
         if (wordInputs.Count > max)
         {
@@ -298,8 +297,16 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
     }
 
     public void CancelChangeTipType()
-    {
-        isImage.isOn = !isImage.isOn;
+    { 
+        confirmChangePanel.gameObject.SetActive(false);
+        if (isImage.isOn)
+        { 
+            isText.SetIsOnWithoutNotify(true);
+        }
+        else
+        {
+            isImage.SetIsOnWithoutNotify(true);
+        }
     }
 
     private void ChangeTipType()
@@ -313,7 +320,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
             gridLayout.cellSize = new Vector2(700, 200);
         }
         int max = maxItems[Utils.BoolToInt(isImage.isOn)];
-
+        gridLayout.constraintCount = Utils.BoolToInt(isImage.isOn) + 1;
         for (int i = wordInputs.Count - 1; i >= 0; i--)
         {
             OnDeleteWord(wordInputs[i], false);
@@ -332,11 +339,6 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
             }
         }
         Canvas.ForceUpdateCanvases();
-    }
-
-    private void ResetToggle()
-    {
-        isImage.SetIsOnWithoutNotify(!isImage.isOn);
     }
 
     public List<File> GetImages()
@@ -433,7 +435,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
 
     public void SetImageToggle(bool status)
     {
-        isImage.isOn =status;
+        isImage.isOn = status;
         if (status)
         {
             gridLayout.constraintCount = 2;

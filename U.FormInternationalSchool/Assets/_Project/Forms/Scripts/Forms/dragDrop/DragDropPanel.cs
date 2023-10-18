@@ -28,6 +28,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
     [SerializeField] private Transform positionsContainer;
 
     [SerializeField] private Toggle isTextToggle;
+    [SerializeField] private Toggle isImageToggle;
     [SerializeField] private Toggle isGroupToggle;
     
     [SerializeField] private List<TMP_Dropdown.OptionData> imageOptions;
@@ -38,8 +39,6 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
     private List<FilledElements> filledEls;
 
     public Canvas canvas;
-
-    private bool isCanceling;
 
     private bool isGridSubscribed = false;
 
@@ -96,7 +95,6 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
 
     private void ShowDropdownQtt()
     {
-        confirmReducePanel.gameObject.SetActive(false);
         int index = 0;
         for (int i = 0; i < gridBackground.transform.childCount; i++)
         {
@@ -128,7 +126,6 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
 
     private void ResetDropdown()
     {
-        confirmReducePanel.gameObject.SetActive(false);
         imageQtt.value = GetDropdownIndex(previousDropdown);
     }
 
@@ -219,11 +216,6 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
 
     public void UpdateDropdownOptions()
     {
-        if (isCanceling)
-        {
-            isCanceling = false;
-            return;
-        }
         int completed = CompletedImages();
         if (completed > 0)
         {
@@ -239,9 +231,15 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
     
     public void CancelChangeInputType()
     {
-        isCanceling = true;
         confirmReducePanel.gameObject.SetActive(false);
-        isTextToggle.isOn = !isTextToggle.isOn;
+        if (isTextToggle.isOn)
+        {
+            isImageToggle.SetIsOnWithoutNotify(true);
+        }
+        else
+        {
+            isTextToggle.SetIsOnWithoutNotify(true);
+        }
     }
 
     public void UpdateGroupOptions()
@@ -255,7 +253,6 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
 
     private void InstantiateNewElements()
     {
-        confirmReducePanel.gameObject.SetActive(false);
         imageQtt.options.Clear(); 
         imageQtt.options.AddRange(isTextToggle.isOn ? textOptions: imageOptions);
         imageQtt.SetValueWithoutNotify(0);
@@ -286,7 +283,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
     {
         imageQtt.options.Clear(); 
         imageQtt.options.AddRange(isTextToggle.isOn ? textOptions: imageOptions);
-        imageQtt.SetValueWithoutNotify(0);
+        imageQtt.SetValueWithoutNotify(GetDropdownIndex(filledEls.Count));
         ImageFrameDragDrop prefab = isTextToggle.isOn ? textFramePrefab : imageFramePrefab;
         if (gridBackground.transform.childCount > 0)
         {

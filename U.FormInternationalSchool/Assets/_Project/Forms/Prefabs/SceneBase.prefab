@@ -1417,7 +1417,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6984485931894224889
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3354,7 +3354,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 5681050381262933948}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.44456726
+  m_Size: 0.44455895
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5949,6 +5949,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3712457652549626663}
     m_Modifications:
+    - target: {fileID: 129553862979571754, guid: 8493e461e9f3fc64a990fcfe5c9736d2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 103
+      objectReference: {fileID: 0}
+    - target: {fileID: 129553862979571754, guid: 8493e461e9f3fc64a990fcfe5c9736d2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 70
+      objectReference: {fileID: 0}
     - target: {fileID: 1510560126063268811, guid: 8493e461e9f3fc64a990fcfe5c9736d2, type: 3}
       propertyPath: m_Name
       value: ConfirmPanel
