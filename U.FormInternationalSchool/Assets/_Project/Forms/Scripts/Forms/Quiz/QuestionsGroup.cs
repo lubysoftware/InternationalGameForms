@@ -32,8 +32,7 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
 
     
     [SerializeField] private Transform questionsContainer;
-    [SerializeField] private Transform addinfoTransform;
-    
+
     [Space(15)]
     [Header("Layouts")] 
     [SerializeField] private LayoutGroup layout;
@@ -95,6 +94,7 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
         denyButton.onClick.RemoveAllListeners();
         confirmButton.onClick.AddListener(confirm);
         denyButton.onClick.AddListener(deny);
+        denyButton.onClick.AddListener(() => confirmReducePanel.gameObject.SetActive(false));
     }
     
     public void UpdateCanvas()

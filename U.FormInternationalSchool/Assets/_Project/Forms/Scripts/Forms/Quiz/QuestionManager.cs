@@ -94,7 +94,7 @@ public class QuestionManager : MonoBehaviour
         QuestionsGroup.Instance.UpdateCanvas();
     }
 
-    private void ShowPanel()
+    public void ShowPanel()
     {
         UpdateButtonsInteraction();
         panelSetting.gameObject.SetActive(!panelSetting.activeInHierarchy);
@@ -215,10 +215,9 @@ public class QuestionManager : MonoBehaviour
     }
 
     public void ChangeAlternativeQtt()
-    {
-        int qtt = previousQttDropdown;
-        int.TryParse(alternativeQtt.options[alternativeQtt.value].text, out qtt);
-       alternativesGroup.DeactivateAlternatives(qtt);
+    {  
+        int.TryParse(alternativeQtt.options[alternativeQtt.value].text, out previousQttDropdown);
+       alternativesGroup.DeactivateAlternatives(previousQttDropdown);
        UpdateCanvas();
     }
 

@@ -483,6 +483,7 @@ GameObject:
   - component: {fileID: 440090511579122424}
   - component: {fileID: 3686607258739803078}
   - component: {fileID: 467836240268052090}
+  - component: {fileID: 3614306256219455927}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -576,6 +577,35 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &3614306256219455927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3125432625226327776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3911724444903565998}
+          m_TargetAssemblyTypeName: QuestionManager, Assembly-CSharp
+          m_MethodName: ShowPanel
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &3128266119095097383
 GameObject:
   m_ObjectHideFlags: 0
