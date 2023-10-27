@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using FrostweepGames.Plugins.WebGLFileBrowser;
@@ -7,6 +8,9 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
+using Image = UnityEngine.UI.Image;
 
 public class QuestionManager : MonoBehaviour
 {
@@ -22,19 +26,28 @@ public class QuestionManager : MonoBehaviour
     [SerializeField] private AlternativeGroup alternativesGroup;
     [SerializeField] private Transform alternativeGroupContainer;
 
-    [Header("Settings Buttons")]
-    [SerializeField] private Button moveUpperBtn;
+    [Header("Settings Buttons")] [SerializeField]
+    private Button moveUpperBtn;
+
     [SerializeField] private Button moveDownBtn;
     [SerializeField] private Button deleteQuestion;
     [SerializeField] private GameObject panelSetting;
     [SerializeField] private Button settingsButton;
 
-    [Header("Question error view")] 
-    [SerializeField] private Image background;
-    [SerializeField]  GameObject errorSymbol;
+    [Header("Question error view")] [SerializeField]
+    private Image background;
+
+    [SerializeField] GameObject errorSymbol;
     [SerializeField] private Sprite[] backSprite;
 
     private int previousQttDropdown;
+    private QuestionsGroup.InputType previousTypeDropdown;
+
+    [Space(15)] [Header("Layouts")] [SerializeField]
+    private LayoutGroup layout;
+
+    [SerializeField] private LayoutGroup layout2;
+    [SerializeField] private LayoutGroup layout3;
 
     void Start()
     {
@@ -68,37 +81,56 @@ public class QuestionManager : MonoBehaviour
     #endregion
 
     #region Settings
+
     private void MoveUpper()
     {
         int index = transform.GetSiblingIndex();
         if (index > 0)
         {
-            transform.SetSiblingIndex(index-1);
+            transform.SetSiblingIndex(index - 1);
         }
+
+        QuestionsGroup.Instance.UpdateCanvas();
     }
 
     private void ShowPanel()
     {
         panelSetting.gameObject.SetActive(!panelSetting.activeInHierarchy);
     }
+
     private void MoveDown()
-    {  
+    {
         int index = transform.GetSiblingIndex();
         if (index < QuestionsGroup.Instance.QuestionsQtt - 1)
         {
-            transform.SetSiblingIndex(index+1);
+            transform.SetSiblingIndex(index + 1);
         }
+
+        QuestionsGroup.Instance.UpdateCanvas();
+    }
+
+    public void UpdateCanvas()
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layout.transform as RectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layout2.transform as RectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layout3.transform as RectTransform);
+        QuestionsGroup.Instance.UpdateCanvas();
     }
 
     private void DeleteButton()
     {
-        // Confirm panel
-        Destroy(this.gameObject);
-        QuestionsGroup.Instance.CheckAddQuestionButton();
+        QuestionsGroup.Instance.ShowConfirmPanel("Confirma excluir a questao?",DeleteQuestion,ShowPanel );
     }
-    
 
-    #endregion
+    private void DeleteQuestion()
+    {
+        DestroyImmediate(this.gameObject);
+        QuestionsGroup.Instance.CheckAddQuestionButton();
+        QuestionsGroup.Instance.UpdateCanvas();
+    }
+
+
+#endregion
 
     #region Dropdowns
 
@@ -119,15 +151,17 @@ public class QuestionManager : MonoBehaviour
             extra_statementImg.gameObject.SetActive(false);
         }
         questionType.SetValueWithoutNotify(value);
+        UpdateCanvas();
     }
 
     private void OnChangeAlternativeTypeDrop(int value)
     {
+        
         if (alternativesGroup != null)
         {
             if (alternativesGroup.HasAnyAlternativeCompleted() > 0)
             {
-                // confirm popup
+                QuestionsGroup.Instance.ShowConfirmPanel("Confirma alterar o tipo de alternativas e perder os dados cadastrados?",ChangeAlternativeType,RevertAlternativesType );
             }
             else
             {
@@ -144,34 +178,46 @@ public class QuestionManager : MonoBehaviour
     {
         if(alternativesGroup != null)
             DestroyImmediate(alternativesGroup.gameObject);
-        alternativesGroup = Instantiate(QuestionsGroup.Instance.GetAlternativeGroupPrefab((QuestionsGroup.InputType)alternativeType.value), alternativeGroupContainer);
-        alternativeQtt.value = 3;
+        alternativesGroup =
+            Instantiate(
+                QuestionsGroup.Instance.GetAlternativeGroupPrefab((QuestionsGroup.InputType)alternativeType.value),
+                alternativeGroupContainer);
+        previousTypeDropdown = (QuestionsGroup.InputType) alternativeType.value;
+        ChangeAlternativeQtt();
+        UpdateCanvas();
     }
 
     private void OnChangeAlternativeQttDrop(int value)
     {
         int qtt = previousQttDropdown;
         int.TryParse(alternativeQtt.options[alternativeQtt.value].text, out qtt);
-        
-        if (alternativesGroup.HasAnyAlternativeCompleted() > qtt)
+
+        int completed = alternativesGroup.HasAnyAlternativeCompleted();
+        if (completed > qtt)
         {
-            // confirm popup
+            QuestionsGroup.Instance.ShowConfirmPanel(String.Format("Confirma reduzir a quantidade de alternativas e perder {0} alternativas ja preenchidas?", completed-qtt ),ChangeAlternativeQtt,RevertAlternativesQtt );
         }
         else
         {
-            previousQttDropdown = qtt;
             ChangeAlternativeQtt();
         }
     }
 
     public void ChangeAlternativeQtt()
     {
-       alternativesGroup.DeactivateAlternatives(previousQttDropdown);
+        int qtt = previousQttDropdown;
+        int.TryParse(alternativeQtt.options[alternativeQtt.value].text, out qtt);
+       alternativesGroup.DeactivateAlternatives(qtt);
+       UpdateCanvas();
     }
 
     public void RevertAlternativesQtt()
     {
         alternativeQtt.value = GetDropdownIndex(alternativeQtt,previousQttDropdown);
+    }
+    public void RevertAlternativesType()
+    {
+        alternativeType.value = (int)previousTypeDropdown;
     }
     
     private int GetDropdownIndex(TMP_Dropdown drop, int qtt)

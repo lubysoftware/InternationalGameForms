@@ -27,11 +27,18 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
     [SerializeField] private Button denyButton;
     [SerializeField] private TextMeshProUGUI alertMessage;
 
+    [Space(15)]
     private QuestionManager[] questions;
 
     
     [SerializeField] private Transform questionsContainer;
     [SerializeField] private Transform addinfoTransform;
+    
+    [Space(15)]
+    [Header("Layouts")] 
+    [SerializeField] private LayoutGroup layout;
+    [SerializeField] private LayoutGroup layout2;
+    [SerializeField] private LayoutGroup layout3;
     public int QuestionsQtt => transform.childCount;
 
     public enum InputType
@@ -44,6 +51,7 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
     void Start()
     {
         addQuestion.onClick.AddListener(OnAddQuestion);
+        UpdateCanvas();
     }
     
     public AlternativeGroup GetAlternativeGroupPrefab(InputType type)
@@ -66,6 +74,7 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
         QuestionManager newQuestion = Instantiate(questionPrefab, questionsContainer);
         newQuestion.SetQuestionType(questionType.value);
         addinfoTransform.SetAsLastSibling();
+        UpdateCanvas();
         CheckAddQuestionButton();
     }
 
@@ -78,6 +87,7 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
     {
         alertMessage.text =errorMessage;
         SetConfirmPanelListeners(yes,cancel);
+        confirmReducePanel.gameObject.SetActive(true);
     }
     
     private void SetConfirmPanelListeners(UnityAction confirm, UnityAction deny)
@@ -88,5 +98,11 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
         denyButton.onClick.AddListener(deny);
     }
     
+    public void UpdateCanvas()
+    {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layout.transform as RectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layout2.transform as RectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layout3.transform as RectTransform);
+    }
     
 }

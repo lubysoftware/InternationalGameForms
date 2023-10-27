@@ -1,35 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
+using LubyLib.Core.Extensions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class QuizAlternative : MonoBehaviour
 {
-    public int Index;
+    public char Index;
 
     [SerializeField] private Toggle isCorrect;
+    [SerializeField] private TextMeshProUGUI letterText;
+    [SerializeField] private InputElement input;
+    private UploadFileElement FileElement;
     
-    void Start()
+    
+    void Awake()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        FileElement = gameObject.GetComponent<UploadFileElement>();
     }
 
     public bool IsCompleted()
     {
-        return true;
+        if (FileElement != null)
+        {
+            return gameObject.GetComponent<UploadFileElement>().IsFilled || gameObject.GetComponent<UploadFileElement>().UploadedFile != null;
+        }
+        return !input.InputField.text.IsNullEmptyOrWhitespace();
     }
-
+    
     public bool Deactivate()
     {
         gameObject.SetActive(false);
         bool correct = isCorrect.isOn;
         isCorrect.isOn = false;
+        if(input.InputField != null)
+            input.InputField.text = null;
+        if(FileElement != null)
+            FileElement.Clear();
         return correct;
     }
 
@@ -37,4 +45,11 @@ public class QuizAlternative : MonoBehaviour
     {
         isCorrect.isOn = true;
     }
+
+    public void SetIndex(char letter)
+    {
+        letterText.text = letter.ToString();
+    }
+    
+    
 }

@@ -467,8 +467,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd523566effe2d148855f7da28a2aff3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Index: 0
+  Index: 65
   isCorrect: {fileID: 2416213813695830676}
+  letterText: {fileID: 7923077119194343773}
+  input: {fileID: 4246925269688741368}
+--- !u!114 &4246925269688741368 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6474999524249547193, guid: 9c9ea4f779b87b749982fac5395fc1b6, type: 3}
+  m_PrefabInstance: {fileID: 7146031505328495681}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2312366270329493881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5b95f070702ad446819f1ff7dfbb0bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8335834200095497630
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -8,25 +8,29 @@ public class AlternativeGroup : MonoBehaviour
     [SerializeField] private QuestionsGroup.InputType type;
     [SerializeField] private List<QuizAlternative> alternatives;
     
+    private char[] letters = { 'A', 'B', 'C', 'D'};
+    
     void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
     {
         
     }
 
     public bool IsAllAlternativeCompleted()
     {
-        return false;
+        return alternatives.Count == HasAnyAlternativeCompleted();
     }
 
     public int HasAnyAlternativeCompleted()
     {
-        return 0;
+        int qtt = 0;
+        foreach (var alternative in alternatives)
+        {
+            if (alternative.IsCompleted())
+            {
+                qtt++;
+            }
+        }
+        return qtt;
     }
     
 
@@ -45,6 +49,7 @@ public class AlternativeGroup : MonoBehaviour
             if (i < qtt )
             {
                 alternatives[i].gameObject.SetActive(true);
+                alternatives[i].SetIndex(letters[i]);
             }
             else
             {
@@ -55,7 +60,7 @@ public class AlternativeGroup : MonoBehaviour
             }
         }
         
-        
+        LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<LayoutGroup>().transform as RectTransform);
     }
 }
 

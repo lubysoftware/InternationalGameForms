@@ -36,7 +36,9 @@ public class UploadFileElement : InputElement
 
     private IFileBrowser _fileBrowser;
 
-    public File UploadedFile => _loadedFiles != null && _loadedFiles.Length > 0 && _loadedFiles[0].data != null? _loadedFiles[0] : null;
+    public File UploadedFile => _loadedFiles != null && _loadedFiles.Length > 0 && _loadedFiles[0].data != null
+        ? _loadedFiles[0]
+        : null;
 
     public event Action<UploadFileElement> OnFill;
     public event Action<bool> OnChangeFile;
@@ -113,7 +115,7 @@ public class UploadFileElement : InputElement
         IsFilled = false;
         AddErrorMessage();
         OnChangeFile?.Invoke(false);
-     //   WebGLFileBrowser.FreeMemory(); // free used memory and destroy created content
+        //   WebGLFileBrowser.FreeMemory(); // free used memory and destroy created content
     }
 
 
@@ -146,12 +148,12 @@ public class UploadFileElement : InputElement
 
                         WebGLFileBrowser
                             .RegisterFileObject(file
-                                .ToSprite()); 
+                                .ToSprite());
                         // add sprite with texture to cache list. should be used with  fileBrowserFreeMemory() when its no need anymore
                         if (hasErrorMode)
                         {
                             RemoveErrorMessage();
-                            DeactivateErrorMode(null,false);
+                            DeactivateErrorMode(null, false);
                         }
                     }
                 }
@@ -166,7 +168,7 @@ public class UploadFileElement : InputElement
       */
                     if (file.IsAudio(AudioType.OGG) || file.IsAudio(AudioType.OGGVORBIS))
                     {
-                       // Debug.Log("File is OGG. " + file.fileInfo.extension);
+                        // Debug.Log("File is OGG. " + file.fileInfo.extension);
                         AudioClip clip = file.ToAudioClip();
 
                         WebGLFileBrowser.RegisterFileObject(clip);
@@ -187,19 +189,25 @@ public class UploadFileElement : InputElement
                         Debug.LogError("Não é OGG. " + file.fileInfo.extension);
                     }
                 }
+
                 OnChangeFile?.Invoke(true);
-                
+
             }
             else
             {
                 Debug.LogError("loaded files count = 0");
             }
-            
+
         }
         else
         {
             Debug.LogError("loaded files = null ou = 0");
         }
+    }
+
+    public void Clear()
+    {
+        CleanupButtonOnClickHandler();
     }
 
     private void FilePopupWasClosedEventHandler()
