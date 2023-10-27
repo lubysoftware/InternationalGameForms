@@ -48,6 +48,7 @@ public class QuizAlternative : MonoBehaviour
 
     public void SetIndex(char letter)
     {
+        Index = letter;
         letterText.text = letter.ToString();
     }
     

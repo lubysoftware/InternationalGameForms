@@ -39,7 +39,7 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
     [SerializeField] private LayoutGroup layout;
     [SerializeField] private LayoutGroup layout2;
     [SerializeField] private LayoutGroup layout3;
-    public int QuestionsQtt => transform.childCount;
+    public int QuestionsQtt => questionsContainer.childCount;
 
     public enum InputType
     {
@@ -73,7 +73,6 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
     {
         QuestionManager newQuestion = Instantiate(questionPrefab, questionsContainer);
         newQuestion.SetQuestionType(questionType.value);
-        addinfoTransform.SetAsLastSibling();
         UpdateCanvas();
         CheckAddQuestionButton();
     }

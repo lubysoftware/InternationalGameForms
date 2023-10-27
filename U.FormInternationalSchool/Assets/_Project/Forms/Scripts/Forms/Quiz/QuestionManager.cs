@@ -89,23 +89,34 @@ public class QuestionManager : MonoBehaviour
         {
             transform.SetSiblingIndex(index - 1);
         }
-
+        UpdateButtonsInteraction();
+        ShowPanel();
         QuestionsGroup.Instance.UpdateCanvas();
     }
 
     private void ShowPanel()
     {
+        UpdateButtonsInteraction();
         panelSetting.gameObject.SetActive(!panelSetting.activeInHierarchy);
     }
 
+    private void UpdateButtonsInteraction()
+    {
+        int index = transform.GetSiblingIndex();
+
+        moveDownBtn.interactable = index < QuestionsGroup.Instance.QuestionsQtt-1;
+        moveUpperBtn.interactable = index > 0;
+    }
+    
     private void MoveDown()
     {
         int index = transform.GetSiblingIndex();
-        if (index < QuestionsGroup.Instance.QuestionsQtt - 1)
+        if (index < QuestionsGroup.Instance.QuestionsQtt-1)
         {
             transform.SetSiblingIndex(index + 1);
         }
-
+        UpdateButtonsInteraction();
+        ShowPanel();
         QuestionsGroup.Instance.UpdateCanvas();
     }
 
