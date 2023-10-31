@@ -16,6 +16,8 @@ public class QuizAlternative : MonoBehaviour
     private UploadFileElement FileElement;
     
     public bool IsFilled => FileElement != null? FileElement.IsFilled: !input.InputField.text.IsNullEmptyOrWhitespace();
+
+    public bool IsCorrect => isCorrect.isOn;
     void Awake()
     {
         FileElement = gameObject.GetComponent<UploadFileElement>();
@@ -65,6 +67,7 @@ public class QuizAlternative : MonoBehaviour
             FileElement.Clear();
         return correct;
     }
+    
 
     public void ActivateToggle()
     {
@@ -76,6 +79,10 @@ public class QuizAlternative : MonoBehaviour
         Index = letter;
         letterText.text = letter.ToString();
     }
-    
+
+    public string GetText()
+    {
+        return input.InputField.text;
+    }
     
 }

@@ -351,6 +351,10 @@ public class QuestionManager : MonoBehaviour
         SendFilesPack(files);
     }
 
+    private int GetCorrectAnswer()
+    {
+        return alternativesGroup.GetCorrectAnswer();
+    }
     private void SendFilesPack(List<File> fileList)
     {
         RestClient.DefaultRequestHeaders["Authorization"] = "Bearer Luby2021";
@@ -403,28 +407,38 @@ public class QuestionManager : MonoBehaviour
         }
 
         List<string> answersUrls = new List<string>();
-        foreach (var letter  in alternativesGroup.Letters)
+        
+        if (alternativeType.value == (int)QuestionsGroup.InputType.TEXT)
         {
-            if (filledUrls.ContainsKey(letter.ToString()))
+            answersUrls = alternativesGroup.GetTextAnswers();
+        }
+        else
+        {
+            foreach (var letter  in alternativesGroup.Letters)
             {
-                answersUrls.Add(filledUrls[letter.ToString()]);
-            }
-            else
-            {
-                answersUrls.Add(fileList[index]);
-                index++;
+                if (filledUrls.ContainsKey(letter.ToString()))
+                {
+                    answersUrls.Add(filledUrls[letter.ToString()]);
+                }
+                else
+                {
+                    answersUrls.Add(fileList[index]);
+                    index++;
+                }
             }
         }
+       
         Question question = new Question()
         {
-            questionType = (QuestionsGroup.InputType)questionType.value,
+            quizType =((QuestionsGroup.InputType) questionType.value).ToString(),
             questionTitleEnglish = statementEN_text.InputField.text,
             questionTitlePortuguese = statementPT_text.InputField.text,
-            questionTitleAudioEnglish = en_audio,
-            questionTitleAudioPortuguese = pt_audio,
+            questionAudioEnglishUrl = en_audio,
+            questionAudioPortugueseUrl = pt_audio,
             questionFileUrl = statement_url,
-            answerType = (QuestionsGroup.InputType) alternativeType.value,
-            answers = answersUrls
+            answerType = ((QuestionsGroup.InputType) alternativeType.value).ToString(),
+            answers = answersUrls,
+            correctAnswer = GetCorrectAnswer()
         };
         
         QuestionsGroup.Instance.ReceiveQuestionData(question, transform.GetSiblingIndex());
@@ -436,13 +450,13 @@ public class QuestionManager : MonoBehaviour
 
 public struct Question
 {
-    public QuestionsGroup.InputType questionType;
+    public string quizType;
     public string questionTitleEnglish;
     public string questionTitlePortuguese;
-    public string questionTitleAudioEnglish;
-    public string questionTitleAudioPortuguese;
+    public string questionAudioEnglishUrl;
+    public string questionAudioPortugueseUrl;
     public string questionFileUrl;
-    public QuestionsGroup.InputType answerType;
+    public string answerType;
     public int correctAnswer;
     public List<string> answers;
 }

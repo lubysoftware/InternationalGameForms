@@ -64,6 +64,17 @@ public class AlternativeGroup : MonoBehaviour
         
         LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<LayoutGroup>().transform as RectTransform);
     }
+
+    public List<string> GetTextAnswers()
+    {
+        List<string> answers = new List<string>();
+        foreach (var item in alternatives)
+        {
+            answers.Add(item.GetText());
+        }
+
+        return answers;
+    }
     
     public List<File> GetFiles()
     {
@@ -90,6 +101,19 @@ public class AlternativeGroup : MonoBehaviour
         }
 
         return listFilledImages;
+    }
+
+    public int GetCorrectAnswer()
+    {
+        foreach (var item in alternatives)
+        {
+            if (item.IsCorrect)
+            {
+                return item.transform.GetSiblingIndex();
+            }
+        }
+
+        return 0;
     }
 }
 

@@ -17,7 +17,6 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
 
     [Header("Inputs")] [SerializeField] private Button addQuestion;
     [SerializeField] private TMP_Dropdown questionType;
-    [SerializeField] private Toggle randomize;
 
     [Header("Confirm Panel")] [SerializeField]
     private Transform confirmReducePanel;
@@ -36,6 +35,8 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
 
     [SerializeField] private LayoutGroup layout2;
     [SerializeField] private LayoutGroup layout3;
+
+    [SerializeField] private QuizForm form;
 
     private int receivedData = 0;
     public int QuestionsQtt => questionsContainer.childCount;
@@ -104,10 +105,10 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
         LayoutRebuilder.ForceRebuildLayoutImmediate(layout3.transform as RectTransform);
     }
 
-    private bool CheckAllQuestions()
+    public bool CheckAllQuestions()
     {
         bool isCompleted = true;
-        foreach (Transform child in transform)
+        foreach(Transform child in questionsContainer)
         {
             if (!child.GetComponent<QuestionManager>().IsQuestionComplete())
             {
@@ -118,11 +119,11 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
         return isCompleted;
     }
 
-    private void GetAllQuestionData()
+    public void GetAllQuestionData()
     {
         receivedData = 0;
         questionsData = new Question[QuestionsQtt];
-        foreach (Transform child in transform)
+        foreach(Transform child in questionsContainer)
         {
             child.GetComponent<QuestionManager>().GetQuestion();
         }
@@ -132,14 +133,9 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
     {
         receivedData++;
         questionsData[index] = question;
-        if (receivedData == QuestionsQtt-1)
+        if (receivedData == QuestionsQtt)
         {
-            Quiz gamedata = new Quiz()
-            {
-                randomAnswers = randomize.isOn,
-                questions = questionsData
-            };
-            //send data
+            form.SerializeGameData(questionsData);
         }
     }
 

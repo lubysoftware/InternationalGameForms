@@ -530,7 +530,7 @@ public class FormScreen : MonoBehaviour
 
     public virtual void SerializeBaseFormData(string[] urls)
     {
-        Debug.Log("serialize base");
+        Debug.LogError("serialize base");
         List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
         if (urls != null)
         {
