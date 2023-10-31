@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FrostweepGames.Plugins.WebGLFileBrowser;
 using LubyLib.Core.Extensions;
 using TMPro;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class QuizAlternative : MonoBehaviour
     [SerializeField] private InputElement input;
     private UploadFileElement FileElement;
     
-    
+    public bool IsFilled => FileElement != null? FileElement.IsFilled: !input.InputField.text.IsNullEmptyOrWhitespace();
     void Awake()
     {
         FileElement = gameObject.GetComponent<UploadFileElement>();
@@ -27,6 +28,30 @@ public class QuizAlternative : MonoBehaviour
             return gameObject.GetComponent<UploadFileElement>().IsFilled || gameObject.GetComponent<UploadFileElement>().UploadedFile != null;
         }
         return !input.InputField.text.IsNullEmptyOrWhitespace();
+    }
+
+    public string GetFilledUrl()
+    {
+        if (FileElement != null)
+        {
+            if (gameObject.GetComponent<UploadFileElement>().IsFilled)
+            {
+                return gameObject.GetComponent<UploadFileElement>().url;
+            }
+        }
+        return "";
+    }
+    
+    public File GetFile()
+    {
+        if (FileElement != null)
+        {
+            if (gameObject.GetComponent<UploadFileElement>().UploadedFile != null)
+            {
+                return gameObject.GetComponent<UploadFileElement>().UploadedFile;
+            }
+        }
+        return null;
     }
     
     public bool Deactivate()

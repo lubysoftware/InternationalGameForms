@@ -10,34 +10,34 @@ using UnityEngine.UI;
 
 public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
 {
-    [Header("Prefabs")]
-    [SerializeField] private AlternativeGroup textGroupPrefab;
+    [Header("Prefabs")] [SerializeField] private AlternativeGroup textGroupPrefab;
     [SerializeField] private AlternativeGroup audioGroupPrefab;
     [SerializeField] private AlternativeGroup imgGroupPrefab;
     [SerializeField] private QuestionManager questionPrefab;
-    
-    [Header("Inputs")]
-    [SerializeField] private Button addQuestion;
+
+    [Header("Inputs")] [SerializeField] private Button addQuestion;
     [SerializeField] private TMP_Dropdown questionType;
     [SerializeField] private Toggle randomize;
-    
-    [Header("Confirm Panel")]
-    [SerializeField] private Transform confirmReducePanel;
+
+    [Header("Confirm Panel")] [SerializeField]
+    private Transform confirmReducePanel;
+
     [SerializeField] private Button confirmButton;
     [SerializeField] private Button denyButton;
     [SerializeField] private TextMeshProUGUI alertMessage;
 
-    [Space(15)]
-    private QuestionManager[] questions;
+    [Space(15)] private Question[] questionsData;
 
-    
+
     [SerializeField] private Transform questionsContainer;
 
-    [Space(15)]
-    [Header("Layouts")] 
-    [SerializeField] private LayoutGroup layout;
+    [Space(15)] [Header("Layouts")] [SerializeField]
+    private LayoutGroup layout;
+
     [SerializeField] private LayoutGroup layout2;
     [SerializeField] private LayoutGroup layout3;
+
+    private int receivedData = 0;
     public int QuestionsQtt => questionsContainer.childCount;
 
     public enum InputType
@@ -46,13 +46,13 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
         AUDIO,
         IMAGE
     }
-    
+
     void Start()
     {
         addQuestion.onClick.AddListener(OnAddQuestion);
         UpdateCanvas();
     }
-    
+
     public AlternativeGroup GetAlternativeGroupPrefab(InputType type)
     {
         switch (type)
@@ -83,11 +83,11 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
 
     public void ShowConfirmPanel(string errorMessage, UnityAction yes, UnityAction cancel)
     {
-        alertMessage.text =errorMessage;
-        SetConfirmPanelListeners(yes,cancel);
+        alertMessage.text = errorMessage;
+        SetConfirmPanelListeners(yes, cancel);
         confirmReducePanel.gameObject.SetActive(true);
     }
-    
+
     private void SetConfirmPanelListeners(UnityAction confirm, UnityAction deny)
     {
         confirmButton.onClick.RemoveAllListeners();
@@ -96,12 +96,59 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
         denyButton.onClick.AddListener(deny);
         denyButton.onClick.AddListener(() => confirmReducePanel.gameObject.SetActive(false));
     }
-    
+
     public void UpdateCanvas()
     {
         LayoutRebuilder.ForceRebuildLayoutImmediate(layout.transform as RectTransform);
         LayoutRebuilder.ForceRebuildLayoutImmediate(layout2.transform as RectTransform);
         LayoutRebuilder.ForceRebuildLayoutImmediate(layout3.transform as RectTransform);
     }
-    
+
+    private bool CheckAllQuestions()
+    {
+        bool isCompleted = true;
+        foreach (Transform child in transform)
+        {
+            if (!child.GetComponent<QuestionManager>().IsQuestionComplete())
+            {
+                isCompleted = false;
+            }
+        }
+
+        return isCompleted;
+    }
+
+    private void GetAllQuestionData()
+    {
+        receivedData = 0;
+        questionsData = new Question[QuestionsQtt];
+        foreach (Transform child in transform)
+        {
+            child.GetComponent<QuestionManager>().GetQuestion();
+        }
+    }
+
+    public void ReceiveQuestionData(Question question, int index)
+    {
+        receivedData++;
+        questionsData[index] = question;
+        if (receivedData == QuestionsQtt-1)
+        {
+            Quiz gamedata = new Quiz()
+            {
+                randomAnswers = randomize.isOn,
+                questions = questionsData
+            };
+            //send data
+        }
+    }
+
+}
+
+[Serializable]
+public class Quiz
+{
+    public int failPenalty;
+    public bool randomAnswers;
+    public Question[] questions;
 }

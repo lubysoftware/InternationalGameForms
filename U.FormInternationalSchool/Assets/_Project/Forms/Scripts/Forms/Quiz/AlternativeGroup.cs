@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using FrostweepGames.Plugins.WebGLFileBrowser;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class AlternativeGroup : MonoBehaviour
 {
     [SerializeField] private QuestionsGroup.InputType type;
     [SerializeField] private List<QuizAlternative> alternatives;
-    
-    private char[] letters = { 'A', 'B', 'C', 'D'};
+
+    public char[] Letters = { 'A', 'B', 'C', 'D'};
     
     void Start()
     {
@@ -49,7 +51,7 @@ public class AlternativeGroup : MonoBehaviour
             if (i < qtt )
             {
                 alternatives[i].gameObject.SetActive(true);
-                alternatives[i].SetIndex(letters[i]);
+                alternatives[i].SetIndex(Letters[i]);
             }
             else
             {
@@ -61,6 +63,33 @@ public class AlternativeGroup : MonoBehaviour
         }
         
         LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<LayoutGroup>().transform as RectTransform);
+    }
+    
+    public List<File> GetFiles()
+    {
+        List<File> files = new List<File>();
+        foreach (var item in alternatives)
+        {
+            if (item.IsCompleted() && !item.IsFilled)
+            {
+                files.Add(item.GetFile());
+            }
+        }
+        return files;
+    }
+
+    public Dictionary<string,string> FilledImages()
+    {
+        Dictionary<string, string> listFilledImages = new Dictionary<string, string>();
+        foreach (var item in alternatives)
+        {
+            if (item.IsCompleted() && item.IsFilled)
+            {
+                listFilledImages.Add(item.Index.ToString(),item.GetFilledUrl());
+            }
+        }
+
+        return listFilledImages;
     }
 }
 
