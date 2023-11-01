@@ -54,9 +54,9 @@ public class QuestionManager : MonoBehaviour
     
     private Dictionary<string, string> filledUrls;
     
-    private const string EN = "EN_AUDIO";
-    private const string PT = "PT_AUDIO";
-    private const string FILE = "URL_STATEMENT";
+    private const string EN = "statement_audio_en";
+    private const string PT = "enunciado_audio_pt";
+    private const string FILE = "statement_file";
     void Start()
     {
         AddListeners();
@@ -221,11 +221,10 @@ public class QuestionManager : MonoBehaviour
     }
 
     public void ChangeAlternativeQtt()
-    {  
-        Debug.LogError("change qtt");
-        int.TryParse(alternativeQtt.options[alternativeQtt.value].text, out previousQttDropdown);
-       alternativesGroup.DeactivateAlternatives(previousQttDropdown);
-       UpdateCanvas();
+    { 
+        int.TryParse(alternativeQtt.options[alternativeQtt.value].text, out previousQttDropdown); 
+        alternativesGroup.DeactivateAlternatives(previousQttDropdown); 
+        UpdateCanvas();
     }
 
     public void RevertAlternativesQtt()
@@ -261,13 +260,11 @@ public class QuestionManager : MonoBehaviour
         }
         if (statementPT_audio.UploadedFile == null && !statementPT_audio.IsFilled)
         {
-            Debug.LogError("audio pt");
             statementPT_audio.ActivateErrorMode();
             isComplete = false;
         }
         if (statementEN_audio.UploadedFile == null && !statementEN_audio.IsFilled)
         {
-            Debug.LogError("audio en");
             statementEN_audio.ActivateErrorMode();
             isComplete = false;
         }
@@ -275,7 +272,7 @@ public class QuestionManager : MonoBehaviour
         if (questionType.value == (int)QuestionsGroup.InputType.AUDIO)
         {
             if (extra_statementAudio.UploadedFile == null && !extra_statementAudio.IsFilled)
-            {Debug.LogError("audio");
+            {
                 extra_statementAudio.ActivateErrorMode();
                 isComplete = false;
             }
@@ -283,7 +280,6 @@ public class QuestionManager : MonoBehaviour
         {
             if (extra_statementImg.UploadedFile == null && !extra_statementImg.IsFilled)
             {
-                Debug.LogError("image");
                 extra_statementImg.ActivateErrorMode();
                 isComplete = false;
             }
@@ -291,7 +287,6 @@ public class QuestionManager : MonoBehaviour
 
         if (!alternativesGroup.IsAllAlternativeCompleted(previousQttDropdown))
         {
-            Debug.LogError("alternatives");
             isComplete = false;
         }
 
@@ -352,12 +347,10 @@ public class QuestionManager : MonoBehaviour
         filledUrls.AddRange(alternativesGroup.FilledImages());
         if (files.Count > 0)
         {
-            Debug.LogError("send files");
             SendFilesPack(files);
         }
         else
         {
-            Debug.LogError("send question");
             SendQuestion(null);
         }
     }
@@ -433,8 +426,15 @@ public class QuestionManager : MonoBehaviour
                 }
                 else
                 {
-                    answersUrls.Add(fileList[index]);
-                    index++;
+                    if (index < fileList.Length)
+                    {
+                        answersUrls.Add(fileList[index]);
+                        index++;
+                    }
+                    else
+                    {
+                        answersUrls.Add("");
+                    }
                 }
             }
         }
@@ -479,7 +479,7 @@ public class QuestionManager : MonoBehaviour
         statementEN_text.InputField.text = questionData.questionTitleEnglish;
         statementPT_text.InputField.text = questionData.questionTitlePortuguese;
         OnChangeQuestionType(list.FindIndex(x => x.ToString() == questionData.quizType));
-        int qtt = alternativesGroup.FillAlternativeGroup(questionData.Answer, questionData.correctAnswer, form);
+        int qtt = alternativesGroup.FillAlternativeGroup(questionData.Answer, questionData.correctAnswer, form, previousTypeDropdown);
         alternativeQtt.SetValueWithoutNotify(GetDropdownIndex(alternativeQtt,qtt));
         ChangeAlternativeQtt();
     }

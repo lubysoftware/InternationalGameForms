@@ -133,8 +133,6 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
     {
         receivedData++;
         questionsData[index] = question;
-        Debug.LogError("received daata " + receivedData);
-        Debug.LogError("questions qtt " + QuestionsQtt);
         if (receivedData == QuestionsQtt)
         {
             form.SerializeGameData(questionsData);

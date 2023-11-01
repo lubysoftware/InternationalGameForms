@@ -117,18 +117,17 @@ public class AlternativeGroup : MonoBehaviour
         return 0;
     }
 
-    public int FillAlternativeGroup(List<AnswerGet> answers, int selectedAnswer, FormScreen form)
+    public int FillAlternativeGroup(List<AnswerGet> answers, int selectedAnswer, FormScreen form, QuestionsGroup.InputType type)
     {
         int count = 0;
         for(int i =0;i < alternatives.Count; i++)
         {
             if (!answers[i].answer.IsNullEmptyOrWhitespace())
             {
-                alternatives[i].FillAlternative(answers[i].answer, i == selectedAnswer, form);
+                alternatives[i].FillAlternative(answers[i].answer, i == selectedAnswer, form, type);
                 count++;
             }
         }
-        Debug.LogError(count);
         DeactivateAlternatives(count);
         return count;
     }

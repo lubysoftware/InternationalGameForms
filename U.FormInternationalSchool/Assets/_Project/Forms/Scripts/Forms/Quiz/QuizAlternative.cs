@@ -91,13 +91,14 @@ public class QuizAlternative : MonoBehaviour
         return input.InputField.text;
     }
 
-    public void FillAlternative(string url, bool isSelected, FormScreen form)
+    public void FillAlternative(string url, bool isSelected, FormScreen form, QuestionsGroup.InputType type)
     {
         FileElement = gameObject.GetComponent<UploadFileElement>();
         if (FileElement != null)
         {
             form.loadFileQtt += 1;
-            form.FillUploadFiles( FileElement,Index.ToString(),url);
+            
+            form.FillUploadFiles( FileElement,(type +"_"+Index).ToLower(),url);
         }
         else
         {

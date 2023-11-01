@@ -53,7 +53,6 @@ public class DragDropForm : FormScreen
 
     protected override void SendGameFiles()
     {
-        Debug.LogError("send game");
         filledImages = panel.FilledImages();
         imageQtt = panel.previousDropdown;
         items = panel.GetAllDraggableItems();
@@ -92,7 +91,6 @@ public class DragDropForm : FormScreen
         
         if (panel.GetImages() != null && panel.GetImages().Count > 0)
         {
-            Debug.LogError("upload game");
             SendFilesToAPI.Instance.StartUploadFiles(this, filesToSend, false);
         }
         else

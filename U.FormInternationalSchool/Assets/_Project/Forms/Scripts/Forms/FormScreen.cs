@@ -391,7 +391,7 @@ public class FormScreen : MonoBehaviour
     
     protected void SendBaseFormFiles()
     {
-        Debug.LogError("send base");
+        Debug.Log("send base");
         supportMaterialImgsQtt = 0;
         List<File> files = new List<File>();
         newUrlFiles.Clear();
@@ -516,7 +516,7 @@ public class FormScreen : MonoBehaviour
         {
             if (files.Count > 0)
             {
-                Debug.LogError("upload base");
+                Debug.Log("upload base");
                 SendFilesToAPI.Instance.StartUploadFiles(this,files, true);
             }
             else
@@ -530,7 +530,7 @@ public class FormScreen : MonoBehaviour
 
     public virtual void SerializeBaseFormData(string[] urls)
     {
-        Debug.LogError("serialize base");
+        Debug.Log("serialize base");
         List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
         if (urls != null)
         {

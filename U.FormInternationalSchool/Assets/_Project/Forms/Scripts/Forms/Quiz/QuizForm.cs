@@ -39,8 +39,7 @@ public class QuizForm : FormScreen
 
     protected override void SendGameFiles()
     {
-        Debug.LogError("get game all questions");
-       questionsGroup.GetAllQuestionData();
+        questionsGroup.GetAllQuestionData();
     }
 
     protected override void CheckEmptyGameFields()
@@ -91,8 +90,7 @@ public class QuizForm : FormScreen
         {
             return;
         }
-
-        Debug.LogError("check game all questions");
+        
         if (!questionsGroup.CheckAllQuestions())
         {
             string errormessage = "Todos as questões devem ser preenchidas.";
@@ -109,7 +107,6 @@ public class QuizForm : FormScreen
 
     public void SerializeGameData(Question[] questionsList)
     {
-        Debug.LogError("serialize game data");
         FormQuiz completeForm = new FormQuiz()
         {
             game = this.game,
@@ -123,7 +120,6 @@ public class QuizForm : FormScreen
 
 
         string json = JsonConvert.SerializeObject(completeForm);
-        Debug.LogError(json);
         if (isEdit)
         {
             SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this);
