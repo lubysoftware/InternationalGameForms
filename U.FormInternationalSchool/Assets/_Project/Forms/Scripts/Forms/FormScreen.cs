@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using LubyLib.Core;
 using LubyLib.Core.Extensions;
@@ -22,6 +23,9 @@ using Toggle = UnityEngine.UI.Toggle;
 
 public class FormScreen : MonoBehaviour
 {
+    [DllImport("__Internal")]
+    protected static extern void OnGameCreated(int gameId, string gameType);
+    
     [SerializeField] protected InputElement title;
     [SerializeField] private InputElement statement_PT, statement_EN;
     [SerializeField] private UploadFileElement audioStatement_PT, audioStatement_EN;
@@ -664,7 +668,20 @@ public class FormScreen : MonoBehaviour
         
     }
     
-    
+    public virtual void SendGameInfoToPortal(string responseJson)
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        try
+        {
+            GameCreationResponse response = JsonConvert.DeserializeObject<GameCreationResponse>(responseJson);
+            OnGameCreated(response.id, response.gameType);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
+#endif
+    }
 
     #endregion
     
