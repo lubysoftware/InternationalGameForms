@@ -18,12 +18,12 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
     //public event Action<string[]> OnUploadFiles; 
 
-    public void StartUploadJson(string json, string url, string title, FormScreen screen)
+    public void StartUploadJson(string json, string url, string title, FormScreen screen, Action<string> onSuccess)
     {
-        StartCoroutine(UploadJson(url, json, title, screen));
+        StartCoroutine(UploadJson(url, json, title, screen, onSuccess));
     }
 
-    IEnumerator UploadJson(string postURL, string json, string title, FormScreen screen)
+    IEnumerator UploadJson(string postURL, string json, string title, FormScreen screen, Action<string> onSuccess)
     {
         //UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
         UnityWebRequest www = UnityWebRequest.Post(Constants.URL_DATABASE + postURL, json, "application/json");
@@ -42,16 +42,17 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
             Debug.Log(www.downloadHandler.text);
             SucessPanel.Instance.SetText("O jogo \"" + title + "\" foi salvo com sucesso.",
                 SucessPanel.MessageType.SUCCESS);
+            onSuccess?.Invoke(www.downloadHandler.text);
             screen.BackButton();
         }
     }
 
-    public void StartUploadJsonUpdate(string json, string url, int id, string titulo, FormScreen screen)
+    public void StartUploadJsonUpdate(string json, string url, int id, string titulo, FormScreen screen, Action<string> onSuccess)
     {
-        StartCoroutine(UploadJsonUpdate(id, url, json, titulo, screen));
+        StartCoroutine(UploadJsonUpdate(id, url, json, titulo, screen, onSuccess));
     }
 
-    IEnumerator UploadJsonUpdate(int id, string postURL, string json, string titulo, FormScreen screen)
+    IEnumerator UploadJsonUpdate(int id, string postURL, string json, string titulo, FormScreen screen, Action<string> onSuccess)
     {
         UnityWebRequest www = UnityWebRequest.Put(Constants.URL_DATABASE + postURL + "/" + id, json);
 
@@ -69,6 +70,8 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         {
             SucessPanel.Instance.SetText("O jogo \"" + titulo + "\" foi alterado com sucesso",
                 SucessPanel.MessageType.SUCCESS);
+            
+            onSuccess?.Invoke(www.downloadHandler.text);
             screen.BackButton();
         }
     }
