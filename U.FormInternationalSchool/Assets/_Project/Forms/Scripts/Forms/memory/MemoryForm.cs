@@ -198,11 +198,11 @@ public class MemoryForm : FormScreen
         Debug.Log(json);
         if (isEdit)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this);
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this);
+            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
         }
     }
 

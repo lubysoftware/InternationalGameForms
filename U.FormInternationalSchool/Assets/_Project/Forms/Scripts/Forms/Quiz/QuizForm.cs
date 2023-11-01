@@ -126,11 +126,11 @@ public class QuizForm : FormScreen
         Debug.LogError(json);
         if (isEdit)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this);
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this);
+            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
         }
     }
 
@@ -142,9 +142,6 @@ public class QuizForm : FormScreen
         questionsGroup.FillQuestions(json.questions.ToArray());
         CheckIfMaxQtt();
     }
-
-   
-
 }
 
 [Serializable]
