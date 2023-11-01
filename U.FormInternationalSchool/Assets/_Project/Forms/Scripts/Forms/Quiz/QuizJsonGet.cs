@@ -25,5 +25,25 @@ public class QuizJsonGet : MonoBehaviour
     public int quizId;
     public int failPenalty;
     public bool randomAnswers;
-    public List<Question> questions;
+    public List<QuestionGet> questions;
+}
+
+public struct QuestionGet
+{
+    public string quizType;
+    public string questionTitleEnglish;
+    public string questionTitlePortuguese;
+    public string questionAudioEnglishUrl;
+    public string questionAudioPortugueseUrl;
+    public string questionFileUrl;
+    public string answerType;
+    public int correctAnswer;
+    public List<AnswerGet> Answer;
+}
+
+public struct AnswerGet
+{
+    public int id;
+    public int questionId;
+    public string answer;
 }

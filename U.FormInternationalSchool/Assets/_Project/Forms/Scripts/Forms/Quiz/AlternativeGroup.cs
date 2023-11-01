@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using FrostweepGames.Plugins.WebGLFileBrowser;
+using LubyLib.Core.Extensions;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -17,9 +18,9 @@ public class AlternativeGroup : MonoBehaviour
         
     }
 
-    public bool IsAllAlternativeCompleted()
+    public bool IsAllAlternativeCompleted(int qtt)
     {
-        return alternatives.Count == HasAnyAlternativeCompleted();
+        return qtt == HasAnyAlternativeCompleted();
     }
 
     public int HasAnyAlternativeCompleted()
@@ -114,6 +115,22 @@ public class AlternativeGroup : MonoBehaviour
         }
 
         return 0;
+    }
+
+    public int FillAlternativeGroup(List<AnswerGet> answers, int selectedAnswer, FormScreen form)
+    {
+        int count = 0;
+        for(int i =0;i < alternatives.Count; i++)
+        {
+            if (!answers[i].answer.IsNullEmptyOrWhitespace())
+            {
+                alternatives[i].FillAlternative(answers[i].answer, i == selectedAnswer, form);
+                count++;
+            }
+        }
+        Debug.LogError(count);
+        DeactivateAlternatives(count);
+        return count;
     }
 }
 

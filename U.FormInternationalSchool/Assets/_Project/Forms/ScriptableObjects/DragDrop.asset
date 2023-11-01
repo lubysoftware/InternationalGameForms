@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameType: 6
   title: Drag and Drop
-  sprite: {fileID: 21300000, guid: c7b638af73c235546a1cc2a8a5af7e52, type: 3}
+  sprite: {fileID: 21300000, guid: d83f129b62035c24299853dd43ad28db, type: 3}
   description: description
   url: dragndrop
   isActive: 1

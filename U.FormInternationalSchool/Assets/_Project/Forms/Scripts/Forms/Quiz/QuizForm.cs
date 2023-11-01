@@ -139,6 +139,7 @@ public class QuizForm : FormScreen
     {
         failsPenalty.InputField.text = json.failPenalty.ToString();
         randomize.SetIsOnWithoutNotify(json.randomAnswers);
+        questionsGroup.FillQuestions(json.questions.ToArray());
         CheckIfMaxQtt();
     }
 

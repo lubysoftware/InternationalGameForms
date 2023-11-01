@@ -14,10 +14,12 @@ public class QuizAlternative : MonoBehaviour
     [SerializeField] private TextMeshProUGUI letterText;
     [SerializeField] private InputElement input;
     private UploadFileElement FileElement;
-    
-    public bool IsFilled => FileElement != null? FileElement.IsFilled: !input.InputField.text.IsNullEmptyOrWhitespace();
+
+    public bool IsFilled =>
+        FileElement != null ? FileElement.IsFilled : !input.InputField.text.IsNullEmptyOrWhitespace();
 
     public bool IsCorrect => isCorrect.isOn;
+
     void Awake()
     {
         FileElement = gameObject.GetComponent<UploadFileElement>();
@@ -27,8 +29,10 @@ public class QuizAlternative : MonoBehaviour
     {
         if (FileElement != null)
         {
-            return gameObject.GetComponent<UploadFileElement>().IsFilled || gameObject.GetComponent<UploadFileElement>().UploadedFile != null;
+            return gameObject.GetComponent<UploadFileElement>().IsFilled ||
+                   gameObject.GetComponent<UploadFileElement>().UploadedFile != null;
         }
+
         return !input.InputField.text.IsNullEmptyOrWhitespace();
     }
 
@@ -41,9 +45,10 @@ public class QuizAlternative : MonoBehaviour
                 return gameObject.GetComponent<UploadFileElement>().url;
             }
         }
+
         return "";
     }
-    
+
     public File GetFile()
     {
         if (FileElement != null)
@@ -53,21 +58,22 @@ public class QuizAlternative : MonoBehaviour
                 return gameObject.GetComponent<UploadFileElement>().UploadedFile;
             }
         }
+
         return null;
     }
-    
+
     public bool Deactivate()
     {
         gameObject.SetActive(false);
         bool correct = isCorrect.isOn;
         isCorrect.isOn = false;
-        if(input.InputField != null)
+        if (input.InputField != null)
             input.InputField.text = null;
-        if(FileElement != null)
+        if (FileElement != null)
             FileElement.Clear();
         return correct;
     }
-    
+
 
     public void ActivateToggle()
     {
@@ -84,5 +90,21 @@ public class QuizAlternative : MonoBehaviour
     {
         return input.InputField.text;
     }
-    
+
+    public void FillAlternative(string url, bool isSelected, FormScreen form)
+    {
+        FileElement = gameObject.GetComponent<UploadFileElement>();
+        if (FileElement != null)
+        {
+            form.loadFileQtt += 1;
+            form.FillUploadFiles( FileElement,Index.ToString(),url);
+        }
+        else
+        {
+            input.InputField.text = url;
+        }
+        if(isSelected)
+            ActivateToggle();
+    }
+
 }

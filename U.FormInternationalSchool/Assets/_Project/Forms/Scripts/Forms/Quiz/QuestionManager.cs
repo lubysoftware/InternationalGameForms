@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using API;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using LubyLib.Core;
@@ -56,11 +57,9 @@ public class QuestionManager : MonoBehaviour
     private const string EN = "EN_AUDIO";
     private const string PT = "PT_AUDIO";
     private const string FILE = "URL_STATEMENT";
-    
     void Start()
     {
         AddListeners();
-        alternativeQtt.value = 3;
     }
 
     #region Subscriptions
@@ -74,7 +73,6 @@ public class QuestionManager : MonoBehaviour
         alternativeType.onValueChanged.AddListener(OnChangeAlternativeTypeDrop);
         alternativeQtt.onValueChanged.AddListener(OnChangeAlternativeQttDrop);
         settingsButton.onClick.AddListener(ShowPanel);
-        OnChangeAlternativeTypeDrop(0);
     }
 
     #endregion
@@ -224,6 +222,7 @@ public class QuestionManager : MonoBehaviour
 
     public void ChangeAlternativeQtt()
     {  
+        Debug.LogError("change qtt");
         int.TryParse(alternativeQtt.options[alternativeQtt.value].text, out previousQttDropdown);
        alternativesGroup.DeactivateAlternatives(previousQttDropdown);
        UpdateCanvas();
@@ -262,11 +261,13 @@ public class QuestionManager : MonoBehaviour
         }
         if (statementPT_audio.UploadedFile == null && !statementPT_audio.IsFilled)
         {
+            Debug.LogError("audio pt");
             statementPT_audio.ActivateErrorMode();
             isComplete = false;
         }
         if (statementEN_audio.UploadedFile == null && !statementEN_audio.IsFilled)
         {
+            Debug.LogError("audio en");
             statementEN_audio.ActivateErrorMode();
             isComplete = false;
         }
@@ -274,7 +275,7 @@ public class QuestionManager : MonoBehaviour
         if (questionType.value == (int)QuestionsGroup.InputType.AUDIO)
         {
             if (extra_statementAudio.UploadedFile == null && !extra_statementAudio.IsFilled)
-            {
+            {Debug.LogError("audio");
                 extra_statementAudio.ActivateErrorMode();
                 isComplete = false;
             }
@@ -282,13 +283,15 @@ public class QuestionManager : MonoBehaviour
         {
             if (extra_statementImg.UploadedFile == null && !extra_statementImg.IsFilled)
             {
+                Debug.LogError("image");
                 extra_statementImg.ActivateErrorMode();
                 isComplete = false;
             }
         }
 
-        if (!alternativesGroup.IsAllAlternativeCompleted())
+        if (!alternativesGroup.IsAllAlternativeCompleted(previousQttDropdown))
         {
+            Debug.LogError("alternatives");
             isComplete = false;
         }
 
@@ -347,8 +350,16 @@ public class QuestionManager : MonoBehaviour
 
         files.AddRange(alternativesGroup.GetFiles());
         filledUrls.AddRange(alternativesGroup.FilledImages());
-        
-        SendFilesPack(files);
+        if (files.Count > 0)
+        {
+            Debug.LogError("send files");
+            SendFilesPack(files);
+        }
+        else
+        {
+            Debug.LogError("send question");
+            SendQuestion(null);
+        }
     }
 
     private int GetCorrectAnswer()
@@ -446,6 +457,32 @@ public class QuestionManager : MonoBehaviour
 
     #endregion
     
+    public void FillQuestionData(QuestionGet questionData, FormScreen form)
+    {
+        List<QuestionsGroup.InputType> list = Enum.GetValues(typeof(QuestionsGroup.InputType))
+            .Cast<QuestionsGroup.InputType>().ToList();
+        alternativeType.SetValueWithoutNotify( list.FindIndex(x => x.ToString() == questionData.answerType));
+        ChangeAlternativeType();
+        form.FillUploadFiles(statementPT_audio,PT,questionData.questionAudioPortugueseUrl);
+        form.FillUploadFiles(statementEN_audio,EN, questionData.questionAudioEnglishUrl );
+        form.loadFileQtt += 2;
+        if (questionData.quizType == QuestionsGroup.InputType.IMAGE.ToString())
+        {
+            form.loadFileQtt += 1;
+            form.FillUploadFiles(extra_statementImg,"statement_img", questionData.questionFileUrl);
+        }else if (questionData.quizType == QuestionsGroup.InputType.AUDIO.ToString())
+        {
+            form.loadFileQtt += 1;
+            form.FillUploadFiles( extra_statementAudio,"statement_audio", questionData.questionFileUrl);
+        }
+
+        statementEN_text.InputField.text = questionData.questionTitleEnglish;
+        statementPT_text.InputField.text = questionData.questionTitlePortuguese;
+        OnChangeQuestionType(list.FindIndex(x => x.ToString() == questionData.quizType));
+        int qtt = alternativesGroup.FillAlternativeGroup(questionData.Answer, questionData.correctAnswer, form);
+        alternativeQtt.SetValueWithoutNotify(GetDropdownIndex(alternativeQtt,qtt));
+        ChangeAlternativeQtt();
+    }
 }
 
 public struct Question

@@ -133,11 +133,25 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
     {
         receivedData++;
         questionsData[index] = question;
+        Debug.LogError("received daata " + receivedData);
+        Debug.LogError("questions qtt " + QuestionsQtt);
         if (receivedData == QuestionsQtt)
         {
             form.SerializeGameData(questionsData);
         }
     }
+
+    public void FillQuestions(QuestionGet[] questions)
+    {
+        foreach (QuestionGet q in questions)
+        {
+            QuestionManager newQuestion = Instantiate(questionPrefab, questionsContainer);
+            newQuestion.FillQuestionData(q, form);
+        }
+        UpdateCanvas();
+        CheckAddQuestionButton();
+    }
+    
 
 }
 
