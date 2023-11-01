@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using LubyLib.Core;
 using LubyLib.Core.Extensions;
@@ -22,6 +23,9 @@ using Toggle = UnityEngine.UI.Toggle;
 
 public class FormScreen : MonoBehaviour
 {
+    [DllImport("__Internal")]
+    protected static extern void OnGameCreated(int gameId, string gameType);
+
     [SerializeField] protected InputElement title;
     [SerializeField] private InputElement statement_PT, statement_EN;
     [SerializeField] private UploadFileElement audioStatement_PT, audioStatement_EN;
@@ -30,7 +34,10 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private Toggle timer;
     [SerializeField] protected InputElement timeMin, timeSec;
     [SerializeField] private Button openMaterialSupportPanel;
-    [FormerlySerializedAs("supprotMaterialPanel")] [SerializeField] private SupportMaterialCreation supportMaterialPanel;
+
+    [FormerlySerializedAs("supprotMaterialPanel")] [SerializeField]
+    private SupportMaterialCreation supportMaterialPanel;
+
     [SerializeField] private InputElement timerBonus;
     [SerializeField] private UploadFileElement titleImage;
     [SerializeField] private Button sendForm;
@@ -42,11 +49,13 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private Sprite inputImage;
 
     protected FormBase game = new FormBase();
-    
+
     private Dictionary<string, string> newUrlFiles = new Dictionary<string, string>();
     private Dictionary<string, string> filledUrlFiles = new Dictionary<string, string>();
     private Dictionary<string, string> urlDict = new Dictionary<string, string>();
-    private List<string> fields = new() { Constants.IMAGE_TITLE, Constants.MUSIC_BACK, Constants.IMAGE_BACK ,Constants.AUDIO_PT,Constants.AUDIO_EN };
+
+    private List<string> fields = new()
+        { Constants.IMAGE_TITLE, Constants.MUSIC_BACK, Constants.IMAGE_BACK, Constants.AUDIO_PT, Constants.AUDIO_EN };
 
     protected int timeInSec = 0;
     private int bonusTimer = 0;
@@ -61,12 +70,11 @@ public class FormScreen : MonoBehaviour
     protected bool canClick;
     protected bool isEdit;
     protected int id;
-    [SerializeField]
-    protected GameTypeSO so;
+    [SerializeField] protected GameTypeSO so;
 
     protected List<string> emptyField;
     protected bool hasValidationError;
-    
+
     protected virtual void Start()
     {
         sendForm.onClick.AddListener(SendFormData);
@@ -83,7 +91,6 @@ public class FormScreen : MonoBehaviour
 
     public virtual void FinishDownloadingGame(string text)
     {
-         
     }
 
     public void BackButton()
@@ -121,7 +128,7 @@ public class FormScreen : MonoBehaviour
 
     private void CheckEmptyBaseFormFields()
     {
-        if(emptyField == null)
+        if (emptyField == null)
         {
             emptyField = new List<string>();
         }
@@ -129,7 +136,7 @@ public class FormScreen : MonoBehaviour
         {
             emptyField.Clear();
         }
-        
+
         if (title.InputField.text.IsNullEmptyOrWhitespace())
         {
             title.ActivateErrorMode();
@@ -137,27 +144,29 @@ public class FormScreen : MonoBehaviour
         }
         else
         {
-           DeactivateErrorInput(title);
+            DeactivateErrorInput(title);
         }
-        
+
         if (statement_EN.InputField.text.IsNullEmptyOrWhitespace())
         {
             statement_EN.ActivateErrorMode();
             emptyField.Add("Enunciado em Inglês");
-        } else
+        }
+        else
         {
             DeactivateErrorInput(statement_EN);
         }
 
-        if (statement_PT.InputField.text.IsNullEmptyOrWhitespace() )
+        if (statement_PT.InputField.text.IsNullEmptyOrWhitespace())
         {
             statement_PT.ActivateErrorMode();
             emptyField.Add("Enunciado em Português");
-        }else
+        }
+        else
         {
             DeactivateErrorInput(statement_PT);
         }
-        
+
         if (titleImage.UploadedFile == null && titleImage.IsFilled == false)
         {
             titleImage.ActivateErrorMode();
@@ -169,25 +178,25 @@ public class FormScreen : MonoBehaviour
             emptyField.Add("Música de fundo");
             backgroundMusic.ActivateErrorMode();
         }
-        
+
         if (audioStatement_EN.UploadedFile == null && audioStatement_PT.IsFilled == false)
         {
             emptyField.Add("Áudio do enunciado em inglês");
             audioStatement_EN.ActivateErrorMode();
         }
-        
+
         if (audioStatement_PT.UploadedFile == null && audioStatement_PT.IsFilled == false)
         {
             emptyField.Add("Áudio do enunciado em português");
             audioStatement_PT.ActivateErrorMode();
         }
-        
+
         if (backgroundImage.UploadedFile == null && backgroundImage.IsFilled == false)
         {
             emptyField.Add("Imagem de fundo");
             backgroundImage.ActivateErrorMode();
         }
-        
+
 
         if (timer.isOn)
         {
@@ -195,16 +204,18 @@ public class FormScreen : MonoBehaviour
             {
                 timeMin.ActivateErrorMode();
                 emptyField.Add("minutos do timer");
-            }else
+            }
+            else
             {
                 timeMin.DeactivateErrorMode(inputImage);
             }
-            
+
             if (timerBonus.InputField.text.IsNullEmptyOrWhitespace())
             {
                 timerBonus.ActivateErrorMode();
                 emptyField.Add("Bônus do timer");
-            }else
+            }
+            else
             {
                 timerBonus.DeactivateErrorMode(inputImage);
             }
@@ -216,18 +227,18 @@ public class FormScreen : MonoBehaviour
         }
 
         CheckEmptyGameFields();
-
     }
-    
+
     protected virtual void ValidateFields()
     {
         hasValidationError = false;
-        if (!CheckBetweenValues(timerBonus,0,100, "Bônus do timer"))
+        if (!CheckBetweenValues(timerBonus, 0, 100, "Bônus do timer"))
         {
             int.TryParse(timerBonus.InputField.text, out bonusTimer);
             hasValidationError = true;
             return;
         }
+
         if (timer.isOn)
         {
             timeInSec = CalculateTimeInSec("do jogo", timeMin, timeSec, false);
@@ -238,19 +249,20 @@ public class FormScreen : MonoBehaviour
             }
         }
     }
-    
+
     public bool CheckGreatherThanZero(InputElement input, string field)
     {
         int value = 0;
         int.TryParse(input.InputField.text, out value);
         if (value <= 0)
         {
-            ShowError(field, ErrorType.GREATER_THAN, new int[]{0});
+            ShowError(field, ErrorType.GREATER_THAN, new int[] { 0 });
             input.ActivateErrorMode(true);
             return false;
         }
+
         input.DeactivateErrorMode(inputImage);
-        
+
         return true;
     }
 
@@ -258,13 +270,13 @@ public class FormScreen : MonoBehaviour
     {
         CheckGreatherThanZero(el, "minutos");
     }
-    
+
     public void CheckSecondsInput(InputElement el)
     {
         CheckBetweenValues(el, 0, 59, "segundos");
     }
 
-    protected int CalculateTimeInSec(string name, InputElement minText, InputElement secText, bool allowZero )
+    protected int CalculateTimeInSec(string name, InputElement minText, InputElement secText, bool allowZero)
     {
         int min, sec = 0;
         int timeTotal = 0;
@@ -274,7 +286,7 @@ public class FormScreen : MonoBehaviour
         {
             if (min + sec <= 0)
             {
-                ShowError("Tempo do timer " + name, ErrorType.GREATER_THAN, new int[]{0});
+                ShowError("Tempo do timer " + name, ErrorType.GREATER_THAN, new int[] { 0 });
                 minText.ActivateErrorMode(true);
                 secText.ActivateErrorMode(true);
                 return -1;
@@ -284,19 +296,19 @@ public class FormScreen : MonoBehaviour
         {
             if (min + sec < 0)
             {
-                ShowError("Tempo do timer " + name, ErrorType.GREATER_OR_EQUAL, new int[]{0});
+                ShowError("Tempo do timer " + name, ErrorType.GREATER_OR_EQUAL, new int[] { 0 });
                 minText.ActivateErrorMode(true);
                 secText.ActivateErrorMode(true);
                 return -1;
             }
         }
-        
+
         if (!CheckGreatherThanZero(minText, "minutos"))
         {
             return -1;
         }
 
-        if (!CheckBetweenValues(secText,0,59, "segundos"))
+        if (!CheckBetweenValues(secText, 0, 59, "segundos"))
         {
             return -1;
         }
@@ -307,19 +319,20 @@ public class FormScreen : MonoBehaviour
 
     public void CallCheckBonus()
     {
-        CheckBetweenValues(timerBonus,0,100, "Bônus do timer");
+        CheckBetweenValues(timerBonus, 0, 100, "Bônus do timer");
     }
-    
+
     protected bool CheckBetweenValues(InputElement input, int min, int max, string field)
     {
-        int value  = 0;
+        int value = 0;
         int.TryParse(input.InputField.text, out value);
         if (value < min || value > max)
         {
-            ShowError(field, ErrorType.BETWEEN, new int[]{min,max});
-           input.ActivateErrorMode(true);
-           return false;
+            ShowError(field, ErrorType.BETWEEN, new int[] { min, max });
+            input.ActivateErrorMode(true);
+            return false;
         }
+
         input.DeactivateErrorMode(inputImage);
         return true;
     }
@@ -335,7 +348,7 @@ public class FormScreen : MonoBehaviour
             timer.onValueChanged.Invoke(baseForm.hasTimer);
             int min = baseForm.timer / 60;
             int sec = baseForm.timer - min * 60;
-            timeMin.InputField.text =  String.Format("{0:00}", min);
+            timeMin.InputField.text = String.Format("{0:00}", min);
             timeSec.InputField.text = String.Format("{0:00}", sec);
 
             timerBonus.InputField.text = baseForm.bonustimer.ToString();
@@ -345,18 +358,18 @@ public class FormScreen : MonoBehaviour
         {
             supportMaterialPanel.FillSupportMaterial(baseForm.SupportMaterial);
         }
-        
-        FillUploadFiles(titleImage,"gameTitleImg",baseForm.gameTitleImageUrl);
-        FillUploadFiles(backgroundImage,"background",baseForm.backgroundUrl);
-        FillUploadFiles( backgroundMusic,"music_theme",baseForm.backgroundMusicUrl);
-        FillUploadFiles( audioStatement_EN,"statement_en",baseForm.questionStatementEnglishAudioUrl);
-        FillUploadFiles( audioStatement_PT,"statement_pt",baseForm.questionStatementPortugueseAudioUrl);
+
+        FillUploadFiles(titleImage, "gameTitleImg", baseForm.gameTitleImageUrl);
+        FillUploadFiles(backgroundImage, "background", baseForm.backgroundUrl);
+        FillUploadFiles(backgroundMusic, "music_theme", baseForm.backgroundMusicUrl);
+        FillUploadFiles(audioStatement_EN, "statement_en", baseForm.questionStatementEnglishAudioUrl);
+        FillUploadFiles(audioStatement_PT, "statement_pt", baseForm.questionStatementPortugueseAudioUrl);
         loadFileQtt = loadFileQtt + 5;
     }
 
     public void FillUploadFiles(UploadFileElement element, string name, string value)
     {
-        element.FillData(name,value);
+        element.FillData(name, value);
         element.OnFill += OnLoadFile;
         currentLoad++;
         CheckIfMaxQtt();
@@ -388,7 +401,7 @@ public class FormScreen : MonoBehaviour
         currentLoad--;
         el.OnFill -= OnLoadFile;
     }
-    
+
     protected void SendBaseFormFiles()
     {
         Debug.LogError("send base");
@@ -399,14 +412,14 @@ public class FormScreen : MonoBehaviour
         urlDict.Clear();
         if (titleImage.UploadedFile != null)
         {
-            newUrlFiles.TryAdd(fields[0],titleImage.UploadedFile.fileInfo.name);
+            newUrlFiles.TryAdd(fields[0], titleImage.UploadedFile.fileInfo.name);
             files.Add(titleImage.UploadedFile);
         }
         else
         {
             if (titleImage.IsFilled)
             {
-                filledUrlFiles.TryAdd(fields[0],titleImage.url);
+                filledUrlFiles.TryAdd(fields[0], titleImage.url);
             }
             else
             {
@@ -424,7 +437,7 @@ public class FormScreen : MonoBehaviour
         {
             if (backgroundMusic.IsFilled)
             {
-                filledUrlFiles.TryAdd(fields[1],backgroundMusic.url);
+                filledUrlFiles.TryAdd(fields[1], backgroundMusic.url);
             }
             else
             {
@@ -442,7 +455,7 @@ public class FormScreen : MonoBehaviour
         {
             if (backgroundImage.IsFilled)
             {
-                filledUrlFiles.TryAdd(fields[2],backgroundImage.url);
+                filledUrlFiles.TryAdd(fields[2], backgroundImage.url);
             }
             else
             {
@@ -460,7 +473,7 @@ public class FormScreen : MonoBehaviour
         {
             if (audioStatement_PT.IsFilled)
             {
-                filledUrlFiles.TryAdd(fields[3],audioStatement_PT.url);
+                filledUrlFiles.TryAdd(fields[3], audioStatement_PT.url);
             }
             else
             {
@@ -478,7 +491,7 @@ public class FormScreen : MonoBehaviour
         {
             if (audioStatement_EN.IsFilled)
             {
-                filledUrlFiles.TryAdd(fields[4],audioStatement_EN.url);
+                filledUrlFiles.TryAdd(fields[4], audioStatement_EN.url);
             }
             else
             {
@@ -506,8 +519,8 @@ public class FormScreen : MonoBehaviour
                 }
             }
         }
-        
-        
+
+
         if (files.Count < newUrlFiles.Count)
         {
             ShowError("Por favor, preencha todos os campos de arquivos.", ErrorType.CUSTOM, null);
@@ -517,15 +530,13 @@ public class FormScreen : MonoBehaviour
             if (files.Count > 0)
             {
                 Debug.LogError("upload base");
-                SendFilesToAPI.Instance.StartUploadFiles(this,files, true);
+                SendFilesToAPI.Instance.StartUploadFiles(this, files, true);
             }
             else
             {
                 SerializeBaseFormData(null);
             }
-            
         }
-
     }
 
     public virtual void SerializeBaseFormData(string[] urls)
@@ -537,7 +548,7 @@ public class FormScreen : MonoBehaviour
             if (urls.Length == newUrlFiles.Count + supportMaterialImgsQtt)
             {
                 int urlCount = 0;
-                for (int i = 0; i< fields.Count; i++)
+                for (int i = 0; i < fields.Count; i++)
                 {
                     if (!filledUrlFiles.ContainsKey(fields[i]))
                     {
@@ -545,15 +556,15 @@ public class FormScreen : MonoBehaviour
                         urlCount++;
                     }
                 }
-                
+
                 urlDict = newUrlFiles;
                 urlDict.AddRange(filledUrlFiles);
                 /*foreach (var str in urlDict)
                 {
                     Debug.LogError(str.Key + " " + str.Value);
                 }*/
-                
-                for (int i = 0; i< materials.Count; i++)
+
+                for (int i = 0; i < materials.Count; i++)
                 {
                     if (materials[i].isText)
                     {
@@ -562,7 +573,6 @@ public class FormScreen : MonoBehaviour
                             position = i,
                             material = materials[i].text,
                             materialType = "TEXT"
-                        
                         });
                     }
                     else
@@ -597,7 +607,7 @@ public class FormScreen : MonoBehaviour
         else
         {
             urlDict = filledUrlFiles;
-            for (int i = 0; i< materials.Count; i++)
+            for (int i = 0; i < materials.Count; i++)
             {
                 if (materials[i].isText)
                 {
@@ -630,8 +640,8 @@ public class FormScreen : MonoBehaviour
             backgroundUrl = urlDict[Constants.IMAGE_BACK],
             bonustimer = bonusTimer,
             gameTitleImageUrl = urlDict[Constants.IMAGE_TITLE],
-            hasSupportMaterial =  supportMaterial.Count > 0,
-            supportMaterial = supportMaterial.Count > 0? supportMaterial : null,
+            hasSupportMaterial = supportMaterial.Count > 0,
+            supportMaterial = supportMaterial.Count > 0 ? supportMaterial : null,
             hasTimer = timer.isOn,
             questionStatementEnglishAudioUrl = urlDict[Constants.AUDIO_EN],
             questionStatementEnglishVersion = statement_EN.InputField.text,
@@ -640,7 +650,6 @@ public class FormScreen : MonoBehaviour
             questionStatementPortugueseVersion = statement_PT.InputField.text
         };
         SendGameFiles();
-
     }
 
     #endregion
@@ -650,24 +659,27 @@ public class FormScreen : MonoBehaviour
 
     protected virtual void CheckEmptyGameFields()
     {
-        
     }
-    
-    
+
+
     protected virtual void SendGameFiles()
     {
-        
     }
 
     public virtual void SerializeGameData(string[] urls)
     {
-        
     }
-    
-    
+
+    public virtual void SendGameInfoToPortal(string responseJson)
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        GameCreationResponse response = JsonConvert.DeserializeObject<GameCreationResponse>(responseJson);
+        OnGameCreated(response.id, response.gameType);
+#endif
+    }
 
     #endregion
-    
+
     public void ShowError(string field, ErrorType type, int[] values)
     {
         string error = "error";
@@ -677,19 +689,21 @@ public class FormScreen : MonoBehaviour
                 error = "Todos os campos obrigatórios devem ser preenchidos.";
                 break;
             case ErrorType.EMPTY:
-                error = String.Format("O campo {0} deve ser preenchido.",field);
+                error = String.Format("O campo {0} deve ser preenchido.", field);
                 break;
             case ErrorType.LESS_THAN:
-                error = String.Format("O campo {0} deve ser preenchido com um valor menor que {1}.",field, values[0]);
+                error = String.Format("O campo {0} deve ser preenchido com um valor menor que {1}.", field, values[0]);
                 break;
             case ErrorType.GREATER_THAN:
-                error = String.Format("O campo {0} deve ser preenchido com um valor maior que {1}.",field, values[0]);
+                error = String.Format("O campo {0} deve ser preenchido com um valor maior que {1}.", field, values[0]);
                 break;
             case ErrorType.GREATER_OR_EQUAL:
-                error = String.Format("O campo {0} deve ser preenchido com um valor maior  ou igual a {1}.",field, values[0]);
+                error = String.Format("O campo {0} deve ser preenchido com um valor maior  ou igual a {1}.", field,
+                    values[0]);
                 break;
             case ErrorType.BETWEEN:
-                error = String.Format("O campo {0} deve ser preenchido com um valor maior que {1} e menor que {2}.",field, values[0], values[1]);
+                error = String.Format("O campo {0} deve ser preenchido com um valor maior que {1} e menor que {2}.",
+                    field, values[0], values[1]);
                 break;
             case ErrorType.CUSTOM:
                 error = field;
@@ -700,14 +714,12 @@ public class FormScreen : MonoBehaviour
         errorPanel.gameObject.SetActive(true);
         SaveDataFail();
     }
-    
+
 
     public void DeactivateErrorInput(InputElement el)
     {
         el.DeactivateErrorMode(inputImage);
     }
-
-
 }
 
 public enum ErrorType
@@ -716,7 +728,7 @@ public enum ErrorType
     GREATER_THAN,
     LESS_THAN,
     GREATER_OR_EQUAL,
-    BETWEEN, 
+    BETWEEN,
     CUSTOM,
     ALL_FIELDS
 }
