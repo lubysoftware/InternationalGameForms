@@ -80,6 +80,7 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
     public void CheckAddQuestionButton()
     {
         addQuestion.interactable = transform.childCount < 10;
+        form.UpdatePoints();
     }
 
     public void ShowConfirmPanel(string errorMessage, UnityAction yes, UnityAction cancel)
@@ -148,6 +149,16 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
         }
         UpdateCanvas();
         CheckAddQuestionButton();
+    }
+
+    public void DeactivateErrorMode(InputElement el)
+    {
+        form.DeactivateErrorInput(el);
+    }
+
+    public bool IsEdit()
+    {
+        return form.isEdit;
     }
     
 

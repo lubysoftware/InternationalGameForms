@@ -44,16 +44,7 @@ public class QuizForm : FormScreen
 
     protected override void CheckEmptyGameFields()
     {
-        if (failsPenalty.InputField.text.IsNullEmptyOrWhitespace())
-        {
-            failsPenalty.ActivateErrorMode();
-            emptyField.Add("Pontuação descontada por erro");
-        }
-        else
-        {
-            DeactivateErrorInput(failsPenalty);
-        }
-        
+
         if (emptyField.Count > 0)
         {
             if (emptyField.Count == 1)
@@ -82,13 +73,12 @@ public class QuizForm : FormScreen
             return;
         }
 
-        if (CheckGreatherThanZero(failsPenalty, "Pontuação descontada por erro"))
-        {
-            int.TryParse(failsPenalty.InputField.text, out failsPenaltyValue);
-        }
-        else
-        {
+        if (questionsGroup.QuestionsQtt == 0)
+        { 
+            string errormessage = "O quiz deve possuir ao menos uma questão.";
+            ShowError(errormessage, ErrorType.CUSTOM, null);
             return;
+            
         }
         
         if (!questionsGroup.CheckAllQuestions())
@@ -137,6 +127,11 @@ public class QuizForm : FormScreen
         randomize.SetIsOnWithoutNotify(json.randomAnswers);
         questionsGroup.FillQuestions(json.questions.ToArray());
         CheckIfMaxQtt();
+    }
+    
+    public void UpdatePoints()
+    {
+        failsPenalty.InputField.text = questionsGroup.QuestionsQtt > 0 ? (100/questionsGroup.QuestionsQtt).ToString():0.ToString();
     }
 }
 

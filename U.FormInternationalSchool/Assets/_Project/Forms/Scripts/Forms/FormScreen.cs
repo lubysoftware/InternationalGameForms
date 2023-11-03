@@ -63,7 +63,7 @@ public class FormScreen : MonoBehaviour
     protected bool isLoading;
 
     protected bool canClick;
-    protected bool isEdit;
+    public bool isEdit;
     protected int id;
     [SerializeField]
     protected GameTypeSO so;

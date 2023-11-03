@@ -39,7 +39,7 @@ public class DeleteGamePanel : MonoBehaviour
     {
         OnYesAction = onYes;
         OnNoAction = onNo;
-        messageText.text = String.Format("Tem certeza que deseja deletar o jogo {0}?", title);
+        messageText.text = String.Format("Tem certeza que deseja deletar o jogo \"{0}\"?", title);
     }
 
     private void OnNoButton()

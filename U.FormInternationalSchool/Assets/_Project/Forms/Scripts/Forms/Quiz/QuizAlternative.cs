@@ -36,6 +36,28 @@ public class QuizAlternative : MonoBehaviour
         return !input.InputField.text.IsNullEmptyOrWhitespace();
     }
 
+    public bool IsCompleteWithError()
+    {
+        bool isComplete;
+        if (FileElement != null)
+        {
+            isComplete = gameObject.GetComponent<UploadFileElement>().IsFilled ||
+                         gameObject.GetComponent<UploadFileElement>().UploadedFile != null;
+            if (!isComplete)
+            {
+                FileElement.ActivateErrorMode();
+            }
+            return isComplete;
+        }
+
+        isComplete = !input.InputField.text.IsNullEmptyOrWhitespace();
+        if (!isComplete)
+        {
+            input.ActivateErrorMode();
+        }
+        return isComplete;
+    }
+
     public string GetFilledUrl()
     {
         if (FileElement != null)

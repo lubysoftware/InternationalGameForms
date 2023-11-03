@@ -60,6 +60,10 @@ public class QuestionManager : MonoBehaviour
     void Start()
     {
         AddListeners();
+        if (!QuestionsGroup.Instance.IsEdit())
+        {
+            previousQttDropdown = 4;
+        }
     }
 
     #region Subscriptions
@@ -178,7 +182,7 @@ public class QuestionManager : MonoBehaviour
         {
             if (alternativesGroup.HasAnyAlternativeCompleted() > 0)
             {
-                QuestionsGroup.Instance.ShowConfirmPanel("Confirma alterar o tipo de alternativas e perder os dados cadastrados?",ChangeAlternativeType,RevertAlternativesType );
+                QuestionsGroup.Instance.ShowConfirmPanel("Confirma alterar o tipo de alternativa e descartar os dados cadastrados?",ChangeAlternativeType,RevertAlternativesType );
             }
             else
             {
@@ -210,9 +214,16 @@ public class QuestionManager : MonoBehaviour
         int.TryParse(alternativeQtt.options[alternativeQtt.value].text, out qtt);
 
         int completed = alternativesGroup.HasAnyAlternativeCompleted();
+
+        int dif = completed - qtt;
+        string message = "Confirma reduzir a quantidade de alternativas e descartar {0} alternativas já preenchidas?";
+        if (dif == 1)
+        {
+            message = "Confirma reduzir a quantidade de alternativas e descartar {0} alternativa já preenchida?";
+        }
         if (completed > qtt)
         {
-            QuestionsGroup.Instance.ShowConfirmPanel(String.Format("Confirma reduzir a quantidade de alternativas e perder {0} alternativas ja preenchidas?", completed-qtt ),ChangeAlternativeQtt,RevertAlternativesQtt );
+            QuestionsGroup.Instance.ShowConfirmPanel(String.Format(message, completed-qtt ),ChangeAlternativeQtt,RevertAlternativesQtt );
         }
         else
         {
@@ -253,21 +264,24 @@ public class QuestionManager : MonoBehaviour
             statementEN_text.ActivateErrorMode();
             isComplete = false;
         }
+       
         if (statementPT_text.InputField.text.IsNullEmptyOrWhitespace())
         {
             statementPT_text.ActivateErrorMode();
             isComplete = false;
-        }
+        } 
+        
         if (statementPT_audio.UploadedFile == null && !statementPT_audio.IsFilled)
         {
             statementPT_audio.ActivateErrorMode();
             isComplete = false;
-        }
+        } 
+        
         if (statementEN_audio.UploadedFile == null && !statementEN_audio.IsFilled)
         {
             statementEN_audio.ActivateErrorMode();
             isComplete = false;
-        }
+        } 
 
         if (questionType.value == (int)QuestionsGroup.InputType.AUDIO)
         {
@@ -285,14 +299,12 @@ public class QuestionManager : MonoBehaviour
             }
         }
 
+        Debug.LogError(previousQttDropdown);
         if (!alternativesGroup.IsAllAlternativeCompleted(previousQttDropdown))
         {
             isComplete = false;
         }
 
-        background.sprite = backSprite[Utils.BoolToInt(isComplete)];
-        errorSymbol.gameObject.SetActive(!isComplete);
-        
         return isComplete;
     }
 
@@ -482,6 +494,11 @@ public class QuestionManager : MonoBehaviour
         int qtt = alternativesGroup.FillAlternativeGroup(questionData.Answer, questionData.correctAnswer, form, previousTypeDropdown);
         alternativeQtt.SetValueWithoutNotify(GetDropdownIndex(alternativeQtt,qtt));
         ChangeAlternativeQtt();
+    }
+
+    public void DeactivateErrorInput(InputElement el)
+    {
+        QuestionsGroup.Instance.DeactivateErrorMode(el);
     }
 }
 

@@ -35,6 +35,11 @@ public class InputElement : MonoBehaviour
         }
     }
 
+    public void DeactivateErrorMode()
+    {
+        DeactivateErrorMode(fieldNormalMode);
+    }
+
     public virtual void DeactivateErrorMode(Sprite normal,bool changeSprite = true)
     {
         RemoveErrorMessage();

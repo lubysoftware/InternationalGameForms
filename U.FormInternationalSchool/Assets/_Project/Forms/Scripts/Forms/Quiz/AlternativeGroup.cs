@@ -20,17 +20,27 @@ public class AlternativeGroup : MonoBehaviour
 
     public bool IsAllAlternativeCompleted(int qtt)
     {
-        return qtt == HasAnyAlternativeCompleted();
+        return qtt == HasAnyAlternativeCompleted(true);
     }
 
-    public int HasAnyAlternativeCompleted()
+    public int HasAnyAlternativeCompleted(bool showError = false)
     {
         int qtt = 0;
         foreach (var alternative in alternatives)
         {
-            if (alternative.IsCompleted())
+            if (showError)
             {
-                qtt++;
+                if (alternative.IsCompleteWithError())
+                {
+                    qtt++;
+                }
+            }
+            else
+            {
+                if (alternative.IsCompleted())
+                {
+                    qtt++;
+                }
             }
         }
         return qtt;

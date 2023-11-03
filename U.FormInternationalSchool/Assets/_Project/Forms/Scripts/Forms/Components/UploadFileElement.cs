@@ -75,7 +75,7 @@ public class UploadFileElement : InputElement
         }
 
         _audioSource = GetComponent<AudioSource>();
-
+        
         // if you want to set custom localization for file browser popup -> use that function:
         // fileBrowserSetLocalization(LocalizationKey.DESCRIPTION_TEXT, "Select file for loading:");
     }
@@ -111,6 +111,8 @@ public class UploadFileElement : InputElement
             playAudio.gameObject.SetActive(false);
             pauseAudio.gameObject.SetActive(false);
         }
+        if(_audioSource != null)
+            _audioSource.clip = null;
 
         IsFilled = false;
         AddErrorMessage();
