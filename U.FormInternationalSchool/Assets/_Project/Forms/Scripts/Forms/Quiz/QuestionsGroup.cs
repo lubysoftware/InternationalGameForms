@@ -106,6 +106,14 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
         LayoutRebuilder.ForceRebuildLayoutImmediate(layout3.transform as RectTransform);
     }
 
+    public void UpdateAllQuestionsIndex()
+    {
+        foreach(Transform child in questionsContainer)
+        {
+            child.GetComponent<QuestionManager>().UpdateIndex();
+        }
+    }
+
     public bool CheckAllQuestions()
     {
         bool isCompleted = true;

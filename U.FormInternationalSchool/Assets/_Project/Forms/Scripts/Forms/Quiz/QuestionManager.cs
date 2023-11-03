@@ -29,6 +29,8 @@ public class QuestionManager : MonoBehaviour
     [SerializeField] private AlternativeGroup alternativesGroup;
     [SerializeField] private Transform alternativeGroupContainer;
 
+    [SerializeField] private TextMeshProUGUI questionPosition;
+
     [Header("Settings Buttons")] [SerializeField]
     private Button moveUpperBtn;
 
@@ -51,15 +53,17 @@ public class QuestionManager : MonoBehaviour
 
     [SerializeField] private LayoutGroup layout2;
     [SerializeField] private LayoutGroup layout3;
-    
+
     private Dictionary<string, string> filledUrls;
-    
+
     private const string EN = "statement_audio_en";
     private const string PT = "enunciado_audio_pt";
     private const string FILE = "statement_file";
+
     void Start()
     {
         AddListeners();
+        UpdateIndex();
         if (!QuestionsGroup.Instance.IsEdit())
         {
             previousQttDropdown = 4;
@@ -99,8 +103,10 @@ public class QuestionManager : MonoBehaviour
         {
             transform.SetSiblingIndex(index - 1);
         }
+
         UpdateButtonsInteraction();
         ShowPanel();
+        QuestionsGroup.Instance.UpdateAllQuestionsIndex();
         QuestionsGroup.Instance.UpdateCanvas();
     }
 
@@ -114,20 +120,27 @@ public class QuestionManager : MonoBehaviour
     {
         int index = transform.GetSiblingIndex();
 
-        moveDownBtn.interactable = index < QuestionsGroup.Instance.QuestionsQtt-1;
+        moveDownBtn.interactable = index < QuestionsGroup.Instance.QuestionsQtt - 1;
         moveUpperBtn.interactable = index > 0;
     }
-    
+
     private void MoveDown()
     {
         int index = transform.GetSiblingIndex();
-        if (index < QuestionsGroup.Instance.QuestionsQtt-1)
+        if (index < QuestionsGroup.Instance.QuestionsQtt - 1)
         {
             transform.SetSiblingIndex(index + 1);
         }
+
         UpdateButtonsInteraction();
         ShowPanel();
         QuestionsGroup.Instance.UpdateCanvas();
+        QuestionsGroup.Instance.UpdateAllQuestionsIndex();
+    }
+
+    public void UpdateIndex()
+    {
+        questionPosition.text = (transform.GetSiblingIndex() + 1).ToString();
     }
 
     public void UpdateCanvas()
@@ -148,6 +161,7 @@ public class QuestionManager : MonoBehaviour
         DestroyImmediate(this.gameObject);
         QuestionsGroup.Instance.CheckAddQuestionButton();
         QuestionsGroup.Instance.UpdateCanvas();
+        QuestionsGroup.Instance.UpdateAllQuestionsIndex();
     }
 
 
