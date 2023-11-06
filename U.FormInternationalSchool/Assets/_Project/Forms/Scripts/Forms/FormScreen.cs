@@ -670,17 +670,18 @@ public class FormScreen : MonoBehaviour
     
     public virtual void SendGameInfoToPortal(string responseJson)
     {
-#if UNITY_WEBGL && !UNITY_EDITOR
-        try
-        {
-            GameCreationResponse response = JsonConvert.DeserializeObject<GameCreationResponse>(responseJson);
-            OnGameCreated(response.id, response.gameType);
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError(ex.Message);
-        }
-#endif
+        Debug.Log("[DEBUG] Informação do game enviada para o portal.");
+// #if UNITY_WEBGL && !UNITY_EDITOR
+//         try
+//         {
+//             GameCreationResponse response = JsonConvert.DeserializeObject<GameCreationResponse>(responseJson);
+//             OnGameCreated(response.id, response.gameType);
+//         }
+//         catch (Exception ex)
+//         {
+//             Debug.LogError(ex.Message);
+//         }
+// #endif
     }
 
     #endregion
