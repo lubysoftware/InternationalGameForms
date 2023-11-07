@@ -24,11 +24,11 @@ public class DashboardScreen : MonoBehaviour
 
 public enum GameType
 {
-    IMAGE_SEQ,
-    IMAGE_PAIR,
-    CROSS_WORDS,
+    IMAGE_SEQUENCE,
+    IMAGE_PARING,
+    CROSS_WORD,
     QUIZ,
     PUZZLE,
-    MEMORY,
-    DRAG_DROP
+    MATCH_CARD,
+    DRAGNDROP
 }

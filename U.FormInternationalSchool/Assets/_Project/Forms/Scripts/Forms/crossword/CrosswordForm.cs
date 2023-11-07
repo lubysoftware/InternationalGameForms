@@ -172,7 +172,8 @@ public class CrosswordForm : FormScreen
         string json = JsonConvert.SerializeObject(completeForm);
         if (isPreview)
         {
-
+            PreviewInPortal(json);
+            StopLoading();
         }
         else
         {

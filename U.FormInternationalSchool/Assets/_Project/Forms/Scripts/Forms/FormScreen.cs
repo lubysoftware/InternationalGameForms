@@ -25,6 +25,7 @@ public class FormScreen : MonoBehaviour
 {
     [DllImport("__Internal")]
     protected static extern void OnGameCreated(int gameId, string gameType);
+    protected static extern void OnShowPreview(string gameType, string json);
     
     [SerializeField] protected InputElement title;
     [SerializeField] private InputElement statement_PT, statement_EN;
@@ -71,6 +72,7 @@ public class FormScreen : MonoBehaviour
     protected List<string> emptyField;
     protected bool hasValidationError;
     protected bool isPreview;
+    protected bool hasPreviewData;
     
     protected virtual void Start()
     {
@@ -117,9 +119,16 @@ public class FormScreen : MonoBehaviour
 
     public void SendFormData()
     {
+        isPreview = false;
         if (!canClick) return;
         loading.gameObject.SetActive(true);
         SetCanClick(false);
+
+        if (hasPreviewData)
+        {
+            
+        }
+
         CheckEmptyBaseFormFields();
     }
     
@@ -695,19 +704,22 @@ public class FormScreen : MonoBehaviour
 // #endif
     }
     
-    public virtual void ShowPreviewPortal(string responseJson)
+    public virtual void PreviewInPortal(string jsonData)
     {
-#if UNITY_WEBGL && !UNITY_EDITOR
-        try
-        {
-            ShowPreview(response.id, response);
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError(ex.Message);
-        }
-#endif
+        isPreview = false;
+        Debug.Log("[DEBUG] Solicitacao preview para o portal.");
+// #if UNITY_WEBGL && !UNITY_EDITOR
+//         try
+//         {
+//             OnShowPreview(so.gameType.ToString(), jsonData);
+//         }
+//         catch (Exception ex)
+//         {
+//             Debug.LogError(ex.Message);
+//         }
+// #endif
     }
+    
 
     #endregion
     
