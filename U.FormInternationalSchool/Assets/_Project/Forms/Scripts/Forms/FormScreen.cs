@@ -42,7 +42,7 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private TextMeshProUGUI errorText;
     [SerializeField] private LoadingDots loading;
     [SerializeField] private Button backButton;
-
+    [SerializeField] private Button previewForm;
     [SerializeField] private Sprite inputImage;
 
     protected FormBase game = new FormBase();
@@ -70,10 +70,12 @@ public class FormScreen : MonoBehaviour
 
     protected List<string> emptyField;
     protected bool hasValidationError;
+    protected bool isPreview;
     
     protected virtual void Start()
     {
         sendForm.onClick.AddListener(SendFormData);
+        sendForm.onClick.AddListener(ShowPreview);
         backButton.onClick.AddListener(BackButton);
         SetCanClick(true);
         isEdit = false;
@@ -115,6 +117,15 @@ public class FormScreen : MonoBehaviour
 
     public void SendFormData()
     {
+        if (!canClick) return;
+        loading.gameObject.SetActive(true);
+        SetCanClick(false);
+        CheckEmptyBaseFormFields();
+    }
+    
+    public void ShowPreview()
+    {
+        isPreview = true;
         if (!canClick) return;
         loading.gameObject.SetActive(true);
         SetCanClick(false);
@@ -675,6 +686,20 @@ public class FormScreen : MonoBehaviour
         {
             GameCreationResponse response = JsonConvert.DeserializeObject<GameCreationResponse>(responseJson);
             OnGameCreated(response.id, response.gameType);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
+#endif
+    }
+    
+    public virtual void ShowPreviewPortal(string responseJson)
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        try
+        {
+            ShowPreview(response.id, response);
         }
         catch (Exception ex)
         {

@@ -284,3 +284,4 @@ public struct DraggableItemJson
     public float spawnPointY;
     public string imageUrl;
 }
+

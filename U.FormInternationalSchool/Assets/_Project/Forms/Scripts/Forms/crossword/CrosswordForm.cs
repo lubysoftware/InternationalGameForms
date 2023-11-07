@@ -84,7 +84,7 @@ public class CrosswordForm : FormScreen
         }
         ValidateFields();
     }
-    
+
     protected virtual void ValidateFields()
     {
         base.ValidateFields();
@@ -97,7 +97,7 @@ public class CrosswordForm : FormScreen
 
         if (panel.editingInput != null)
         {
-            ShowError("Finalize a edição da palavra "+ panel.editingInput.Index+".", ErrorType.CUSTOM, null);
+            ShowError("Finalize a edição da palavra " + panel.editingInput.Index + ".", ErrorType.CUSTOM, null);
             return;
         }
 
@@ -106,7 +106,11 @@ public class CrosswordForm : FormScreen
             ShowError("Todas as palavras devem ter as dicas preenchidas.", ErrorType.CUSTOM, null);
             return;
         }
+
+
         SendBaseFormFiles();
+        
+        
     }
 
     public override void SerializeGameData(string[] urls)
@@ -115,10 +119,14 @@ public class CrosswordForm : FormScreen
         List<Words> listWords = new List<Words>();
         if (filledImages.Count == wordsQtt)
         {
-            foreach(var input in filledImages) 
+            foreach (var input in filledImages)
             {
                 int row = WordsGrid.idsRow.ToList().FindIndex(x => x == input.Key.Coord.row);
-                listWords.Add(new Words() { question = input.Value, answer = input.Key.Word, posY = input.Key.Coord.column - 1, posX = row, orientation = input.Key.IsHorizontal? "HORIZONTAL": "VERTICAL"});
+                listWords.Add(new Words()
+                {
+                    question = input.Value, answer = input.Key.Word, posY = input.Key.Coord.column - 1, posX = row,
+                    orientation = input.Key.IsHorizontal ? "HORIZONTAL" : "VERTICAL"
+                });
             }
         }
         else
@@ -129,38 +137,53 @@ public class CrosswordForm : FormScreen
                 int row = WordsGrid.idsRow.ToList().FindIndex(x => x == input.Info.Coord.row);
                 if (filledImages.ContainsKey(input.Info))
                 {
-                    listWords.Add(new Words() { question = filledImages[input.Info], answer = input.Info.Word, posY = input.Info.Coord.column -1, posX = row, orientation = input.Info.IsHorizontal? "HORIZONTAL": "VERTICAL"});
+                    listWords.Add(new Words()
+                    {
+                        question = filledImages[input.Info], answer = input.Info.Word,
+                        posY = input.Info.Coord.column - 1, posX = row,
+                        orientation = input.Info.IsHorizontal ? "HORIZONTAL" : "VERTICAL"
+                    });
                 }
                 else
                 {
                     if (urls.Length > urlIndex)
                     {
-                        listWords.Add(new Words() { question = urls[urlIndex], answer = input.Info.Word, posY = input.Info.Coord.column -1, posX = row, orientation = input.Info.IsHorizontal? "HORIZONTAL": "VERTICAL"});
+                        listWords.Add(new Words()
+                        {
+                            question = urls[urlIndex], answer = input.Info.Word, posY = input.Info.Coord.column - 1,
+                            posX = row, orientation = input.Info.IsHorizontal ? "HORIZONTAL" : "VERTICAL"
+                        });
                         urlIndex++;
                     }
                 }
             }
         }
-        
+
         FormCrossword completeForm = new FormCrossword()
         {
             game = this.game,
-            gameData =  new Crossword()
+            gameData = new Crossword()
             {
-                questionType = panel.IsImage? "IMAGE":"TEXT",
+                questionType = panel.IsImage ? "IMAGE" : "TEXT",
                 words = listWords
             }
         };
 
-       
         string json = JsonConvert.SerializeObject(completeForm);
-        if (isEdit)
+        if (isPreview)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
+
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
+            if (isEdit)
+            {
+                SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
+            }
+            else
+            {
+                SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
+            }
         }
     }
 
