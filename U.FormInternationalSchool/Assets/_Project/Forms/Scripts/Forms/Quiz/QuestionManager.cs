@@ -369,8 +369,10 @@ public class QuestionManager : MonoBehaviour
             filledUrls.Add(FILE, "");
         }
 
-        files.AddRange(alternativesGroup.GetFiles());
-        filledUrls.AddRange(alternativesGroup.FilledImages());
+        if(alternativesGroup.GetFiles().Count > 0)
+            files.AddRange(alternativesGroup.GetFiles());
+        if(alternativesGroup.FilledImages().Count > 0)
+            filledUrls.AddRange(alternativesGroup.FilledImages());
         if (files.Count > 0)
         {
             SendFilesPack(files);
