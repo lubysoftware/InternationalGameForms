@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 [Serializable]
@@ -24,9 +25,9 @@ public class ImagePairJsonGet
     public string created_at;
     public string updated_at;
     public bool deleted;
-    public List<SupportMaterialGet> SupportMaterial;
+    public List<SupportMaterialGet> supportMaterial;
     public int failPenalty;
-    public List<PairGet> paringUnits;
+    public List<PairGet> pairs;
 }
 
 [Serializable]

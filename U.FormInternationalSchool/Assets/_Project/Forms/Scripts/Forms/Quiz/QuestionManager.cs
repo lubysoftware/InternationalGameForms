@@ -507,7 +507,7 @@ public class QuestionManager : MonoBehaviour
         statementEN_text.InputField.text = questionData.questionTitleEnglish;
         statementPT_text.InputField.text = questionData.questionTitlePortuguese;
         OnChangeQuestionType(list.FindIndex(x => x.ToString() == questionData.quizType));
-        int qtt = alternativesGroup.FillAlternativeGroup(questionData.Answer, questionData.correctAnswer, form, previousTypeDropdown);
+        int qtt = alternativesGroup.FillAlternativeGroup(questionData.answers, questionData.correctAnswer, form, previousTypeDropdown);
         alternativeQtt.SetValueWithoutNotify(GetDropdownIndex(alternativeQtt,qtt));
         ChangeAlternativeQtt();
     }

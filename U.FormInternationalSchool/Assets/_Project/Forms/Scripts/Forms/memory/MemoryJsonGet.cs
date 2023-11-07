@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class MemoryJsonGet 
@@ -23,7 +24,7 @@ public class MemoryJsonGet
     public string created_at;
     public string updated_at;
     public bool deleted;
-    public List<SupportMaterialGet> SupportMaterial;
+    public List<SupportMaterialGet> supportMaterial;
     public int matchCardId;
     public string backImageUrl;
     public List<MatchPairGet> cardPairs;

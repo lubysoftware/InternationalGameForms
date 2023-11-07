@@ -179,9 +179,9 @@ public class ImagePairingForm : FormScreen
     {
         failsPenalty.InputField.text = json.failPenalty.ToString();
         List<string[]> urls = new List<string[]>();
-        for (int i = 0; i < json.paringUnits.Count; i++)
+        for (int i = 0; i < json.pairs.Count; i++)
         {
-            string[] urlPair = new[] { json.paringUnits[i].firstImageUrl, json.paringUnits[i].secondImageUrl };
+            string[] urlPair = new[] { json.pairs[i].firstImageUrl, json.pairs[i].secondImageUrl };
             urls.Add(urlPair);
         }
         panel.FillImages(urls, FillUploadFiles);

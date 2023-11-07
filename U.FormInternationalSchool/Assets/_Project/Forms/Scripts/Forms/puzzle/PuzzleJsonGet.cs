@@ -23,7 +23,7 @@ public class PuzzleJsonGet
     public string created_at;
     public string updated_at;
     public bool deleted;
-    public List<SupportMaterialGet> SupportMaterial;
+    public List<SupportMaterialGet> supportMaterial;
     public int puzzleId;
     public string imageUrl;
     public int pieceCount;
