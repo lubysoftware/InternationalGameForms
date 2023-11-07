@@ -23,7 +23,7 @@ public class CrosswordJsonGet
     public string created_at;
     public string updated_at;
     public bool deleted;
-    public List<SupportMaterialGet> SupportMaterial; 
+    public List<SupportMaterialGet> supportMaterial; 
     public int crossWordId;
     public string questionType;
     public List<WordsGet> words;

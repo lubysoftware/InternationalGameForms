@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class ImageSeqJsonGet
@@ -23,10 +24,10 @@ public class ImageSeqJsonGet
     public string created_at;
     public string updated_at;
     public bool deleted;
-    public List<SupportMaterialGet> SupportMaterial;
+    public List<SupportMaterialGet> supportMaterial;
     public int imageSequenceId;
     public int failPenalty;
-    public List<SequenceGet> sequenceUnits;
+    public List<SequenceGet> sequences;
 }
 
 

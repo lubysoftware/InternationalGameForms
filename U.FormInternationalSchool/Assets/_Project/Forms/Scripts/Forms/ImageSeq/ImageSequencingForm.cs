@@ -179,8 +179,8 @@ public class ImageSequencingForm : FormScreen
     private void FillGameData(ImageSeqJsonGet json)
     {
         failsPenalty.InputField.text = json.failPenalty.ToString();
-        panel.FillImages(json.sequenceUnits, FillUploadFiles);
-        sequenceQtt = json.sequenceUnits.Count;
+        panel.FillImages(json.sequences, FillUploadFiles);
+        sequenceQtt = json.sequences.Count;
         loadFileQtt = loadFileQtt + sequenceQtt;
         CheckIfMaxQtt();
     }

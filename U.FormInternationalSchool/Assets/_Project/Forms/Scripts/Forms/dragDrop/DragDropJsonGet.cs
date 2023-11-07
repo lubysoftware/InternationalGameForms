@@ -22,7 +22,7 @@ public class DragDropJsonGet : MonoBehaviour
     public string created_at;
     public string updated_at;
     public bool deleted;
-    public List<SupportMaterialGet> SupportMaterial;
+    public List<SupportMaterialGet> supportMaterial;
     public int dragnDropId;
     public string dropPlaceBackgroundUrl;
     public string materialType;

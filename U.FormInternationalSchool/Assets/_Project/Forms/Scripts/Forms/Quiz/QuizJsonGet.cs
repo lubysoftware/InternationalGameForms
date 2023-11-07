@@ -21,7 +21,7 @@ public class QuizJsonGet : MonoBehaviour
     public string created_at;
     public string updated_at;
     public bool deleted;
-    public List<SupportMaterialGet> SupportMaterial;
+    public List<SupportMaterialGet> supportMaterial;
     public int quizId;
     public int failPenalty;
     public bool randomAnswers;
@@ -38,7 +38,7 @@ public struct QuestionGet
     public string questionFileUrl;
     public string answerType;
     public int correctAnswer;
-    public List<AnswerGet> Answer;
+    public List<AnswerGet> answers;
 }
 
 public struct AnswerGet
