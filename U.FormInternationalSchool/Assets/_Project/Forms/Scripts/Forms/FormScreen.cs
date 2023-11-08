@@ -761,16 +761,16 @@ public class FormScreen : MonoBehaviour
     {
         isPreview = false;
         Debug.Log("[DEBUG] Solicitacao preview para o portal.");
-// #if UNITY_WEBGL && !UNITY_EDITOR
-//         try
-//         {
-//             OnShowPreview(so.gameType.ToString(), jsonData);
-//         }
-//         catch (Exception ex)
-//         {
-//             Debug.LogError(ex.Message);
-//         }
-// #endif
+#if UNITY_WEBGL && !UNITY_EDITOR
+        try
+        {
+            OnShowPreview(so.gameType.ToString(), jsonData);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
+#endif
     }
     
 
