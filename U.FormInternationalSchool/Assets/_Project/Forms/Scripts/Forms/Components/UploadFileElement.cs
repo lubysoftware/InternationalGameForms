@@ -293,6 +293,28 @@ public class UploadFileElement : InputElement
         SucessPanel.Instance.SetText($"Erro ao baixar \"{fileName}\".", SucessPanel.MessageType.ERROR);
         OnFill?.Invoke(this);
     }
+
+    public float[] GetAudioData()
+    {
+        if (!isImage)
+        {
+            float[] samples = new float[_audioSource.clip.samples * _audioSource.clip.channels];
+            _audioSource.clip.GetData(samples, 0);
+            return samples;
+        }
+
+        return null;
+    }
+    
+    public string GetImageData()
+    {
+        if (isImage)
+        {
+           return FileExtension.TextureToBase64(showImage.sprite.texture);
+        }
+
+        return null;
+    }
 }
 
 public class FileData

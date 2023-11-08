@@ -45,6 +45,7 @@ public class ImageSequencingPanel : MonoBehaviour
         return listImages;
     }
     
+    
     public Dictionary<int,string> FilledImages()
     {
         Dictionary<int, string> listFilledImages = new Dictionary<int, string>();
@@ -57,6 +58,21 @@ public class ImageSequencingPanel : MonoBehaviour
                 {
                     listFilledImages.Add(el.Index, el.url);
                 }
+            }
+        }
+
+        return listFilledImages;
+    }
+    
+    public Dictionary<int,string> PreviewImages()
+    {
+        Dictionary<int, string> listFilledImages = new Dictionary<int, string>();
+        foreach (Transform child in transform)
+        {
+            ImageElement el = child.GetComponent<ImageFrame>().Image;
+            if (el.IsActive)
+            {
+                listFilledImages.Add(el.Index, el.GetImageData());
             }
         }
 

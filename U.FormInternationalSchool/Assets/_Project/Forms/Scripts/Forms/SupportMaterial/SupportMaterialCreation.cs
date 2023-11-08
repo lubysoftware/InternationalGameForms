@@ -80,6 +80,44 @@ public class SupportMaterialCreation : MonoBehaviour
 
         return materials;
     }
+    
+    public List<Material> GetMaterialPreview()
+    {
+        List<Material> materials = new List<Material>();
+
+        int index = 0;
+        for (int i = 0; i < materialInputs.Count; i++)
+        {
+            if (materialInputs[i].IsEdited)
+            {
+                if (materialInputs[i].IsText && !materialInputs[i].Text.IsNullEmptyOrWhitespace())
+                {
+                    materials.Add(new Material()
+                    {
+                        index = index,
+                        file = null,
+                        isText = true,
+                        text = materialInputs[i].Text
+                    });
+                    index++;
+
+                }else if (!materialInputs[i].IsText)
+                {
+                    materials.Add(new Material()
+                    {
+                        index = index,
+                        file = null,
+                        isText = false,
+                        text = materialInputs[i].fileUploadEl.GetImageData()
+                    });
+                    index++;
+                }
+            }
+           
+        }
+
+        return materials;
+    }
 
     private void CloseButton()
     {

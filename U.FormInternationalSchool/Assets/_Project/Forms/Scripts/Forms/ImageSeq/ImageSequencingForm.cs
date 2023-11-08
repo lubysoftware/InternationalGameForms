@@ -115,7 +115,15 @@ public class ImageSequencingForm : FormScreen
             ShowError("O sequenciamento de imagens deve conter no mínimo duas imagens.", ErrorType.CUSTOM, null);
             return;
         }
-        SendBaseFormFiles();
+
+        if (isPreview)
+        {
+            SerializeBaseFormPreviewData();
+        }
+        else
+        {
+            SendBaseFormFiles();
+        }
     }
 
     public override void SerializeGameData(string[] urls)
@@ -175,6 +183,40 @@ public class ImageSequencingForm : FormScreen
             SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
         }
     }
+    
+    public override void SerializeGameDataPreview()
+    {
+        Debug.Log("serialize game preview");
+
+        List<Sequence> listSeq = new List<Sequence>();
+        Dictionary<int, string> previewImages = panel.PreviewImages();
+       
+        int urlIndex = 0;
+        for (int i = 0; i < imageSeqQtt; i++)
+        {
+            if (previewImages.ContainsKey(i))
+            {
+                listSeq.Add(new Sequence(){ position = i, imageUrl = previewImages[i]});
+            }
+        }
+        
+       
+
+        FormImageSequencePreview completeForm = new FormImageSequencePreview()
+        {
+            gamePrev = this.gamePreview,
+            gameData =  new ImageSequence()
+            {
+                failPenalty = failsPenaltyValue,
+                sequences = listSeq
+            }
+        };
+
+       
+        string json = JsonConvert.SerializeObject(completeForm);
+        PreviewInPortal(json);
+        System.IO.File.WriteAllText(Application.persistentDataPath + "/FormData.json", json);
+    }
 
     private void FillGameData(ImageSeqJsonGet json)
     {
@@ -205,5 +247,11 @@ public class ImageSequence
 public class FormImageSequence
 {
     public FormBase game;
+    public ImageSequence gameData;
+}
+
+public class FormImageSequencePreview
+{
+    public FormBasePreview gamePrev;
     public ImageSequence gameData;
 }

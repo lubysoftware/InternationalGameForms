@@ -47,6 +47,7 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private Sprite inputImage;
 
     protected FormBase game = new FormBase();
+    protected FormBasePreview gamePreview = new FormBasePreview();
     
     private Dictionary<string, string> newUrlFiles = new Dictionary<string, string>();
     private Dictionary<string, string> filledUrlFiles = new Dictionary<string, string>();
@@ -77,7 +78,7 @@ public class FormScreen : MonoBehaviour
     protected virtual void Start()
     {
         sendForm.onClick.AddListener(SendFormData);
-        sendForm.onClick.AddListener(ShowPreview);
+        previewForm.onClick.AddListener(ShowPreview);
         backButton.onClick.AddListener(BackButton);
         SetCanClick(true);
         isEdit = false;
@@ -124,11 +125,6 @@ public class FormScreen : MonoBehaviour
         loading.gameObject.SetActive(true);
         SetCanClick(false);
 
-        if (hasPreviewData)
-        {
-            
-        }
-
         CheckEmptyBaseFormFields();
     }
     
@@ -139,6 +135,7 @@ public class FormScreen : MonoBehaviour
         loading.gameObject.SetActive(true);
         SetCanClick(false);
         CheckEmptyBaseFormFields();
+        Debug.LogError("show preview");
     }
 
     #region BASE_FORM
@@ -666,6 +663,57 @@ public class FormScreen : MonoBehaviour
         SendGameFiles();
 
     }
+    
+    public virtual void SerializeBaseFormPreviewData()
+    {
+        Debug.LogError("preview serialize");
+        List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
+        List<Material> materialPrev = supportMaterialPanel.GetMaterialPreview();
+        for (int i = 0; i< materialPrev.Count; i++)
+        {
+            if (materialPrev[i].isText)
+            {
+                supportMaterial.Add(new SupportMaterial()
+                {
+                    position = i,
+                    material = materialPrev[i].text,
+                    materialType = "TEXT"
+                });
+            }
+            else
+            {
+                if (materialPrev[i].text != null)
+                {
+                    supportMaterial.Add(new SupportMaterial()
+                    {
+                        position = i,
+                        material = materialPrev[i].text,
+                        materialType = "IMAGE"
+                    });
+                }
+            }
+        }
+        
+
+        gamePreview = new FormBasePreview()
+        {
+            gameTitle = title.InputField.text,
+            backgroundMusicUrl = backgroundMusic.GetAudioData(),
+            backgroundUrl = backgroundImage.GetImageData(),
+            bonustimer = bonusTimer,
+            gameTitleImageUrl = titleImage.GetImageData(),
+            hasSupportMaterial =  supportMaterial.Count > 0,
+            supportMaterial = supportMaterial.Count > 0? supportMaterial : null,
+            hasTimer = timer.isOn,
+            questionStatementEnglishAudioUrl = audioStatement_EN.GetAudioData(),
+            questionStatementEnglishVersion = statement_EN.InputField.text,
+            questionStatementPortugueseAudioUrl =audioStatement_PT.GetAudioData(),
+            timer = timeInSec,
+            questionStatementPortugueseVersion = statement_PT.InputField.text
+        };
+        
+       SerializeGameDataPreview();
+    }
 
     #endregion
 
@@ -683,6 +731,11 @@ public class FormScreen : MonoBehaviour
         
     }
 
+    public virtual void SerializeGameDataPreview()
+    {
+        
+    }
+    
     public virtual void SerializeGameData(string[] urls)
     {
         
@@ -787,6 +840,24 @@ public class FormBase
     public string questionStatementEnglishVersion;
     public string questionStatementPortugueseAudioUrl;
     public string questionStatementEnglishAudioUrl;
+    public bool hasSupportMaterial;
+    public bool hasTimer;
+    public int timer;
+    public int bonustimer;
+    public List<SupportMaterial> supportMaterial;
+}
+
+[Serializable]
+public class FormBasePreview
+{
+    public string gameTitle;
+    public string gameTitleImageUrl;
+    public string backgroundUrl;
+    public float[] backgroundMusicUrl;
+    public string questionStatementPortugueseVersion;
+    public string questionStatementEnglishVersion;
+    public float[] questionStatementPortugueseAudioUrl;
+    public float[] questionStatementEnglishAudioUrl;
     public bool hasSupportMaterial;
     public bool hasTimer;
     public int timer;

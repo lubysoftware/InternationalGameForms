@@ -28,4 +28,25 @@ public class FileUpload : BaseApi
         
         Api.Post(currentRequest, onSuccess, onError);
     }
+    
+    public void DeleteFile(FilesToDelete files, Action<List<string>> onSuccess, Action<ErrorProxy> onError)
+    {
+        var currentRequest = new RequestHelper
+        {
+            Uri = GetFormattedPath("/file-upload"),
+            EnableDebug = DebugMode,
+            Retries = 1,
+            Timeout = 15,
+            Body = files
+        };
+
+        Api.Delete(currentRequest, onSuccess, onError);
+    }
+    
+}
+
+[Serializable]
+public class FilesToDelete
+{
+    public List<string> fileNames;
 }

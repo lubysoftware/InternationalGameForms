@@ -108,9 +108,16 @@ public class CrosswordForm : FormScreen
         }
 
 
-        SendBaseFormFiles();
+
+        if (isPreview)
+        {
         
-        
+        }
+        else
+        {
+            SendBaseFormFiles();
+        }
+
     }
 
     public override void SerializeGameData(string[] urls)
@@ -170,21 +177,14 @@ public class CrosswordForm : FormScreen
         };
 
         string json = JsonConvert.SerializeObject(completeForm);
-        if (isPreview)
+
+        if (isEdit)
         {
-            PreviewInPortal(json);
-            StopLoading();
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
         }
         else
         {
-            if (isEdit)
-            {
-                SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
-            }
-            else
-            {
-                SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
-            }
+            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
         }
     }
 
