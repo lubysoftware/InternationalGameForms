@@ -215,7 +215,8 @@ public class ImageSequencingForm : FormScreen
        
         string json = JsonConvert.SerializeObject(completeForm);
         PreviewInPortal(json);
-        System.IO.File.WriteAllText(Application.persistentDataPath + "/FormData.json", json);
+        StopLoading();
+        //System.IO.File.WriteAllText(Application.persistentDataPath + "/FormData.json", json);
     }
 
     private void FillGameData(ImageSeqJsonGet json)
