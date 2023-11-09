@@ -90,6 +90,11 @@ public class PuzzleForm : FormScreen
                 timeTipMin.ActivateErrorMode();
                 emptyField.Add("Minutos do timer de dicas");
             }
+            if (timeTipSec.InputField.text.IsNullEmptyOrWhitespace())
+            {
+                timeTipSec.ActivateErrorMode();
+                emptyField.Add("Segundos do timer de dicas");
+            }
         }
         else
         {
