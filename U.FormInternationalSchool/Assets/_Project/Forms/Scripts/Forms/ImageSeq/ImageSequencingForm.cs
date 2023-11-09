@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LubyLib.Core;
 using LubyLib.Core.Extensions;
 using Newtonsoft.Json;
@@ -22,7 +23,7 @@ public class ImageSequencingForm : FormScreen
 
     private int sequenceQtt;
 
-    
+
     protected override void Start()
     {
         base.Start();
@@ -30,11 +31,12 @@ public class ImageSequencingForm : FormScreen
         SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
         if (!isEdit)
         {
-            loadFileQtt=1;
-            FillUploadFiles( backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/0c917c36-1e93-489a-a4d0-e4327cffc752_name.001_img_sequencing.ogg");
+            loadFileQtt = 1;
+            FillUploadFiles(backgroundMusic, "music_theme",
+                "https://stg1atividades.blob.core.windows.net/arquivos/0c917c36-1e93-489a-a4d0-e4327cffc752_name.001_img_sequencing.ogg");
         }
     }
-    
+
     public override void FinishDownloadingGame(string text)
     {
         if (text != null)
@@ -58,22 +60,24 @@ public class ImageSequencingForm : FormScreen
             if (panel.GetImages() != null && panel.GetImages().Count > 0)
             {
                 SendFilesToAPI.Instance.StartUploadFiles(this, panel.GetImages(), false);
-            }else
+            }
+            else
             {
                 SerializeGameData(filledImages.Values.ToArray());
             }
         }
     }
-    
+
     protected override void CheckEmptyGameFields()
     {
         if (failsPenalty.InputField.text.IsNullEmptyOrWhitespace())
         {
             failsPenalty.ActivateErrorMode();
             emptyField.Add("Pontuação descontada por erro");
-        }else
+        }
+        else
         {
-           DeactivateErrorInput(failsPenalty);
+            DeactivateErrorInput(failsPenalty);
         }
 
         if (emptyField.Count > 0)
@@ -83,18 +87,19 @@ public class ImageSequencingForm : FormScreen
                 ShowError(emptyField[0], ErrorType.EMPTY, null);
                 return;
             }
-            
+
             ShowError("", ErrorType.ALL_FIELDS, null);
             return;
         }
+
         ValidateFields();
     }
-    
+
     public void CallCheckFails()
     {
         CheckGreatherThanZero(failsPenalty, "Pontuação descontada por erro");
     }
-    
+
     protected override void ValidateFields()
     {
         base.ValidateFields();
@@ -102,6 +107,7 @@ public class ImageSequencingForm : FormScreen
         {
             return;
         }
+
         if (CheckGreatherThanZero(failsPenalty, "Pontuação descontada por erro"))
         {
             int.TryParse(failsPenalty.InputField.text, out failsPenaltyValue);
@@ -110,6 +116,7 @@ public class ImageSequencingForm : FormScreen
         {
             return;
         }
+
         if (panel.ImageQtt() < 2)
         {
             ShowError("O sequenciamento de imagens deve conter no mínimo duas imagens.", ErrorType.CUSTOM, null);
@@ -148,75 +155,97 @@ public class ImageSequencingForm : FormScreen
             {
                 if (filledImages.ContainsKey(i))
                 {
-                    listSeq.Add(new Sequence(){ position = i, imageUrl = filledImages[i]});
+                    listSeq.Add(new Sequence() { position = i, imageUrl = filledImages[i] });
                 }
                 else
                 {
                     if (urls.Length > urlIndex)
                     {
-                        listSeq.Add(new Sequence(){ position = i, imageUrl = urls[urlIndex]});
+                        listSeq.Add(new Sequence() { position = i, imageUrl = urls[urlIndex] });
                         urlIndex++;
                     }
                 }
             }
         }
-       
+
 
         FormImageSequence completeForm = new FormImageSequence()
         {
             game = this.game,
-            gameData =  new ImageSequence()
+            gameData = new ImageSequence()
             {
                 failPenalty = failsPenaltyValue,
                 sequences = listSeq
             }
         };
 
-       
+
         string json = JsonConvert.SerializeObject(completeForm);
         if (isEdit)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
+            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this,
+                SendGameInfoToPortal);
         }
         else
         {
             SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
         }
     }
-    
+
     public override void SerializeGameDataPreview()
     {
         Debug.Log("serialize game preview");
 
         List<Sequence> listSeq = new List<Sequence>();
         Dictionary<int, string> previewImages = panel.PreviewImages();
-       
+
         int urlIndex = 0;
         for (int i = 0; i < imageSeqQtt; i++)
         {
             if (previewImages.ContainsKey(i))
             {
-                listSeq.Add(new Sequence(){ position = i, imageUrl = previewImages[i]});
+                listSeq.Add(new Sequence() { position = i, imageUrl = previewImages[i] });
             }
         }
-        
-       
+
 
         FormImageSequencePreview completeForm = new FormImageSequencePreview()
         {
             gamePrev = this.gamePreview,
-            gameData =  new ImageSequence()
+            gameData = new ImageSequence()
             {
                 failPenalty = failsPenaltyValue,
                 sequences = listSeq
             }
         };
 
-       
-        string json = JsonConvert.SerializeObject(completeForm);
-        PreviewInPortal(json);
-        StopLoading();
+        // string json = JsonUtility.ToJson(completeForm);
+        // PreviewInPortal(json);
+        // StopLoading();
+
+        StartCoroutine(SerializeGamePreviewCoroutine(completeForm));
+
         //System.IO.File.WriteAllText(Application.persistentDataPath + "/FormData.json", json);
+    }
+
+    private IEnumerator SerializeGamePreviewCoroutine(FormImageSequencePreview completeForm)
+    {
+        Task<string> async = SerializeGamePreview(completeForm);
+        while (!async.IsCompleted)
+        {
+            yield return null;
+        }
+        
+        async.Dispose();
+        
+        string previewJson = async.Result;
+        PreviewInPortal(previewJson);
+        StopLoading();
+    }
+    
+    private Task<string> SerializeGamePreview(FormImageSequencePreview completeForm)
+    {
+        return Task.Run(() => JsonUtility.ToJson(completeForm));
     }
 
     private void FillGameData(ImageSeqJsonGet json)
