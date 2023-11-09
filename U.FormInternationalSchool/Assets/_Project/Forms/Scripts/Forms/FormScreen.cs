@@ -204,6 +204,15 @@ public class FormScreen : MonoBehaviour
                 timeMin.DeactivateErrorMode(inputImage);
             }
             
+            if (timeSec.InputField.text.IsNullEmptyOrWhitespace())
+            {
+                timeSec.ActivateErrorMode();
+                emptyField.Add("segundos do timer");
+            }else
+            {
+                timeSec.DeactivateErrorMode(inputImage);
+            }
+            
             if (timerBonus.InputField.text.IsNullEmptyOrWhitespace())
             {
                 timerBonus.ActivateErrorMode();
@@ -243,16 +252,29 @@ public class FormScreen : MonoBehaviour
         }
     }
     
-    public bool CheckGreatherThanZero(InputElement input, string field)
+    public bool CheckGreatherThanZero(InputElement input, string field, bool allowZero = false)
     {
         int value = 0;
         int.TryParse(input.InputField.text, out value);
-        if (value <= 0)
+        if (allowZero)
         {
-            ShowError(field, ErrorType.GREATER_THAN, new int[]{0});
-            input.ActivateErrorMode(true);
-            return false;
+            if (value < 0)
+            {
+                ShowError(field, ErrorType.GREATER_OR_EQUAL, new int[]{0});
+                input.ActivateErrorMode(true);
+                return false;
+            }
         }
+        else
+        {
+            if (value <= 0)
+            {
+                ShowError(field, ErrorType.GREATER_THAN, new int[]{0});
+                input.ActivateErrorMode(true);
+                return false;
+            }
+        }
+       
         input.DeactivateErrorMode(inputImage);
         
         return true;
@@ -260,7 +282,16 @@ public class FormScreen : MonoBehaviour
 
     public void CheckMinutesInput(InputElement el)
     {
-        CheckGreatherThanZero(el, "minutos");
+        int value = 0;
+        int.TryParse(el.InputField.text, out value);
+        if (value != 0)
+        {
+            CheckGreatherThanZero(el, "minutos", true);
+        }
+        else
+        {
+            el.DeactivateErrorMode(inputImage);
+        }
     }
     
     public void CheckSecondsInput(InputElement el)
@@ -268,18 +299,24 @@ public class FormScreen : MonoBehaviour
         CheckBetweenValues(el, 0, 59, "segundos");
     }
 
-    protected int CalculateTimeInSec(string name, InputElement minText, InputElement secText, bool allowZero )
+    protected int CalculateTimeInSec(string name, InputElement minText, InputElement secText, bool allowZero)
     {
+        if (minText.InputField.text.IsNullEmptyOrWhitespace() && secText.InputField.text.IsNullEmptyOrWhitespace())
+            return 0;
         int min, sec = 0;
         int timeTotal = 0;
         int.TryParse(minText.InputField.text, out min);
         int.TryParse(secText.InputField.text, out sec);
+        if ((min == 0 && secText.InputField.text.IsNullEmptyOrWhitespace() )||(sec ==0 && minText.InputField.text.IsNullEmptyOrWhitespace() ))
+        {
+            return 0;
+        }
         if (!allowZero)
         {
             if (min + sec <= 0)
             {
-                ShowError("Tempo do timer " + name, ErrorType.GREATER_THAN, new int[]{0});
-                minText.ActivateErrorMode(true);
+                ShowError("Tempo total do timer " + name, ErrorType.GREATER_THAN, new int[]{0});
+                minText.ActivateErrorMode();
                 secText.ActivateErrorMode(true);
                 return -1;
             }
@@ -288,14 +325,14 @@ public class FormScreen : MonoBehaviour
         {
             if (min + sec < 0)
             {
-                ShowError("Tempo do timer " + name, ErrorType.GREATER_OR_EQUAL, new int[]{0});
+                ShowError("Tempo total do timer " + name, ErrorType.GREATER_OR_EQUAL, new int[]{0});
                 minText.ActivateErrorMode(true);
                 secText.ActivateErrorMode(true);
                 return -1;
             }
         }
         
-        if (!CheckGreatherThanZero(minText, "minutos"))
+        if (!CheckGreatherThanZero(minText, "minutos", true))
         {
             return -1;
         }
