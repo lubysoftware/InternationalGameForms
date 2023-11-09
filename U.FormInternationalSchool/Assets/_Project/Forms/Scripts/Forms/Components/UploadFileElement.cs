@@ -40,6 +40,12 @@ public class UploadFileElement : InputElement
         ? _loadedFiles[0]
         : null;
 
+    private float[] _audioData;
+    private string imgData;
+
+    public float[] PreviewAudioData => _audioData;
+    public string PreviewImageData => imgData;
+
     public event Action<UploadFileElement> OnFill;
     public event Action<bool> OnChangeFile;
 
@@ -115,6 +121,8 @@ public class UploadFileElement : InputElement
             _audioSource.clip = null;
 
         IsFilled = false;
+        imgData = null;
+        _audioData = null;
         AddErrorMessage();
         OnChangeFile?.Invoke(false);
         //   WebGLFileBrowser.FreeMemory(); // free used memory and destroy created content
@@ -142,6 +150,7 @@ public class UploadFileElement : InputElement
                             IsFilled = false;
                             showImage.gameObject.SetActive(true);
                             showImage.sprite = file.ToSprite(); // dont forget to delete unused objects to free memory!
+                            imgData = GetImageData();
                         }
                         else
                         {
@@ -177,6 +186,7 @@ public class UploadFileElement : InputElement
                         // add audio clip to cache list. should be used with  fileBrowserFreeMemory() when its no need anymore
                         fileData.text = $"{file.fileInfo.fullName}";
                         _audioSource.clip = clip;
+                        _audioData = GetAudioData();
                         playAudio.gameObject.SetActive(true);
                         pauseAudio.gameObject.SetActive(true);
                         fileField.gameObject.SetActive(true);
@@ -264,6 +274,7 @@ public class UploadFileElement : InputElement
         Sprite s = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height),
             new Vector2(0.5f, 0.5f));
         showImage.sprite = s;
+        imgData = GetImageData();
         showImage.gameObject.SetActive(true);
         IsFilled = true;
         OnChangeFile?.Invoke(true);
@@ -278,6 +289,7 @@ public class UploadFileElement : InputElement
         fileData.gameObject.SetActive(true);
         fileData.text = $"{fileName}";
         _audioSource.clip = clip;
+        _audioData = GetAudioData();
         playAudio.gameObject.SetActive(true);
         pauseAudio.gameObject.SetActive(true);
         IsFilled = true;
@@ -294,7 +306,7 @@ public class UploadFileElement : InputElement
         OnFill?.Invoke(this);
     }
 
-    public float[] GetAudioData()
+    private float[] GetAudioData()
     {
         if (!isImage)
         {
@@ -306,7 +318,7 @@ public class UploadFileElement : InputElement
         return null;
     }
     
-    public string GetImageData()
+    private string GetImageData()
     {
         if (isImage)
         {

@@ -72,7 +72,7 @@ public class ImageSequencingPanel : MonoBehaviour
             ImageElement el = child.GetComponent<ImageFrame>().Image;
             if (el.IsActive)
             {
-                listFilledImages.Add(el.Index, el.GetImageData());
+                listFilledImages.Add(el.Index, el.PreviewImageData);
             }
         }
 

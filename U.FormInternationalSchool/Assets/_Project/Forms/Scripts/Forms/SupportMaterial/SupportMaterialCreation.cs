@@ -108,7 +108,7 @@ public class SupportMaterialCreation : MonoBehaviour
                         index = index,
                         file = null,
                         isText = false,
-                        text = materialInputs[i].fileUploadEl.GetImageData()
+                        text = materialInputs[i].fileUploadEl.PreviewImageData
                     });
                     index++;
                 }

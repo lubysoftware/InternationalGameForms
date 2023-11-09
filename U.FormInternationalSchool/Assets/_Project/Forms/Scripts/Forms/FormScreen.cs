@@ -735,16 +735,16 @@ public class FormScreen : MonoBehaviour
         gamePreview = new FormBasePreview()
         {
             gameTitle = title.InputField.text,
-            backgroundMusicUrl = backgroundMusic.GetAudioData(),
-            backgroundUrl = backgroundImage.GetImageData(),
+            backgroundMusicUrl = backgroundMusic.PreviewAudioData,
+            backgroundUrl = backgroundImage.PreviewImageData,
             bonustimer = bonusTimer,
-            gameTitleImageUrl = titleImage.GetImageData(),
+            gameTitleImageUrl = titleImage.PreviewImageData,
             hasSupportMaterial =  supportMaterial.Count > 0,
             supportMaterial = supportMaterial.Count > 0? supportMaterial : null,
             hasTimer = timer.isOn,
-            questionStatementEnglishAudioUrl = audioStatement_EN.GetAudioData(),
+            questionStatementEnglishAudioUrl = audioStatement_EN.PreviewAudioData,
             questionStatementEnglishVersion = statement_EN.InputField.text,
-            questionStatementPortugueseAudioUrl =audioStatement_PT.GetAudioData(),
+            questionStatementPortugueseAudioUrl =audioStatement_PT.PreviewAudioData,
             timer = timeInSec,
             questionStatementPortugueseVersion = statement_PT.InputField.text
         };
