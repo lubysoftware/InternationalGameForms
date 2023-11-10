@@ -5589,8 +5589,10 @@ MonoBehaviour:
   errorText: {fileID: 1205122063}
   loading: {fileID: 697080174}
   backButton: {fileID: 595041970}
+  previewForm: {fileID: 1896994001}
   inputImage: {fileID: 21300000, guid: e73bf5f7d5ec1424ab47f0c0fc1732d2, type: 3}
   loadFileQtt: 0
+  isEdit: 0
   so: {fileID: 11400000, guid: 1da35fea3a8112e4ba323a36f71a43ef, type: 2}
   panel: {fileID: 1644361569}
   failsPenalty: {fileID: 1122438760}
@@ -5814,6 +5816,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4597818334906369359, guid: 6f75817611c910642919e872bd43f09f, type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5761463847547022724, guid: 6f75817611c910642919e872bd43f09f, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -5839,6 +5845,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f75817611c910642919e872bd43f09f, type: 3}
+--- !u!114 &1896994001 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4597818334906369359, guid: 6f75817611c910642919e872bd43f09f, type: 3}
+  m_PrefabInstance: {fileID: 1896994000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1914685643
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using LubyLib.Core;
 using LubyLib.Core.Extensions;
@@ -165,7 +166,14 @@ public class DragDropForm : FormScreen
             return;
         }
 
-        SendBaseFormFiles();
+        if (isPreview)
+        {
+            SerializeBaseFormPreviewData();
+        }
+        else
+        {
+            SendBaseFormFiles();
+        }
     }
 
     public override void SerializeGameData(string[] urls)
@@ -231,6 +239,52 @@ public class DragDropForm : FormScreen
             SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
         }
     }
+    
+     public override void SerializeGameDataPreview()
+     { 
+         Dictionary<int, string> filledImages = panel.PreviewImages();
+         items = panel.GetAllDraggableItems();
+         List<DraggableItemJson> listDraggableItems = new List<DraggableItemJson>();
+         for (int i = 0; i < filledImages.Count; i++) 
+         {
+             Debug.LogError("for " + i);
+             listDraggableItems.Add(new DraggableItemJson() { spawnPointX = items[i].spawnPointX, spawnPointY = items[i].spawnPointY, imageUrl = filledImages[i], groupId = items[i].groupId});
+         }
+         Debug.LogError(listDraggableItems.Count);
+        FormDragDropPreview completeForm = new FormDragDropPreview()
+        {
+            game = this.gamePreview,
+            gameData = new DragDrop()
+            {
+                dropPlaceBackgroundUrl = panel.BackImage().PreviewImageData,
+                failPenalty = failsPenaltyValue,
+                materialType = panel.IsText? "TEXT":"IMAGE",
+                dragType = panel.IsGroup? "CATEGORY":"UNIQUE",
+                draggableItems = listDraggableItems,
+            }
+        };
+
+        StartCoroutine(SerializeGamePreviewCoroutine(completeForm));
+     }
+    
+     private Task<string> SerializeGamePreview(FormDragDropPreview completeForm)
+     {
+         return Task.Run(() => JsonUtility.ToJson(completeForm));
+     }
+     
+     private IEnumerator SerializeGamePreviewCoroutine(FormDragDropPreview completeForm)
+     {
+         Task<string> async = SerializeGamePreview(completeForm);
+         while (!async.IsCompleted)
+         {
+             yield return null;
+         }
+        
+         async.Dispose();
+         string previewJson = async.Result;
+         PreviewInPortal(previewJson);
+         StopLoading();
+     }
 
 
     private void FillGameData(DragDropJsonGet json)
@@ -269,6 +323,13 @@ public class FormDragDrop
 }
 
 [Serializable]
+public class FormDragDropPreview
+{
+    public FormBasePreview game;
+    public DragDrop gameData;
+}
+
+[Serializable]
 public struct DraggableItem
 {
     public int groupId;
@@ -277,6 +338,7 @@ public struct DraggableItem
     public File image;
 }
 
+[Serializable]
 public struct DraggableItemJson
 {
     public int groupId;

@@ -172,6 +172,21 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
 
         return listFilledImages;
     }
+     
+    public Dictionary<int,string> PreviewImages()
+    {
+        Dictionary<int, string> listFilledImages = new Dictionary<int, string>();
+        foreach (Transform child in gridBackground.transform)
+        {
+            ImageElement el = child.GetComponent<ImageFrameDragDrop>().Image;
+            if (el.IsActive)
+            {
+                listFilledImages.Add(el.Index, el.PreviewImageData);
+            }
+        }
+
+        return listFilledImages;
+    }
     
     public List<File> GetImages()
     {
