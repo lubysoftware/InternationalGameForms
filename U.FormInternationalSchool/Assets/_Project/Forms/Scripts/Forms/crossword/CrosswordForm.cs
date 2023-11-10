@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LubyLib.Core;
 using Newtonsoft.Json;
 using TMPro;
@@ -107,11 +109,9 @@ public class CrosswordForm : FormScreen
             return;
         }
 
-
-
         if (isPreview)
         {
-        
+            SerializeBaseFormPreviewData();
         }
         else
         {
@@ -188,6 +188,65 @@ public class CrosswordForm : FormScreen
         }
     }
 
+    public override void SerializeGameDataPreview()
+    {
+        List<Words> listWords = new List<Words>();
+        Dictionary<NewWordInput.WordInfo, string> filledImages;
+        if (panel.IsImage)
+        {
+            filledImages = panel.PreviewImages();
+        }
+        else
+        {
+            filledImages = panel.FilledInputs();
+        }
+
+        wordsQtt = panel.WordsQtt;
+        if (filledImages.Count == wordsQtt)
+        {
+            foreach (var input in filledImages)
+            {
+                int row = WordsGrid.idsRow.ToList().FindIndex(x => x == input.Key.Coord.row);
+                listWords.Add(new Words()
+                {
+                    question = input.Value, answer = input.Key.Word, posY = input.Key.Coord.column - 1, posX = row,
+                    orientation = input.Key.IsHorizontal ? "HORIZONTAL" : "VERTICAL"
+                });
+            }
+        }
+
+        FormCrosswordPreview completeForm = new FormCrosswordPreview()
+        {
+            game = this.gamePreview,
+            gameData = new Crossword()
+            {
+                questionType = panel.IsImage ? "IMAGE" : "TEXT",
+                words = listWords
+            }
+        };
+
+        StartCoroutine(SerializeGamePreviewCoroutine(completeForm));
+    }
+    
+    private Task<string> SerializeGamePreview(FormCrosswordPreview completeForm)
+    {
+        return Task.Run(() => JsonUtility.ToJson(completeForm));
+    }
+    private IEnumerator SerializeGamePreviewCoroutine(FormCrosswordPreview completeForm)
+    {
+        Task<string> async = SerializeGamePreview(completeForm);
+        while (!async.IsCompleted)
+        {
+            yield return null;
+        }
+        
+        async.Dispose();
+        string previewJson = async.Result;
+       // System.IO.File.WriteAllText(Application.persistentDataPath + "/FormData.json", previewJson);
+        PreviewInPortal(previewJson);
+        StopLoading();
+    }
+
     private void FillGameData(CrosswordJsonGet json)
     {
         pointPerWord.InputField.text = (100/json.words.Count).ToString();
@@ -228,5 +287,12 @@ public class Crossword
 public class FormCrossword
 {
     public FormBase game;
+    public Crossword gameData;
+}
+
+[Serializable]
+public class FormCrosswordPreview
+{
+    public FormBasePreview game;
     public Crossword gameData;
 }

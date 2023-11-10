@@ -372,6 +372,21 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
 
         return listFilledImages;
     }
+    
+    public Dictionary<NewWordInput.WordInfo,string> PreviewImages()
+    {
+        Dictionary<NewWordInput.WordInfo, string> listFilledImages = new Dictionary<NewWordInput.WordInfo, string>();
+        foreach (var input in wordInputs)
+        {
+            ImageElement el = input.imageComp.Image;
+            if (el.IsActive)
+            {
+                listFilledImages.Add(input.Info, el.PreviewImageData);
+            }
+        }
+
+        return listFilledImages;
+    }
 
     public bool IsAllFilled()
     {

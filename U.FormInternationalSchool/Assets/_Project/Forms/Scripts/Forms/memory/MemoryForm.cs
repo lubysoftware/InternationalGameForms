@@ -258,7 +258,6 @@ public class MemoryForm : FormScreen
         async.Dispose();
         
         string previewJson = async.Result;
-        System.IO.File.WriteAllText(Application.persistentDataPath + "/FormData.json", previewJson);
         PreviewInPortal(previewJson);
         StopLoading();
     }
