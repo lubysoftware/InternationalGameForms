@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using LubyLib.Core;
 using LubyLib.Core.Extensions;
@@ -135,7 +136,7 @@ public class FormScreen : MonoBehaviour
         loading.gameObject.SetActive(true);
         SetCanClick(false);
         CheckEmptyBaseFormFields();
-        Debug.LogError("show preview");
+        Debug.Log("show preview");
     }
 
     #region BASE_FORM
@@ -703,7 +704,7 @@ public class FormScreen : MonoBehaviour
     
     public virtual void SerializeBaseFormPreviewData()
     {
-        Debug.LogError("preview serialize");
+        Debug.Log("preview serialize");
         List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
         List<Material> materialPrev = supportMaterialPanel.GetMaterialPreview();
         for (int i = 0; i< materialPrev.Count; i++)
@@ -777,6 +778,7 @@ public class FormScreen : MonoBehaviour
     {
         
     }
+    
     
     public virtual void SendGameInfoToPortal(string responseJson)
     {

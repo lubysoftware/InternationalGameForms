@@ -227,7 +227,11 @@ public class ImageSequencingForm : FormScreen
 
         //System.IO.File.WriteAllText(Application.persistentDataPath + "/FormData.json", json);
     }
-
+    
+    private Task<string> SerializeGamePreview(FormImageSequencePreview completeForm)
+    {
+        return Task.Run(() => JsonUtility.ToJson(completeForm));
+    }
     private IEnumerator SerializeGamePreviewCoroutine(FormImageSequencePreview completeForm)
     {
         Task<string> async = SerializeGamePreview(completeForm);
@@ -241,11 +245,6 @@ public class ImageSequencingForm : FormScreen
         string previewJson = async.Result;
         PreviewInPortal(previewJson);
         StopLoading();
-    }
-    
-    private Task<string> SerializeGamePreview(FormImageSequencePreview completeForm)
-    {
-        return Task.Run(() => JsonUtility.ToJson(completeForm));
     }
 
     private void FillGameData(ImageSeqJsonGet json)

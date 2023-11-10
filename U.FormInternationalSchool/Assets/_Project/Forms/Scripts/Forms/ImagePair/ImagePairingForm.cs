@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using LubyLib.Core;
 using LubyLib.Core.Extensions;
 using Newtonsoft.Json;
@@ -78,7 +79,14 @@ public class ImagePairingForm : FormScreen
             return;
         }
         
-        SendBaseFormFiles();
+        if (isPreview)
+        {
+            SerializeBaseFormPreviewData();
+        }
+        else
+        {
+            SendBaseFormFiles();
+        }
     }
     
     protected override void CheckEmptyGameFields()
@@ -174,6 +182,50 @@ public class ImagePairingForm : FormScreen
             SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
         }
     }
+    
+    public override void SerializeGameDataPreview()
+    {
+        List<Pair> listPair = new List<Pair>();
+        Dictionary<char, List<string>> pairImages = panel.PreviewImages();
+        pairsQtt = panel.CompletedPairs();
+        for(int i=0; i< pairsQtt; i++)
+        {
+            listPair.Add(new Pair() { firstImageUrl = pairImages[panel.idsList[i]][0], secondImageUrl = pairImages[panel.idsList[i]][1] });
+        }
+
+        FormImagePairingPreview completeForm = new FormImagePairingPreview()
+        {
+            game = this.gamePreview,
+            gameData =  new ImagePairing()
+            {
+                failPenalty = failsPenaltyValue,
+                pairs = listPair
+            }
+        };
+
+
+        StartCoroutine(SerializeGamePreviewCoroutine(completeForm));
+    }
+    
+    private Task<string> SerializeGamePreview(FormImagePairingPreview completeForm)
+    {
+        return Task.Run(() => JsonUtility.ToJson(completeForm));
+    }
+    private IEnumerator SerializeGamePreviewCoroutine(FormImagePairingPreview completeForm)
+    {
+        Task<string> async = SerializeGamePreview(completeForm);
+        while (!async.IsCompleted)
+        {
+            yield return null;
+        }
+        
+        async.Dispose();
+        
+        string previewJson = async.Result;
+        PreviewInPortal(previewJson);
+        System.IO.File.WriteAllText(Application.persistentDataPath + "/FormData.json", previewJson);
+        StopLoading();
+    }
 
     private void FillGameData(ImagePairJsonGet json)
     {
@@ -208,6 +260,13 @@ public class ImagePairing
 public class FormImagePairing
 {
     public FormBase game;
+    public ImagePairing gameData;
+}
+
+[Serializable]
+public class FormImagePairingPreview
+{
+    public FormBasePreview game;
     public ImagePairing gameData;
 }
 

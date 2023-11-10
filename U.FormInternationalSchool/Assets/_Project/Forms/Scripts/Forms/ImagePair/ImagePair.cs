@@ -65,6 +65,23 @@ public class ImagePair : MonoBehaviour
 
         return listFilledImages;
     }
+    
+    public List<string> PreviewImages()
+    {
+        List<string> listFilledImages = new List<string>();
+        foreach (var frame in frames)
+        {
+            Debug.LogError("frame");
+            if (frame.Image.IsActive)
+            {
+                Debug.LogError("isactive");
+                listFilledImages.Add(frame.Image.PreviewImageData);
+            }
+        }
+
+        return listFilledImages;
+    }
+    
 
     private void OnAddImage(int index, bool isUpdate)
     {
