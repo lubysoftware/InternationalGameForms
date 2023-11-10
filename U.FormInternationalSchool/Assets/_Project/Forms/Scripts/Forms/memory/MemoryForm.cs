@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using LubyLib.Core;
 using LubyLib.Core.Extensions;
@@ -125,7 +126,14 @@ public class MemoryForm : FormScreen
             ShowError("Todos os pares devem ser preenchidos.", ErrorType.CUSTOM, null);
             return;
         }
-        SendBaseFormFiles();
+        if (isPreview)
+        {
+            SerializeBaseFormPreviewData();
+        }
+        else
+        {
+            SendBaseFormFiles();
+        }
     }
 
     public override void SerializeGameData(string[] urls)
@@ -205,6 +213,55 @@ public class MemoryForm : FormScreen
             SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
         }
     }
+    
+    public override void SerializeGameDataPreview()
+    {
+        List<Pair> listPair = new List<Pair>();
+        Dictionary<char, List<string>> filledImages = panel.PreviewImages();
+        pairsQtt = panel.CompletedPairs();
+
+        for (int i = 0; i < pairsQtt; i++)
+        {
+            listPair.Add(new Pair()
+            {
+                firstImageUrl = filledImages[panel.idsList[i]][0],
+                secondImageUrl = filledImages[panel.idsList[i]][1]
+            });
+        }
+
+        FormMatchCardPreview completeForm = new FormMatchCardPreview()
+        {
+            game = this.gamePreview,
+            gameData = new MatchCard()
+            {
+                backImageUrl = backCardImage.Image.PreviewImageData,
+                cardPairs = listPair
+            }
+        };
+
+
+        StartCoroutine(SerializeGamePreviewCoroutine(completeForm));
+    }
+    
+    private Task<string> SerializeGamePreview(FormMatchCardPreview completeForm)
+    {
+        return Task.Run(() => JsonUtility.ToJson(completeForm));
+    }
+    private IEnumerator SerializeGamePreviewCoroutine(FormMatchCardPreview completeForm)
+    {
+        Task<string> async = SerializeGamePreview(completeForm);
+        while (!async.IsCompleted)
+        {
+            yield return null;
+        }
+        
+        async.Dispose();
+        
+        string previewJson = async.Result;
+        System.IO.File.WriteAllText(Application.persistentDataPath + "/FormData.json", previewJson);
+        PreviewInPortal(previewJson);
+        StopLoading();
+    }
 
     private void FillGameData(MemoryJsonGet json)
     {
@@ -267,6 +324,13 @@ public class MatchCard
 public class FormMatchCard
 {
     public FormBase game;
+    public MatchCard gameData;
+}
+
+[Serializable]
+public class FormMatchCardPreview
+{
+    public FormBasePreview game;
     public MatchCard gameData;
 }
 

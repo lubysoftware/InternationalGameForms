@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using LubyLib.Core;
 using LubyLib.Core.Extensions;
@@ -151,7 +152,14 @@ public class PuzzleForm : FormScreen
             cooldownTimeInSec = 0;
         }
 
-        SendBaseFormFiles();
+        if (isPreview)
+        {
+            SerializeBaseFormPreviewData();
+        }
+        else
+        {
+            SendBaseFormFiles();
+        }
     }
 
     public override void SerializeGameData(string[] urls)
@@ -194,6 +202,54 @@ public class PuzzleForm : FormScreen
         {
             SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
         }
+    }
+    
+    public override void SerializeGameDataPreview()
+    {
+        Debug.Log("serialize game ");
+        
+        
+        int pieces = 0;
+        int.TryParse(piecesQtt.options[piecesQtt.value].text, out pieces);
+        int tips = 0;
+        if (this.tips.isOn)
+        {
+            int.TryParse(tipQtt.options[tipQtt.value].text, out tips);
+        }
+        FormPuzzlePreview completeForm = new FormPuzzlePreview()
+        {
+            game = this.gamePreview,
+            gameData = new Puzzle()
+            {
+                imageUrl = puzzleImage.PreviewImageData,
+                pieceCount = pieces,
+                tipCoolDown = this.tips.isOn? cooldownTimeInSec:0,
+                tipShowTime = this.tips.isOn? tipTimeInSec:0,
+                tipCount = this.tips.isOn? tips : 0
+            }
+        };
+
+
+        StartCoroutine(SerializeGamePreviewCoroutine(completeForm));
+    }
+    
+    private Task<string> SerializeGamePreview(FormPuzzlePreview completeForm)
+    {
+        return Task.Run(() => JsonUtility.ToJson(completeForm));
+    }
+    private IEnumerator SerializeGamePreviewCoroutine(FormPuzzlePreview completeForm)
+    {
+        Task<string> async = SerializeGamePreview(completeForm);
+        while (!async.IsCompleted)
+        {
+            yield return null;
+        }
+        
+        async.Dispose();
+        
+        string previewJson = async.Result;
+        PreviewInPortal(previewJson);
+        StopLoading();
     }
 
     private void FillGameData(PuzzleJsonGet json)
@@ -278,4 +334,9 @@ public class FormPuzzle
     public Puzzle gameData;
 }
 
-
+[Serializable]
+public class FormPuzzlePreview
+{
+    public FormBasePreview game;
+    public Puzzle gameData;
+}

@@ -146,6 +146,17 @@ public class MemoryPanel : MonoBehaviour
         return files;
     }
     
+    public Dictionary<char, List<string>> PreviewImages()
+    {
+        Dictionary<char, List<string>> files = new Dictionary<char, List<string>>();
+        foreach (ImagePair pair in pairs)
+        {
+            if(pair.PreviewImages() != null && pair.PreviewImages().Count > 0)
+                files.Add(pair.Id, pair.PreviewImages());
+        }
+
+        return files;
+    }
 
     public void FillImages(List<string[]> urls,Action<UploadFileElement, string, string> action)
     {

@@ -224,8 +224,6 @@ public class ImageSequencingForm : FormScreen
         // StopLoading();
 
         StartCoroutine(SerializeGamePreviewCoroutine(completeForm));
-
-        //System.IO.File.WriteAllText(Application.persistentDataPath + "/FormData.json", json);
     }
     
     private Task<string> SerializeGamePreview(FormImageSequencePreview completeForm)
