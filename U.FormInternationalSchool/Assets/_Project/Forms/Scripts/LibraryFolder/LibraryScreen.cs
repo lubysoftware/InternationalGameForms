@@ -35,7 +35,7 @@ public class LibraryScreen : MonoBehaviour
 
     private string gameTitle;
 
-    void Start()
+    private void Start()
     {
         newGame.onClick.AddListener(OnClickNewGame);
         backButton.onClick.AddListener(OnClickBack);
@@ -59,7 +59,7 @@ public class LibraryScreen : MonoBehaviour
         newGame.image.color = so.colors[1];
         searchTitle.image.color = so.colors[3];
         title.text = so.title;
-        
+
         //scroll
         scroll.color = so.colors[1];
         scrollBack.color = so.colors[3];
@@ -74,13 +74,14 @@ public class LibraryScreen : MonoBehaviour
         nextPage.interactable = list.meta.countItems > page * list.meta.perPage;
         pagesText.text = page + "/" + list.meta.lastPage;
         previousPage.interactable = page > 1;
-        for (int i=0; i < component.Length; i++)
+        for (int i = 0; i < component.Length; i++)
         {
             if (i < list.data.Count)
             {
                 if (!list.data[i].deleted)
                 {
-                    component[i].Init(list.data[i].gameTitle,list.data[i].id,so.scene, so.colors[4], so.colors[2] );
+                    component[i].Init(list.data[i].gameTitle, list.data[i].id, so.scene, list.data[i].gameType,
+                        so.colors[4], so.colors[2]);
                     component[i].gameObject.SetActive(true);
                 }
             }
@@ -88,14 +89,14 @@ public class LibraryScreen : MonoBehaviour
             {
                 component[i].gameObject.SetActive(false);
             }
-            
         }
+
         loading.gameObject.SetActive(false);
     }
 
     public void OnDeleteGame(int id, GameComponent comp, string title)
     {
-        confirmDialog.SetNewDelete(ConfirmDeleteGame,DontDeleteGame,title);
+        confirmDialog.SetNewDelete(ConfirmDeleteGame, DontDeleteGame, title);
         confirmDialog.gameObject.SetActive(true);
         gameId = id;
         this.comp = comp;
@@ -109,19 +110,19 @@ public class LibraryScreen : MonoBehaviour
         comp = null;
         gameTitle = "";
     }
-    
+
     public void DontDeleteGame()
     {
         gameId = -1;
-        this.comp =null;
+        this.comp = null;
     }
-    
+
     private void OnClickNewGame()
     {
         SceneDataCarrier.AddData(Constants.IS_EDIT, false);
         SceneManager.LoadScene(so.scene);
     }
-    
+
     private void OnClickBack()
     {
         SceneManager.LoadScene("Dashboard");
@@ -137,18 +138,18 @@ public class LibraryScreen : MonoBehaviour
         loading.gameObject.SetActive(true);
         if (!so.url.IsNullEmptyOrWhitespace())
         {
-            APICommunication.Instance.StartDownloadFiles(so.url,page,7, searchTitle.text);
+            APICommunication.Instance.StartDownloadFiles(so.url, page, 7, searchTitle.text);
         }
     }
 
     private void OnClickNext()
     {
-        DownloadData(page +1);
+        DownloadData(page + 1);
     }
 
     private void OnClickPrevious()
     {
-        DownloadData(page -1);
+        DownloadData(page - 1);
     }
 
     public void OnDeletedGame()

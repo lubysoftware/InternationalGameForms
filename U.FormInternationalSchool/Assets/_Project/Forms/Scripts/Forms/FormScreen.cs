@@ -24,10 +24,6 @@ using Toggle = UnityEngine.UI.Toggle;
 
 public class FormScreen : MonoBehaviour
 {
-    [DllImport("__Internal")]
-    protected static extern void OnGameCreated(int gameId, string gameType);
-    protected static extern void OnShowPreview(string gameType, string json);
-    
     [SerializeField] protected InputElement title;
     [SerializeField] private InputElement statement_PT, statement_EN;
     [SerializeField] private UploadFileElement audioStatement_PT, audioStatement_EN;
@@ -131,6 +127,8 @@ public class FormScreen : MonoBehaviour
     
     public void ShowPreview()
     {
+        return;
+        
         isPreview = true;
         if (!canClick) return;
         loading.gameObject.SetActive(true);
@@ -782,34 +780,13 @@ public class FormScreen : MonoBehaviour
     
     public virtual void SendGameInfoToPortal(string responseJson)
     {
-        Debug.Log("[DEBUG] Informação do game enviada para o portal.");
-// #if UNITY_WEBGL && !UNITY_EDITOR
-//         try
-//         {
-//             GameCreationResponse response = JsonConvert.DeserializeObject<GameCreationResponse>(responseJson);
-//             OnGameCreated(response.id, response.gameType);
-//         }
-//         catch (Exception ex)
-//         {
-//             Debug.LogError(ex.Message);
-//         }
-// #endif
+        PortalBridge.Instance.OnGameCreatedEvent(responseJson);
     }
     
     public virtual void PreviewInPortal(string jsonData)
     {
         isPreview = false;
-        Debug.Log("[DEBUG] Solicitacao preview para o portal.");
-#if UNITY_WEBGL && !UNITY_EDITOR
-        try
-        {
-            OnShowPreview(so.gameType.ToString(), jsonData);
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError(ex.Message);
-        }
-#endif
+        PortalBridge.Instance.OnShowPreviewEvent(so.gameType.ToString(), jsonData);
     }
     
 

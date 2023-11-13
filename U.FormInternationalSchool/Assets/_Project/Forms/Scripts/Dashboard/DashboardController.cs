@@ -1,25 +1,25 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class DashboardScreen : MonoBehaviour
+public class DashboardController : MonoBehaviour
 {
     [SerializeField] private List<GameTypeSO> gameSOs;
     [SerializeField] private GameTypeButton gameButton;
-    void Start()
+    [SerializeField] private Transform _buttonsHolder;
+
+    private void Start()
+    {
+        DisplayButtons();
+    }
+
+    private void DisplayButtons()
     {
         foreach (GameTypeSO game in gameSOs)
         {
-
-            GameTypeButton button = Instantiate(gameButton, this.transform);
+            GameTypeButton button = Instantiate(gameButton, _buttonsHolder);
             button.Init(game);
-            
-            
-        } 
+        }
     }
-    
 }
 
 public enum GameType
