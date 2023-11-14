@@ -26,6 +26,8 @@ public class LibraryScreen : MonoBehaviour
     [SerializeField] private Image scrollBack;
     [SerializeField] private TextMeshProUGUI title;
 
+    [SerializeField] private GameSettingsPanel settingsPanel;
+
     private GameTypeSO so;
 
     private int gameId;
@@ -51,9 +53,9 @@ public class LibraryScreen : MonoBehaviour
     public void SetLibColors()
     {
         //round buttons
-        backButton.image.color = so.colors[4];
-        nextPage.image.color = so.colors[4];
-        previousPage.image.color = so.colors[4];
+        backButton.image.color = so.colors[0];
+        nextPage.image.color = so.colors[0];
+        previousPage.image.color = so.colors[0];
 
         //header
         newGame.image.color = so.colors[1];
@@ -66,6 +68,8 @@ public class LibraryScreen : MonoBehaviour
 
         //deletePanel
         confirmDialog.SetPanelColors(so.colors[0], so.colors[3]);
+        
+        settingsPanel.SetPanelColors(so.colors[0], so.colors[3], so.colors[2],so.colors[1],so.colors[4]);
     }
 
     public void InstantiateGamesList(GameList list)
@@ -81,7 +85,7 @@ public class LibraryScreen : MonoBehaviour
                 if (!list.data[i].deleted)
                 {
                     component[i].Init(list.data[i].gameTitle, list.data[i].id, so.scene, list.data[i].gameType,
-                        so.colors[4], so.colors[2]);
+                        so.colors[0], so.colors[2]);
                     component[i].gameObject.SetActive(true);
                 }
             }
