@@ -44,8 +44,7 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private Sprite inputImage;
 
     protected FormBase game = new FormBase();
-    protected FormBasePreview gamePreview = new FormBasePreview();
-    
+
     private Dictionary<string, string> newUrlFiles = new Dictionary<string, string>();
     private Dictionary<string, string> filledUrlFiles = new Dictionary<string, string>();
     private Dictionary<string, string> urlDict = new Dictionary<string, string>();
@@ -70,8 +69,8 @@ public class FormScreen : MonoBehaviour
     protected List<string> emptyField;
     protected bool hasValidationError;
     protected bool isPreview;
-    protected bool hasPreviewData;
-    
+    protected List<string> urlsToDelete;
+
     protected virtual void Start()
     {
         sendForm.onClick.AddListener(SendFormData);
@@ -80,6 +79,7 @@ public class FormScreen : MonoBehaviour
         SetCanClick(true);
         isEdit = false;
         SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
+        urlsToDelete = new List<string>();
         if (isEdit)
         {
             SceneDataCarrier.GetData(Constants.GAME_EDIT, out id);
@@ -127,8 +127,6 @@ public class FormScreen : MonoBehaviour
     
     public void ShowPreview()
     {
-        return;
-        
         isPreview = true;
         if (!canClick) return;
         loading.gameObject.SetActive(true);
@@ -588,9 +586,12 @@ public class FormScreen : MonoBehaviour
     public virtual void SerializeBaseFormData(string[] urls)
     {
         Debug.Log("serialize base");
+        urlsToDelete.Clear();
+        
         List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
         if (urls != null)
         {
+            urlsToDelete.AddRange(urls.ToList());
             if (urls.Length == newUrlFiles.Count + supportMaterialImgsQtt)
             {
                 int urlCount = 0;
@@ -699,57 +700,6 @@ public class FormScreen : MonoBehaviour
         SendGameFiles();
 
     }
-    
-    public virtual void SerializeBaseFormPreviewData()
-    {
-        Debug.Log("preview serialize");
-        List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
-        List<Material> materialPrev = supportMaterialPanel.GetMaterialPreview();
-        for (int i = 0; i< materialPrev.Count; i++)
-        {
-            if (materialPrev[i].isText)
-            {
-                supportMaterial.Add(new SupportMaterial()
-                {
-                    position = i,
-                    material = materialPrev[i].text,
-                    materialType = "TEXT"
-                });
-            }
-            else
-            {
-                if (materialPrev[i].text != null)
-                {
-                    supportMaterial.Add(new SupportMaterial()
-                    {
-                        position = i,
-                        material = materialPrev[i].text,
-                        materialType = "IMAGE"
-                    });
-                }
-            }
-        }
-        
-
-        gamePreview = new FormBasePreview()
-        {
-            gameTitle = title.InputField.text,
-            backgroundMusicUrl = backgroundMusic.PreviewAudioData,
-            backgroundUrl = backgroundImage.PreviewImageData,
-            bonustimer = bonusTimer,
-            gameTitleImageUrl = titleImage.PreviewImageData,
-            hasSupportMaterial =  supportMaterial.Count > 0,
-            supportMaterial = supportMaterial.Count > 0? supportMaterial : null,
-            hasTimer = timer.isOn,
-            questionStatementEnglishAudioUrl = audioStatement_EN.PreviewAudioData,
-            questionStatementEnglishVersion = statement_EN.InputField.text,
-            questionStatementPortugueseAudioUrl =audioStatement_PT.PreviewAudioData,
-            timer = timeInSec,
-            questionStatementPortugueseVersion = statement_PT.InputField.text
-        };
-        
-       SerializeGameDataPreview();
-    }
 
     #endregion
 
@@ -767,11 +717,6 @@ public class FormScreen : MonoBehaviour
         
     }
 
-    public virtual void SerializeGameDataPreview()
-    {
-        
-    }
-    
     public virtual void SerializeGameData(string[] urls)
     {
         
@@ -856,24 +801,6 @@ public class FormBase
     public string questionStatementEnglishVersion;
     public string questionStatementPortugueseAudioUrl;
     public string questionStatementEnglishAudioUrl;
-    public bool hasSupportMaterial;
-    public bool hasTimer;
-    public int timer;
-    public int bonustimer;
-    public List<SupportMaterial> supportMaterial;
-}
-
-[Serializable]
-public class FormBasePreview
-{
-    public string gameTitle;
-    public string gameTitleImageUrl;
-    public string backgroundUrl;
-    public float[] backgroundMusicUrl;
-    public string questionStatementPortugueseVersion;
-    public string questionStatementEnglishVersion;
-    public float[] questionStatementPortugueseAudioUrl;
-    public float[] questionStatementEnglishAudioUrl;
     public bool hasSupportMaterial;
     public bool hasTimer;
     public int timer;

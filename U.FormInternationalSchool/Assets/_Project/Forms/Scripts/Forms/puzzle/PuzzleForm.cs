@@ -151,21 +151,19 @@ public class PuzzleForm : FormScreen
             tipTimeInSec = 0;
             cooldownTimeInSec = 0;
         }
-
-        if (isPreview)
-        {
-            SerializeBaseFormPreviewData();
-        }
-        else
-        {
-            SendBaseFormFiles();
-        }
+        
+        SendBaseFormFiles();
     }
 
     public override void SerializeGameData(string[] urls)
     {
         Debug.Log("serialize game " + urls);
 
+        if (urls != null)
+        {
+            urlsToDelete.AddRange(urls.ToList());
+        }
+        
         if (puzzleImagePath.IsNullEmptyOrWhitespace())
         {
             puzzleImagePath = urls[0];
@@ -178,6 +176,7 @@ public class PuzzleForm : FormScreen
         {
             int.TryParse(tipQtt.options[tipQtt.value].text, out tips);
         }
+        
         FormPuzzle completeForm = new FormPuzzle()
         {
             game = this.game,
@@ -191,67 +190,56 @@ public class PuzzleForm : FormScreen
             }
         };
 
-
-        string json = JsonConvert.SerializeObject(completeForm);
-        Debug.Log(json);
-        if (isEdit)
+        if (!isPreview)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
+            string json = JsonConvert.SerializeObject(completeForm);
+
+            if (isEdit)
+            {
+                SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
+            }
+            else
+            {
+                SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
+            }
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
-        }
-    }
-    
-    public override void SerializeGameDataPreview()
-    {
-        Debug.Log("serialize game ");
-        
-        
-        int pieces = 0;
-        int.TryParse(piecesQtt.options[piecesQtt.value].text, out pieces);
-        int tips = 0;
-        if (this.tips.isOn)
-        {
-            int.TryParse(tipQtt.options[tipQtt.value].text, out tips);
-        }
-        FormPuzzlePreview completeForm = new FormPuzzlePreview()
-        {
-            game = this.gamePreview,
-            gameData = new Puzzle()
+            FormPuzzlePreviewData preview = new FormPuzzlePreviewData()
             {
-                imageUrl = puzzleImage.PreviewImageData,
-                pieceCount = pieces,
-                tipCoolDown = this.tips.isOn? cooldownTimeInSec:0,
-                tipShowTime = this.tips.isOn? tipTimeInSec:0,
-                tipCount = this.tips.isOn? tips : 0
-            }
-        };
+                gameTitle = game.gameTitle,
+                backgroundMusicUrl = game.backgroundMusicUrl,
+                backgroundUrl = game.backgroundUrl,
+                bonustimer = game.bonustimer,
+                gameTitleImageUrl = game.gameTitleImageUrl,
+                hasSupportMaterial = game.hasSupportMaterial,
+                SupportMaterial = game.supportMaterial,
+                hasTimer = game.hasTimer,
+                questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
+                questionStatementEnglishVersion = game.questionStatementEnglishVersion,
+                questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
+                timer = game.timer,
+                questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
+                imageUrl = completeForm.gameData.imageUrl,
+                pieceCount = completeForm.gameData.pieceCount,
+                tipCoolDown = completeForm.gameData.tipCoolDown,
+                tipShowTime = completeForm.gameData.tipShowTime,
+                tipCount = completeForm.gameData.tipCount
+            };
 
-
-        StartCoroutine(SerializeGamePreviewCoroutine(completeForm));
-    }
-    
-    private Task<string> SerializeGamePreview(FormPuzzlePreview completeForm)
-    {
-        return Task.Run(() => JsonUtility.ToJson(completeForm));
-    }
-    private IEnumerator SerializeGamePreviewCoroutine(FormPuzzlePreview completeForm)
-    {
-        Task<string> async = SerializeGamePreview(completeForm);
-        while (!async.IsCompleted)
-        {
-            yield return null;
+            PuzzlePreview previewData = new PuzzlePreview()
+            {
+                previewData = preview,
+                filesToDelete = urlsToDelete
+            };
+            
+            string json = JsonConvert.SerializeObject(previewData);
+            PreviewInPortal(json);
+            StopLoading();
         }
         
-        async.Dispose();
-        
-        string previewJson = async.Result;
-        PreviewInPortal(previewJson);
-        StopLoading();
     }
-
+    
     private void FillGameData(PuzzleJsonGet json)
     {
         FillUploadFiles(puzzleImage, "puzzle_image", json.imageUrl);
@@ -335,8 +323,20 @@ public class FormPuzzle
 }
 
 [Serializable]
-public class FormPuzzlePreview
+public class FormPuzzlePreviewData : BaseGameJson
 {
-    public FormBasePreview game;
-    public Puzzle gameData;
+    public string imageUrl;
+    public int pieceCount;
+    public int tipShowTime;
+    public int tipCoolDown;
+    public int tipCount;
 }
+
+[Serializable]
+public class PuzzlePreview
+{
+    public FormPuzzlePreviewData previewData;
+    public List<string> filesToDelete;
+}
+
+

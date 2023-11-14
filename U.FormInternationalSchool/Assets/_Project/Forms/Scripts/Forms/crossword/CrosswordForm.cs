@@ -60,13 +60,13 @@ public class CrosswordForm : FormScreen
                 }
                 else
                 {
-                    SerializeGameData(filledImages.Values.ToArray());
+                    SerializeGameData(null);
                 }
             }
             else
             {
                 filledImages = panel.FilledInputs();
-                SerializeGameData(filledImages.Values.ToArray());
+                SerializeGameData(null);
             }
         }
     }
@@ -109,20 +109,23 @@ public class CrosswordForm : FormScreen
             return;
         }
 
-        if (isPreview)
-        {
-            SerializeBaseFormPreviewData();
-        }
-        else
-        {
-            SendBaseFormFiles();
-        }
 
+        SendBaseFormFiles();
     }
 
     public override void SerializeGameData(string[] urls)
     {
-        Debug.Log("serialize game" + urls.Length);
+        Debug.Log("serialize game");
+
+        if (urls == null)
+        {
+            urls = filledImages.Values.ToArray();
+        }
+        else
+        {
+            urlsToDelete.AddRange(urls.ToList());
+        }
+
         List<Words> listWords = new List<Words>();
         if (filledImages.Count == wordsQtt)
         {
@@ -176,75 +179,53 @@ public class CrosswordForm : FormScreen
             }
         };
 
-        string json = JsonConvert.SerializeObject(completeForm);
-
-        if (isEdit)
+        if (!isPreview)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
+            string json = JsonConvert.SerializeObject(completeForm);
+
+            if (isEdit)
+            {
+                SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this,
+                    SendGameInfoToPortal);
+            }
+            else
+            {
+                SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this,
+                    SendGameInfoToPortal);
+            }
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
-        }
-    }
-
-    public override void SerializeGameDataPreview()
-    {
-        List<Words> listWords = new List<Words>();
-        Dictionary<NewWordInput.WordInfo, string> filledImages;
-        if (panel.IsImage)
-        {
-            filledImages = panel.PreviewImages();
-        }
-        else
-        {
-            filledImages = panel.FilledInputs();
-        }
-
-        wordsQtt = panel.WordsQtt;
-        if (filledImages.Count == wordsQtt)
-        {
-            foreach (var input in filledImages)
+            FormCrosswordPreviewData preview = new FormCrosswordPreviewData()
             {
-                int row = WordsGrid.idsRow.ToList().FindIndex(x => x == input.Key.Coord.row);
-                listWords.Add(new Words()
-                {
-                    question = input.Value, answer = input.Key.Word, posY = input.Key.Coord.column - 1, posX = row,
-                    orientation = input.Key.IsHorizontal ? "HORIZONTAL" : "VERTICAL"
-                });
-            }
-        }
+                gameTitle = game.gameTitle,
+                backgroundMusicUrl = game.backgroundMusicUrl,
+                backgroundUrl = game.backgroundUrl,
+                bonustimer = game.bonustimer,
+                gameTitleImageUrl = game.gameTitleImageUrl,
+                hasSupportMaterial = game.hasSupportMaterial,
+                SupportMaterial = game.supportMaterial,
+                hasTimer = game.hasTimer,
+                questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
+                questionStatementEnglishVersion = game.questionStatementEnglishVersion,
+                questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
+                timer = game.timer,
+                questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
+                questionType = completeForm.gameData.questionType,
+                words = completeForm.gameData.words
+            };
 
-        FormCrosswordPreview completeForm = new FormCrosswordPreview()
-        {
-            game = this.gamePreview,
-            gameData = new Crossword()
+            CrosswordPreview previewData = new CrosswordPreview()
             {
-                questionType = panel.IsImage ? "IMAGE" : "TEXT",
-                words = listWords
-            }
-        };
-
-        StartCoroutine(SerializeGamePreviewCoroutine(completeForm));
-    }
-    
-    private Task<string> SerializeGamePreview(FormCrosswordPreview completeForm)
-    {
-        return Task.Run(() => JsonUtility.ToJson(completeForm));
-    }
-    private IEnumerator SerializeGamePreviewCoroutine(FormCrosswordPreview completeForm)
-    {
-        Task<string> async = SerializeGamePreview(completeForm);
-        while (!async.IsCompleted)
-        {
-            yield return null;
+                previewData = preview,
+                filesToDelete = urlsToDelete
+            };
+            
+            string json = JsonConvert.SerializeObject(previewData);
+            PreviewInPortal(json);
+            StopLoading();
         }
-        
-        async.Dispose();
-        string previewJson = async.Result;
-       // System.IO.File.WriteAllText(Application.persistentDataPath + "/FormData.json", previewJson);
-        PreviewInPortal(previewJson);
-        StopLoading();
+
     }
 
     private void FillGameData(CrosswordJsonGet json)
@@ -291,8 +272,15 @@ public class FormCrossword
 }
 
 [Serializable]
-public class FormCrosswordPreview
+public class FormCrosswordPreviewData : BaseGameJson
 {
-    public FormBasePreview game;
-    public Crossword gameData;
+    public string questionType;
+    public List<Words> words;
+}
+
+[Serializable]
+public class CrosswordPreview
+{
+    public FormCrosswordPreviewData previewData;
+    public List<string> filesToDelete;
 }

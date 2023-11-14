@@ -165,21 +165,19 @@ public class DragDropForm : FormScreen
             ShowError(errormessage, ErrorType.CUSTOM, null);
             return;
         }
-
-        if (isPreview)
-        {
-            SerializeBaseFormPreviewData();
-        }
-        else
-        {
-            SendBaseFormFiles();
-        }
+        
+        SendBaseFormFiles();
     }
 
     public override void SerializeGameData(string[] urls)
     {
         Debug.Log("serialize game" + urls);
-        
+
+        if (urls != null)
+        {
+            urlsToDelete.AddRange(urls.ToList());
+        }
+
         int urlIndex = 0;
         if (backImagePath.IsNullEmptyOrWhitespace())
         {
@@ -192,7 +190,11 @@ public class DragDropForm : FormScreen
         {
             for (int i = 0; i < filledImages.Count; i++)
             {
-                listDraggableItems.Add(new DraggableItemJson() { spawnPointX = items[i].spawnPointX, spawnPointY = items[i].spawnPointY, imageUrl = filledImages[i], groupId = items[i].groupId});
+                listDraggableItems.Add(new DraggableItemJson()
+                {
+                    spawnPointX = items[i].spawnPointX, spawnPointY = items[i].spawnPointY, imageUrl = filledImages[i],
+                    groupId = items[i].groupId
+                });
             }
         }
         else
@@ -201,20 +203,26 @@ public class DragDropForm : FormScreen
             {
                 if (filledImages.ContainsKey(i))
                 {
-                    listDraggableItems.Add(new DraggableItemJson() { spawnPointX = items[i].spawnPointX, spawnPointY = items[i].spawnPointY, imageUrl = filledImages[i], groupId = items[i].groupId});
+                    listDraggableItems.Add(new DraggableItemJson()
+                    {
+                        spawnPointX = items[i].spawnPointX, spawnPointY = items[i].spawnPointY,
+                        imageUrl = filledImages[i], groupId = items[i].groupId
+                    });
                 }
                 else
                 {
                     if (urls.Length > urlIndex)
                     {
-                        listDraggableItems.Add(new DraggableItemJson() { spawnPointX = items[i].spawnPointX, spawnPointY = items[i].spawnPointY, imageUrl = urls[urlIndex],groupId = items[i].groupId });
+                        listDraggableItems.Add(new DraggableItemJson()
+                        {
+                            spawnPointX = items[i].spawnPointX, spawnPointY = items[i].spawnPointY,
+                            imageUrl = urls[urlIndex], groupId = items[i].groupId
+                        });
                         urlIndex++;
                     }
                 }
             }
         }
-
-
         FormDragDrop completeForm = new FormDragDrop()
         {
             game = this.game,
@@ -222,69 +230,61 @@ public class DragDropForm : FormScreen
             {
                 dropPlaceBackgroundUrl = backImagePath,
                 failPenalty = failsPenaltyValue,
-                materialType = panel.IsText? "TEXT":"IMAGE",
-                dragType = panel.IsGroup? "CATEGORY":"UNIQUE",
+                materialType = panel.IsText ? "TEXT" : "IMAGE",
+                dragType = panel.IsGroup ? "CATEGORY" : "UNIQUE",
                 draggableItems = listDraggableItems,
             }
         };
 
-
-        string json = JsonConvert.SerializeObject(completeForm);
-        if (isEdit)
+       
+        if (!isPreview)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
+            string json = JsonConvert.SerializeObject(completeForm);
+            
+            if (isEdit)
+            {
+                SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
+            }
+            else
+            {
+                SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
+            }
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
+            FormDragDropPreviewData preview = new FormDragDropPreviewData()
+            {
+                gameTitle = game.gameTitle,
+                backgroundMusicUrl = game.backgroundMusicUrl,
+                backgroundUrl = game.backgroundUrl,
+                bonustimer = game.bonustimer,
+                gameTitleImageUrl = game.gameTitleImageUrl,
+                hasSupportMaterial = game.hasSupportMaterial,
+                SupportMaterial = game.supportMaterial,
+                hasTimer = game.hasTimer,
+                questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
+                questionStatementEnglishVersion = game.questionStatementEnglishVersion,
+                questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
+                timer = game.timer,
+                questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
+                dropPlaceBackgroundUrl = completeForm.gameData.dropPlaceBackgroundUrl,
+                failPenalty = completeForm.gameData.failPenalty,
+                materialType = completeForm.gameData.materialType,
+                dragType = completeForm.gameData.dragType,
+                draggableItems = completeForm.gameData.draggableItems,
+            };
+
+            DragDropPreview previewData = new DragDropPreview()
+            {
+                previewData = preview,
+                filesToDelete = urlsToDelete
+            };
+            
+            string json = JsonConvert.SerializeObject(previewData);
+            
+            PreviewInPortal(json);
         }
     }
-    
-     public override void SerializeGameDataPreview()
-     { 
-         Dictionary<int, string> filledImages = panel.PreviewImages();
-         items = panel.GetAllDraggableItems();
-         List<DraggableItemJson> listDraggableItems = new List<DraggableItemJson>();
-         for (int i = 0; i < filledImages.Count; i++) 
-         {
-             Debug.LogError("for " + i);
-             listDraggableItems.Add(new DraggableItemJson() { spawnPointX = items[i].spawnPointX, spawnPointY = items[i].spawnPointY, imageUrl = filledImages[i], groupId = items[i].groupId});
-         }
-         Debug.LogError(listDraggableItems.Count);
-        FormDragDropPreview completeForm = new FormDragDropPreview()
-        {
-            game = this.gamePreview,
-            gameData = new DragDrop()
-            {
-                dropPlaceBackgroundUrl = panel.BackImage().PreviewImageData,
-                failPenalty = failsPenaltyValue,
-                materialType = panel.IsText? "TEXT":"IMAGE",
-                dragType = panel.IsGroup? "CATEGORY":"UNIQUE",
-                draggableItems = listDraggableItems,
-            }
-        };
-
-        StartCoroutine(SerializeGamePreviewCoroutine(completeForm));
-     }
-    
-     private Task<string> SerializeGamePreview(FormDragDropPreview completeForm)
-     {
-         return Task.Run(() => JsonUtility.ToJson(completeForm));
-     }
-     
-     private IEnumerator SerializeGamePreviewCoroutine(FormDragDropPreview completeForm)
-     {
-         Task<string> async = SerializeGamePreview(completeForm);
-         while (!async.IsCompleted)
-         {
-             yield return null;
-         }
-        
-         async.Dispose();
-         string previewJson = async.Result;
-         PreviewInPortal(previewJson);
-         StopLoading();
-     }
 
 
     private void FillGameData(DragDropJsonGet json)
@@ -323,10 +323,20 @@ public class FormDragDrop
 }
 
 [Serializable]
-public class FormDragDropPreview
+public class FormDragDropPreviewData : BaseGameJson
 {
-    public FormBasePreview game;
-    public DragDrop gameData;
+    public string dropPlaceBackgroundUrl;
+    public int failPenalty;
+    public string materialType;
+    public string dragType;    
+    public List<DraggableItemJson> draggableItems;
+}
+
+[Serializable]
+public class DragDropPreview
+{
+    public FormDragDropPreviewData previewData;
+    public List<string> filesToDelete;
 }
 
 [Serializable]

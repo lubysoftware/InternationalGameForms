@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -24,7 +25,7 @@ public class BaseGameJson
     public string created_at;
     public string updated_at;
     public bool deleted;
-    public List<SupportMaterialGet> SupportMaterial;
+    public List<SupportMaterial> SupportMaterial;
 }
 
 
@@ -53,3 +54,5 @@ public class Meta
     public int countItems;
     public int lastPage;
 }
+
+

@@ -126,19 +126,19 @@ public class MemoryForm : FormScreen
             ShowError("Todos os pares devem ser preenchidos.", ErrorType.CUSTOM, null);
             return;
         }
-        if (isPreview)
-        {
-            SerializeBaseFormPreviewData();
-        }
-        else
-        {
-            SendBaseFormFiles();
-        }
+
+        SendBaseFormFiles();
     }
 
     public override void SerializeGameData(string[] urls)
     {
         Debug.Log("serialize game " + urls);
+
+        if (urls != null)
+        {
+            urlsToDelete.AddRange(urls.ToList());
+        }
+
         int urlIndex = 0;
         if (backImagePath.IsNullEmptyOrWhitespace())
         {
@@ -202,64 +202,53 @@ public class MemoryForm : FormScreen
         };
 
 
-        string json = JsonConvert.SerializeObject(completeForm);
-        Debug.Log(json);
-        if (isEdit)
+        if (!isPreview)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
+            string json = JsonConvert.SerializeObject(completeForm);
+
+            if (isEdit)
+            {
+                SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this,
+                    SendGameInfoToPortal);
+            }
+            else
+            {
+                SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this,
+                    SendGameInfoToPortal);
+            }
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
-        }
-    }
-    
-    public override void SerializeGameDataPreview()
-    {
-        List<Pair> listPair = new List<Pair>();
-        Dictionary<char, List<string>> filledImages = panel.PreviewImages();
-        pairsQtt = panel.CompletedPairs();
-
-        for (int i = 0; i < pairsQtt; i++)
-        {
-            listPair.Add(new Pair()
+            FormMatchCardPreviewData preview = new FormMatchCardPreviewData()
             {
-                firstImageUrl = filledImages[panel.idsList[i]][0],
-                secondImageUrl = filledImages[panel.idsList[i]][1]
-            });
-        }
+                gameTitle = game.gameTitle,
+                backgroundMusicUrl = game.backgroundMusicUrl,
+                backgroundUrl = game.backgroundUrl,
+                bonustimer = game.bonustimer,
+                gameTitleImageUrl = game.gameTitleImageUrl,
+                hasSupportMaterial = game.hasSupportMaterial,
+                SupportMaterial = game.supportMaterial,
+                hasTimer = game.hasTimer,
+                questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
+                questionStatementEnglishVersion = game.questionStatementEnglishVersion,
+                questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
+                timer = game.timer,
+                questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
+                backImageUrl = completeForm.gameData.backImageUrl,
+                cardPairs = completeForm.gameData.cardPairs
+            };
 
-        FormMatchCardPreview completeForm = new FormMatchCardPreview()
-        {
-            game = this.gamePreview,
-            gameData = new MatchCard()
+            MatchCardPreview previewData = new MatchCardPreview()
             {
-                backImageUrl = backCardImage.Image.PreviewImageData,
-                cardPairs = listPair
-            }
-        };
-
-
-        StartCoroutine(SerializeGamePreviewCoroutine(completeForm));
-    }
-    
-    private Task<string> SerializeGamePreview(FormMatchCardPreview completeForm)
-    {
-        return Task.Run(() => JsonUtility.ToJson(completeForm));
-    }
-    private IEnumerator SerializeGamePreviewCoroutine(FormMatchCardPreview completeForm)
-    {
-        Task<string> async = SerializeGamePreview(completeForm);
-        while (!async.IsCompleted)
-        {
-            yield return null;
+                previewData = preview,
+                filesToDelete = urlsToDelete
+            };
+            
+            string json = JsonConvert.SerializeObject(previewData);
+            PreviewInPortal(json);
+            StopLoading();
         }
-        
-        async.Dispose();
-        
-        string previewJson = async.Result;
-        PreviewInPortal(previewJson);
-        StopLoading();
+
     }
 
     private void FillGameData(MemoryJsonGet json)
@@ -327,10 +316,17 @@ public class FormMatchCard
 }
 
 [Serializable]
-public class FormMatchCardPreview
+public class FormMatchCardPreviewData : BaseGameJson
 {
-    public FormBasePreview game;
-    public MatchCard gameData;
+    public string backImageUrl;
+    public List<Pair> cardPairs;
+}
+
+[Serializable]
+public class MatchCardPreview
+{
+    public FormMatchCardPreviewData previewData;
+    public List<string> filesToDelete;
 }
 
 

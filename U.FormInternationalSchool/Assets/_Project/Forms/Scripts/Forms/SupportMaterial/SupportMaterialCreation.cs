@@ -135,9 +135,9 @@ public class SupportMaterialCreation : MonoBehaviour
         return SaveMaterial();
     }
 
-    public void FillSupportMaterial(List<SupportMaterialGet> materials)
+    public void FillSupportMaterial(List<SupportMaterial> materials)
     {
-        foreach (SupportMaterialGet mat in materials)
+        foreach (SupportMaterial mat in materials)
         {
             MaterialInputArea area = AddInputArea();
             if (mat.materialType == "TEXT")

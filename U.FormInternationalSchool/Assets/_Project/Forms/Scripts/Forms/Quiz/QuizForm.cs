@@ -142,4 +142,10 @@ public class FormQuiz
     public Quiz gameData;
 }
 
+public class FormQuizPreview
+{
+    public FormQuiz previewData;
+    public List<string> filesToDelete;
+}
+
 

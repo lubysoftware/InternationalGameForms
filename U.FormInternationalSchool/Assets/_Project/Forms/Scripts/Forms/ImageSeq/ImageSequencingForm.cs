@@ -10,6 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using FileIO = System.IO.File;
+using LinqUtility = Unity.VisualScripting.LinqUtility;
 
 public class ImageSequencingForm : FormScreen
 {
@@ -63,7 +64,7 @@ public class ImageSequencingForm : FormScreen
             }
             else
             {
-                SerializeGameData(filledImages.Values.ToArray());
+                SerializeGameData(null);
             }
         }
     }
@@ -123,19 +124,22 @@ public class ImageSequencingForm : FormScreen
             return;
         }
 
-        if (isPreview)
-        {
-            SerializeBaseFormPreviewData();
-        }
-        else
-        {
-            SendBaseFormFiles();
-        }
+        SendBaseFormFiles();
+        
     }
 
     public override void SerializeGameData(string[] urls)
     {
-        Debug.Log("serialize game" + urls);
+        Debug.Log("serialize game");
+
+        if (urls == null)
+        {
+            urls = filledImages.Values.ToArray();
+        }
+        else
+        {
+            urlsToDelete.AddRange(urls.ToList());
+        }
 
         List<Sequence> listSeq = new List<Sequence>();
         if (filledImages.Count == imageSeqQtt)
@@ -179,70 +183,51 @@ public class ImageSequencingForm : FormScreen
             }
         };
 
-
-        string json = JsonConvert.SerializeObject(completeForm);
-        if (isEdit)
+        
+        if (!isPreview)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this,
-                SendGameInfoToPortal);
+            string json = JsonConvert.SerializeObject(completeForm);
+            if (isEdit)
+            {
+                SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this,
+                    SendGameInfoToPortal);
+            }
+            else
+            {
+                SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
+            }
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
-        }
-    }
-
-    public override void SerializeGameDataPreview()
-    {
-        Debug.Log("serialize game preview");
-
-        List<Sequence> listSeq = new List<Sequence>();
-        Dictionary<int, string> previewImages = panel.PreviewImages();
-
-        int urlIndex = 0;
-        for (int i = 0; i < imageSeqQtt; i++)
-        {
-            if (previewImages.ContainsKey(i))
+            FormImageSequencePreviewData preview = new FormImageSequencePreviewData()
             {
-                listSeq.Add(new Sequence() { position = i, imageUrl = previewImages[i] });
-            }
-        }
+                gameTitle = game.gameTitle,
+                backgroundMusicUrl = game.backgroundMusicUrl,
+                backgroundUrl = game.backgroundUrl,
+                bonustimer = game.bonustimer,
+                gameTitleImageUrl = game.gameTitleImageUrl,
+                hasSupportMaterial = game.hasSupportMaterial,
+                SupportMaterial = game.supportMaterial,
+                hasTimer = game.hasTimer,
+                questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
+                questionStatementEnglishVersion = game.questionStatementEnglishVersion,
+                questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
+                timer = game.timer,
+                questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
+                failPenalty = completeForm.gameData.failPenalty,
+                sequences = completeForm.gameData.sequences
+            };
 
-
-        FormImageSequencePreview completeForm = new FormImageSequencePreview()
-        {
-            gamePrev = this.gamePreview,
-            gameData = new ImageSequence()
+            ImageSequencePreview previewData = new ImageSequencePreview()
             {
-                failPenalty = failsPenaltyValue,
-                sequences = listSeq
-            }
-        };
-
-        // string json = JsonUtility.ToJson(completeForm);
-        // PreviewInPortal(json);
-        // StopLoading();
-
-        StartCoroutine(SerializeGamePreviewCoroutine(completeForm));
-    }
-    
-    private Task<string> SerializeGamePreview(FormImageSequencePreview completeForm)
-    {
-        return Task.Run(() => JsonUtility.ToJson(completeForm));
-    }
-    private IEnumerator SerializeGamePreviewCoroutine(FormImageSequencePreview completeForm)
-    {
-        Task<string> async = SerializeGamePreview(completeForm);
-        while (!async.IsCompleted)
-        {
-            yield return null;
+                previewData = preview,
+                filesToDelete = urlsToDelete
+            };
+            
+            string json = JsonConvert.SerializeObject(previewData);
+            PreviewInPortal(json);
+            StopLoading();
         }
-        
-        async.Dispose();
-        
-        string previewJson = async.Result;
-        PreviewInPortal(previewJson);
-        StopLoading();
     }
 
     private void FillGameData(ImageSeqJsonGet json)
@@ -277,8 +262,16 @@ public class FormImageSequence
     public ImageSequence gameData;
 }
 
-public class FormImageSequencePreview
+[Serializable]
+public class FormImageSequencePreviewData : BaseGameJson
 {
-    public FormBasePreview gamePrev;
-    public ImageSequence gameData;
+    public int failPenalty;
+    public List<Sequence> sequences;
+}
+
+[Serializable]
+public class ImageSequencePreview
+{
+    public FormImageSequencePreviewData previewData;
+    public List<string> filesToDelete;
 }

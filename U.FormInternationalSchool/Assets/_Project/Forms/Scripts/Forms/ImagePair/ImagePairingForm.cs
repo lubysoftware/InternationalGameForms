@@ -79,14 +79,7 @@ public class ImagePairingForm : FormScreen
             return;
         }
         
-        if (isPreview)
-        {
-            SerializeBaseFormPreviewData();
-        }
-        else
-        {
-            SendBaseFormFiles();
-        }
+        SendBaseFormFiles();
     }
     
     protected override void CheckEmptyGameFields()
@@ -124,108 +117,114 @@ public class ImagePairingForm : FormScreen
     {
         Debug.Log("serialize game " + urls);
 
+        if (urls != null)
+        {
+            urlsToDelete.AddRange(urls.ToList());
+        }
+
         List<Pair> listPair = new List<Pair>();
         if (filledImages.Count == pairsQtt || urls == null)
         {
-            for(int i=0; i< pairsQtt; i++)
+            for (int i = 0; i < pairsQtt; i++)
             {
-                listPair.Add(new Pair() { firstImageUrl = filledImages[panel.idsList[i]][0], secondImageUrl = filledImages[panel.idsList[i]][1] });
+                listPair.Add(new Pair()
+                {
+                    firstImageUrl = filledImages[panel.idsList[i]][0],
+                    secondImageUrl = filledImages[panel.idsList[i]][1]
+                });
             }
         }
         else
         {
             int urlIndex = 0;
-            for(int i = 0; i< pairsQtt; i++)
+            for (int i = 0; i < pairsQtt; i++)
             {
                 if (filledImages.ContainsKey(panel.idsList[i]))
                 {
                     if (filledImages[panel.idsList[i]].Count == 2)
                     {
                         listPair.Add(new Pair()
-                            { firstImageUrl = filledImages[panel.idsList[i]][0], secondImageUrl = filledImages[panel.idsList[i]][1] });
+                        {
+                            firstImageUrl = filledImages[panel.idsList[i]][0],
+                            secondImageUrl = filledImages[panel.idsList[i]][1]
+                        });
                     }
                     else if (filledImages[panel.idsList[i]].Count == 1)
                     {
                         listPair.Add(
-                            new Pair() { firstImageUrl = filledImages[panel.idsList[i]][0], secondImageUrl = urls[urlIndex] });
+                            new Pair()
+                            {
+                                firstImageUrl = filledImages[panel.idsList[i]][0], secondImageUrl = urls[urlIndex]
+                            });
                         urlIndex++;
                     }
                 }
                 else
                 {
                     listPair.Add(new Pair() { firstImageUrl = urls[urlIndex], secondImageUrl = urls[urlIndex + 1] });
-                    urlIndex +=2;
+                    urlIndex += 2;
                 }
             }
         }
-       
+
 
         FormImagePairing completeForm = new FormImagePairing()
         {
             game = this.game,
-            gameData =  new ImagePairing()
+            gameData = new ImagePairing()
             {
                 failPenalty = failsPenaltyValue,
                 pairs = listPair
             }
         };
 
-       
-        string json = JsonConvert.SerializeObject(completeForm);
-        Debug.Log(json);
-        if (isEdit)
+        if (!isPreview)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
+            string json = JsonConvert.SerializeObject(completeForm);
+            if (isEdit)
+            {
+                SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
+            }
+            else
+            {
+                SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
+            }
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
-        }
-    }
-    
-    public override void SerializeGameDataPreview()
-    {
-        List<Pair> listPair = new List<Pair>();
-        Dictionary<char, List<string>> pairImages = panel.PreviewImages();
-        pairsQtt = panel.CompletedPairs();
-        for(int i=0; i< pairsQtt; i++)
-        {
-            listPair.Add(new Pair() { firstImageUrl = pairImages[panel.idsList[i]][0], secondImageUrl = pairImages[panel.idsList[i]][1] });
-        }
-
-        FormImagePairingPreview completeForm = new FormImagePairingPreview()
-        {
-            game = this.gamePreview,
-            gameData =  new ImagePairing()
+            FormImagePairingPreviewData preview = new FormImagePairingPreviewData()
             {
-                failPenalty = failsPenaltyValue,
-                pairs = listPair
-            }
-        };
+                gameTitle = game.gameTitle,
+                backgroundMusicUrl = game.backgroundMusicUrl,
+                backgroundUrl = game.backgroundUrl,
+                bonustimer = game.bonustimer,
+                gameTitleImageUrl = game.gameTitleImageUrl,
+                hasSupportMaterial = game.hasSupportMaterial,
+                SupportMaterial = game.supportMaterial,
+                hasTimer = game.hasTimer,
+                questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
+                questionStatementEnglishVersion = game.questionStatementEnglishVersion,
+                questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
+                timer = game.timer,
+                questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
+                failPenalty = completeForm.gameData.failPenalty,
+                pairs = completeForm.gameData.pairs
+            };
 
-
-        StartCoroutine(SerializeGamePreviewCoroutine(completeForm));
-    }
-    
-    private Task<string> SerializeGamePreview(FormImagePairingPreview completeForm)
-    {
-        return Task.Run(() => JsonUtility.ToJson(completeForm));
-    }
-    private IEnumerator SerializeGamePreviewCoroutine(FormImagePairingPreview completeForm)
-    {
-        Task<string> async = SerializeGamePreview(completeForm);
-        while (!async.IsCompleted)
-        {
-            yield return null;
+            ImagePairingPreview previewData = new ImagePairingPreview()
+            {
+                previewData = preview,
+                filesToDelete = urlsToDelete
+            };
+            
+            string json = JsonConvert.SerializeObject(previewData);
+            PreviewInPortal(json);
+            StopLoading();
         }
         
-        async.Dispose();
-        
-        string previewJson = async.Result;
-        PreviewInPortal(previewJson);
-        System.IO.File.WriteAllText(Application.persistentDataPath + "/FormData.json", previewJson);
-        StopLoading();
     }
+    
+ 
 
     private void FillGameData(ImagePairJsonGet json)
     {
@@ -263,10 +262,18 @@ public class FormImagePairing
     public ImagePairing gameData;
 }
 
+
 [Serializable]
-public class FormImagePairingPreview
+public class FormImagePairingPreviewData : BaseGameJson
 {
-    public FormBasePreview game;
-    public ImagePairing gameData;
+    public int failPenalty;
+    public List<Pair> pairs;
+}
+
+[Serializable]
+public class ImagePairingPreview
+{
+    public FormImagePairingPreviewData previewData;
+    public List<string> filesToDelete;
 }
 
