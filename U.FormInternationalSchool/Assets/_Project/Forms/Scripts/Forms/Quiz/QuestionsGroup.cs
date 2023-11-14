@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using LubyLib.Core.Singletons;
 using TMPro;
 using Unity.VisualScripting;
@@ -41,6 +42,8 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
     private int receivedData = 0;
     public int QuestionsQtt => questionsContainer.childCount;
 
+    private List<string> urlsToDelete;
+
     public enum InputType
     {
         TEXT,
@@ -52,6 +55,7 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
     {
         addQuestion.onClick.AddListener(OnAddQuestion);
         UpdateCanvas();
+        urlsToDelete = new List<string>();
     }
 
     public AlternativeGroup GetAlternativeGroupPrefab(InputType type)
@@ -131,6 +135,7 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
     public void GetAllQuestionData()
     {
         receivedData = 0;
+        urlsToDelete.Clear();
         questionsData = new Question[QuestionsQtt];
         foreach(Transform child in questionsContainer)
         {
@@ -138,13 +143,17 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
         }
     }
 
-    public void ReceiveQuestionData(Question question, int index)
+    public void ReceiveQuestionData(Question question, int index, string[] urls)
     {
         receivedData++;
         questionsData[index] = question;
+        if (urls != null)
+        {
+            urlsToDelete.AddRange(urls.ToList());
+        }
         if (receivedData == QuestionsQtt)
         {
-            form.SerializeGameData(questionsData);
+            form.SerializeGameData(questionsData, urlsToDelete);
         }
     }
 

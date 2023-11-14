@@ -95,8 +95,11 @@ public class QuizForm : FormScreen
     {
     }
 
-    public void SerializeGameData(Question[] questionsList)
+    public void SerializeGameData(Question[] questionsList, List<string> deleteUrls)
     {
+        
+        urlsToDelete.AddRange(deleteUrls);
+        
         FormQuiz completeForm = new FormQuiz()
         {
             game = this.game,
@@ -107,16 +110,50 @@ public class QuizForm : FormScreen
                 questions = questionsList,
             }
         };
-
-
-        string json = JsonConvert.SerializeObject(completeForm);
-        if (isEdit)
+        
+        if (!isPreview)
         {
-            SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
+            string json = JsonConvert.SerializeObject(completeForm);
+            if (isEdit)
+            {
+                SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
+            }
+            else
+            {
+                SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
+            }
         }
         else
         {
-            SendFilesToAPI.Instance.StartUploadJson(json, so.url, title.InputField.text, this, SendGameInfoToPortal);
+            FormQuizPreviewData preview = new FormQuizPreviewData()
+            {
+                gameTitle = game.gameTitle,
+                backgroundMusicUrl = game.backgroundMusicUrl,
+                backgroundUrl = game.backgroundUrl,
+                bonustimer = game.bonustimer,
+                gameTitleImageUrl = game.gameTitleImageUrl,
+                hasSupportMaterial = game.hasSupportMaterial,
+                SupportMaterial = game.supportMaterial,
+                hasTimer = game.hasTimer,
+                questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
+                questionStatementEnglishVersion = game.questionStatementEnglishVersion,
+                questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
+                timer = game.timer,
+                questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
+                failPenalty = completeForm.gameData.failPenalty,
+                randomAnswers = completeForm.gameData.randomAnswers,
+                questions = completeForm.gameData.questions
+            };
+
+            QuizPreview previewData = new QuizPreview()
+            {
+                previewData = preview,
+                filesToDelete = urlsToDelete
+            };
+            
+            string json = JsonConvert.SerializeObject(previewData);
+            PreviewInPortal(json);
+            StopLoading();
         }
     }
 
@@ -142,9 +179,16 @@ public class FormQuiz
     public Quiz gameData;
 }
 
-public class FormQuizPreview
+public class FormQuizPreviewData : BaseGameJson
 {
-    public FormQuiz previewData;
+    public int failPenalty;
+    public bool randomAnswers;
+    public Question[] questions;
+}
+
+public class QuizPreview
+{
+    public FormQuizPreviewData previewData;
     public List<string> filesToDelete;
 }
 

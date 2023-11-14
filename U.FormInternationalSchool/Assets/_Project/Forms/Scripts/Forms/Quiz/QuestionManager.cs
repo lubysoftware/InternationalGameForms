@@ -480,7 +480,7 @@ public class QuestionManager : MonoBehaviour
             correctAnswer = GetCorrectAnswer()
         };
         
-        QuestionsGroup.Instance.ReceiveQuestionData(question, transform.GetSiblingIndex());
+        QuestionsGroup.Instance.ReceiveQuestionData(question, transform.GetSiblingIndex(), fileList);
     }
 
     #endregion
