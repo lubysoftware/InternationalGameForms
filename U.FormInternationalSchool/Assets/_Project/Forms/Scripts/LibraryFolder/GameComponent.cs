@@ -74,8 +74,6 @@ public class GameComponent : MonoBehaviour
     private void OnPathButtonClick()
     {
         if(!GlobalSettings.Instance.OpenedFromPath || !_canClick) return;
-
-        //_canClick = false;
         
         PortalBridge.Instance.AddGameToPathEvent(id, _gameType);
     }

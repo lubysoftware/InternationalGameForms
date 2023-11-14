@@ -389,7 +389,7 @@ public class QuestionManager : MonoBehaviour
     }
     private void SendFilesPack(List<File> fileList)
     {
-        RestClient.DefaultRequestHeaders["Authorization"] = "Bearer Luby2021";
+        RestClient.DefaultRequestHeaders["Authorization"] = GlobalSettings.Instance.UserToken;
 
         APIFactory.GetApi<FileUpload>().UploadFile(fileList, list =>
         {
