@@ -1,5 +1,6 @@
 using System;
 using LubyLib.Core.Singletons;
+using UnityEngine;
 
 public class GlobalSettings : SimpleSingleton<GlobalSettings>
 {
@@ -9,13 +10,35 @@ public class GlobalSettings : SimpleSingleton<GlobalSettings>
     /// </summary>
     public bool OpenedFromPath { get; private set; }
 
-    // private void Start()
-    // {
-    //     OpenedFromPath = true;
-    // }
-
-    public void SetPathButtonStatus(bool status)
+    public string UserToken
     {
-        OpenedFromPath = status;
+        get
+        {
+#if UNITY_EDITOR
+            return "Bearer Luby2021";
+#else
+            return _userToken;
+#endif
+        }
+        private set => _userToken = value;
     }
+
+    private string _userToken;
+    
+    protected override bool DestroyOnLoad => false;
+
+    public void Setup(string setupConfig)
+    {
+        SetupConfig setup = JsonUtility.FromJson<SetupConfig>(setupConfig);
+        
+        UserToken = setup.userToken;
+        OpenedFromPath = setup.openedFromPath;
+    }
+}
+
+[Serializable]
+public class SetupConfig
+{
+    public string userToken;
+    public bool openedFromPath;
 }

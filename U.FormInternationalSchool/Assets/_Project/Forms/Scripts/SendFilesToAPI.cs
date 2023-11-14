@@ -9,7 +9,6 @@ using UnityEngine.Networking;
 using LubyLib.Core.Singletons;
 using Newtonsoft.Json;
 using Proyecto26;
-using Unity.VisualScripting;
 using AudioType = UnityEngine.AudioType;
 
 public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
@@ -28,7 +27,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         //UnityWebRequest www = UnityWebRequest.Get("https://school.gamehub.api.oke.luby.me/health-check");
         UnityWebRequest www = UnityWebRequest.Post(Constants.URL_DATABASE + postURL, json, "application/json");
 
-        www.SetRequestHeader("authorization", "Bearer Luby2021");
+        www.SetRequestHeader("authorization", GlobalSettings.Instance.UserToken);
         yield return www.SendWebRequest();
 
         if (www.result != UnityWebRequest.Result.Success)
@@ -56,7 +55,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
     {
         UnityWebRequest www = UnityWebRequest.Put(Constants.URL_DATABASE + postURL + "/" + id, json);
 
-        www.SetRequestHeader("authorization", "Bearer Luby2021");
+        www.SetRequestHeader("authorization", GlobalSettings.Instance.UserToken);
         www.SetRequestHeader("content-type", "application/json");
         yield return www.SendWebRequest();
 
@@ -84,7 +83,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
     private void SendFilesPack(FormScreen screen, List<File> fileList, bool isBaseForm)
     {
-        RestClient.DefaultRequestHeaders["Authorization"] = "Bearer Luby2021";
+        RestClient.DefaultRequestHeaders["Authorization"] = GlobalSettings.Instance.UserToken;
 
         APIFactory.GetApi<FileUpload>().UploadFile(fileList, list =>
         {
@@ -149,8 +148,8 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         wr.downloadHandler = new DownloadHandlerBuffer();
         wr.method = "POST";
         wr.redirectLimit = -1;
-        wr.SetRequestHeader("authorization", "Bearer Luby2021");
-        yield return wr.Send();
+        wr.SetRequestHeader("authorization", GlobalSettings.Instance.UserToken);
+        yield return wr.SendWebRequest();
 
         if (wr.result != UnityWebRequest.Result.Success)
         {
@@ -212,7 +211,6 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
 
     IEnumerator DownloadAudio(UploadFileElement element, string path)
     {
-        Debug.Log(path);
 #if (UNITY_WEBGL || FG_FB_WEBGL) && !UNITY_EDITOR
 		UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(path
 			, AudioType.AUDIOQUEUE);
@@ -244,7 +242,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
     {
         UnityWebRequest www = UnityWebRequest.Get(Constants.URL_DATABASE + path + "/" + id);
 
-        www.SetRequestHeader("authorization", "Bearer Luby2021");
+        www.SetRequestHeader("authorization", GlobalSettings.Instance.UserToken);
         yield return www.SendWebRequest();
 
         if (www.result != UnityWebRequest.Result.Success)

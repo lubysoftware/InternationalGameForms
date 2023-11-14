@@ -1,13 +1,9 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using FrostweepGames.Plugins.WebGLFileBrowser;
 using UnityEngine;
 using UnityEngine.Networking;
 using LubyLib.Core.Singletons;
 using Newtonsoft.Json;
-using Unity.VisualScripting;
 
 public class APICommunication : SimpleSingleton<APICommunication>
 {
@@ -29,7 +25,7 @@ public class APICommunication : SimpleSingleton<APICommunication>
 		string searchString = "?page="+page+"&take="+qtt+"&search="+filter;
 		UnityWebRequest www = UnityWebRequest.Get(Constants.URL_DATABASE + url + searchString);
 
-		www.SetRequestHeader("authorization", "Bearer Luby2021");
+		www.SetRequestHeader("authorization", GlobalSettings.Instance.UserToken);
 		yield return www.SendWebRequest();
 
 		if (www.result != UnityWebRequest.Result.Success)
@@ -58,7 +54,7 @@ public class APICommunication : SimpleSingleton<APICommunication>
 			"Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time");
 		www.SetRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
 		www.SetRequestHeader("Access-Control-Allow-Origin", "*");
-		www.SetRequestHeader("authorization", "Bearer Luby2021");
+		www.SetRequestHeader("authorization", GlobalSettings.Instance.UserToken);
 		yield return www.SendWebRequest();
 
 		if (www.result != UnityWebRequest.Result.Success)
@@ -77,7 +73,7 @@ public class APICommunication : SimpleSingleton<APICommunication>
 	{
 		UnityWebRequest www = UnityWebRequest.Delete(Constants.URL_DATABASE + getURL+"/"+id);
 
-		www.SetRequestHeader("authorization","Bearer Luby2021");
+		www.SetRequestHeader("authorization",GlobalSettings.Instance.UserToken);
 		yield return www.SendWebRequest();
 
 		if (www.result != UnityWebRequest.Result.Success)
