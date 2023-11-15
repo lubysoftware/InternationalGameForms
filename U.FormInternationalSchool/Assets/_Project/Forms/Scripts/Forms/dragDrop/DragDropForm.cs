@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class DragDropForm : FormScreen
@@ -271,7 +272,7 @@ public class DragDropForm : FormScreen
                 failPenalty = completeForm.gameData.failPenalty,
                 materialType = completeForm.gameData.materialType,
                 dragType = completeForm.gameData.dragType,
-                draggableItems = completeForm.gameData.draggableItems,
+                draggableItem = completeForm.gameData.draggableItems,
             };
 
             DragDropPreview previewData = new DragDropPreview()
@@ -333,7 +334,7 @@ public class FormDragDropPreviewData : BaseGameJson
     public int failPenalty;
     public string materialType;
     public string dragType;    
-    public List<DraggableItemJson> draggableItems;
+    public List<DraggableItemJson> draggableItem;
 }
 
 [Serializable]
