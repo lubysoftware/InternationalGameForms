@@ -239,6 +239,11 @@ public class ImagePairingForm : FormScreen
         loadFileQtt = loadFileQtt + urls.Count * 2;
         CheckIfMaxQtt();
     }
+    
+    protected override void SetFailsPenalty(int points)
+    {
+        failsPenalty.InputField.text = points.ToString();
+    }
 
 }
 [Serializable]

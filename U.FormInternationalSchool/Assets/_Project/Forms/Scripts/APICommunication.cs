@@ -87,4 +87,55 @@ public class APICommunication : SimpleSingleton<APICommunication>
 			screen.OnDeletedGame();
 		}
 	}
+	
+	IEnumerator UploadJsonDefaultSettings(string json, GameSettingsPanel screen, LibraryScreen library)
+	{
+		UnityWebRequest www = UnityWebRequest.Post(Constants.URL_DATABASE + "default-settings", json, "application/json");
+
+		www.SetRequestHeader("authorization", GlobalSettings.Instance.UserToken);
+		yield return www.SendWebRequest();
+
+		if (www.result != UnityWebRequest.Result.Success)
+		{
+			SucessPanel.Instance.SetText("Erro ao salvar as preferências de jogo.", SucessPanel.MessageType.ERROR);
+		}
+		else
+		{
+			Debug.Log(www.downloadHandler.text);
+			SucessPanel.Instance.SetText("Preferências de jogo foram salvas com sucesso.",
+				SucessPanel.MessageType.SUCCESS);
+			screen.CloseButton();
+			library.SaveSettingsData(www.downloadHandler.text);
+		}
+	}
+    
+	public void StartUploadDefaultSettings(string json, GameSettingsPanel panel, LibraryScreen library)
+	{
+		StartCoroutine(UploadJsonDefaultSettings(json, panel, library));
+	}
+	
+	public void StartDownloadDefaultSettings(LibraryScreen panel, string type)
+	{
+		StartCoroutine(DownloadGame(panel, type));
+	}
+
+	IEnumerator DownloadGame(LibraryScreen panel, string path)
+	{
+		UnityWebRequest www = UnityWebRequest.Get(Constants.URL_DATABASE + "default-settings" + "/" + path);
+
+		www.SetRequestHeader("authorization", GlobalSettings.Instance.UserToken);
+		yield return www.SendWebRequest();
+
+		if (www.result != UnityWebRequest.Result.Success)
+		{
+			
+		}
+		else
+		{
+			Debug.Log(www.downloadHandler.text);
+			panel.SaveSettingsData(www.downloadHandler.text);
+			
+			
+		}
+	}
 }

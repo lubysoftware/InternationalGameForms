@@ -45,6 +45,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
             screen.BackButton();
         }
     }
+    
 
     public void StartUploadJsonUpdate(string json, string url, int id, string titulo, FormScreen screen, Action<string> onSuccess)
     {

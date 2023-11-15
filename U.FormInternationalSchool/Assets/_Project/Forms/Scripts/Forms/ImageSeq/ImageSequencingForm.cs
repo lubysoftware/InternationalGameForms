@@ -238,6 +238,11 @@ public class ImageSequencingForm : FormScreen
         loadFileQtt = loadFileQtt + sequenceQtt;
         CheckIfMaxQtt();
     }
+    
+    protected override void SetFailsPenalty(int points)
+    {
+        failsPenalty.InputField.text = points.ToString();
+    }
 }
 
 

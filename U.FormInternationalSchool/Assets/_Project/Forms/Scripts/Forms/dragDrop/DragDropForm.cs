@@ -300,6 +300,10 @@ public class DragDropForm : FormScreen
         CheckIfMaxQtt();
     }
 
+    protected override void SetFailsPenalty(int points)
+    {
+        failsPenalty.InputField.text = points.ToString();
+    }
    
 
 }

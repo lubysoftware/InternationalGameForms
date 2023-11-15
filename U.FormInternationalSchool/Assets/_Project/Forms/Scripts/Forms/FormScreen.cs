@@ -71,6 +71,8 @@ public class FormScreen : MonoBehaviour
     protected bool isPreview;
     protected List<string> urlsToDelete;
 
+    private DefaultSettings settings;
+
     protected virtual void Start()
     {
         sendForm.onClick.AddListener(SendFormData);
@@ -79,11 +81,35 @@ public class FormScreen : MonoBehaviour
         SetCanClick(true);
         isEdit = false;
         SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
+        SceneDataCarrier.GetData(Constants.GAME_SETTINGS, out settings);
         urlsToDelete = new List<string>();
         if (isEdit)
         {
             SceneDataCarrier.GetData(Constants.GAME_EDIT, out id);
             SendFilesToAPI.Instance.StartDownloadGame(this, so.url, id);
+        }
+        else
+        {
+            if (settings != null)
+            {
+                if (settings.hasTimer)
+                {
+                    timer.isOn = true;
+                    int min = settings.timer / 60;
+                    int sec = settings.timer - min * 60;
+                    timeMin.InputField.text =  String.Format("{0:00}", min);
+                    timeSec.InputField.text = String.Format("{0:00}", sec);
+                }
+
+                if (settings.hasBonusTime)
+                {
+                    timer.isOn = true;
+                    timerBonus.InputField.text = settings.bonusTimer.ToString();
+                }
+                
+                if (settings.hasMistakePoints)
+                    SetFailsPenalty(settings.mistakePoints);
+            }
         }
     }
 
@@ -774,6 +800,11 @@ public class FormScreen : MonoBehaviour
     public void DeactivateErrorInput(InputElement el)
     {
         el.DeactivateErrorMode(inputImage);
+    }
+
+    protected virtual void SetFailsPenalty(int points)
+    {
+        
     }
 
 

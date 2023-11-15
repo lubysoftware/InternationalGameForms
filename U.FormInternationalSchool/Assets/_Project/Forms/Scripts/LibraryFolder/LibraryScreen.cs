@@ -27,6 +27,7 @@ public class LibraryScreen : MonoBehaviour
     [SerializeField] private TextMeshProUGUI title;
 
     [SerializeField] private GameSettingsPanel settingsPanel;
+    [SerializeField] private Button settings;
 
     private GameTypeSO so;
 
@@ -43,11 +44,14 @@ public class LibraryScreen : MonoBehaviour
         backButton.onClick.AddListener(OnClickBack);
         nextPage.onClick.AddListener(OnClickNext);
         previousPage.onClick.AddListener(OnClickPrevious);
+        settings.onClick.AddListener(OpenSettings);
+        SceneDataCarrier.AddData(Constants.GAME_SETTINGS,new DefaultSettings());
         SceneDataCarrier.GetData(Constants.GAME_SO, out so);
         loading.SetColors(so.colors[0], so.colors[1]);
         SetLibColors();
         DownloadData(1);
         APICommunication.Instance.StartHealthChecker(so.url);
+        APICommunication.Instance.StartDownloadDefaultSettings(this,so.gameType.ToString());
     }
 
     public void SetLibColors()
@@ -59,6 +63,7 @@ public class LibraryScreen : MonoBehaviour
 
         //header
         newGame.image.color = so.colors[1];
+        settings.image.color = so.colors[0];
         searchTitle.image.color = so.colors[3];
         title.text = so.title;
 
@@ -68,8 +73,13 @@ public class LibraryScreen : MonoBehaviour
 
         //deletePanel
         confirmDialog.SetPanelColors(so.colors[0], so.colors[3]);
-        
-        settingsPanel.SetPanelColors(so.colors[0], so.colors[3], so.colors[2],so.colors[1],so.colors[4]);
+
+        settingsPanel.SetPanelColors(so.colors[0], so.colors[3], so.colors[2], so.colors[1], so.colors[4], so.gameType);
+    }
+
+    private void OpenSettings()
+    {
+        settingsPanel.gameObject.SetActive(true);
     }
 
     public void InstantiateGamesList(GameList list)
@@ -160,4 +170,11 @@ public class LibraryScreen : MonoBehaviour
     {
         DownloadData(page);
     }
+
+    public void SaveSettingsData(string data)
+    {
+        DefaultSettings settings = JsonConvert.DeserializeObject<DefaultSettings>(data);
+        SceneDataCarrier.AddData(Constants.GAME_SETTINGS, settings );
+    } 
+
 }
