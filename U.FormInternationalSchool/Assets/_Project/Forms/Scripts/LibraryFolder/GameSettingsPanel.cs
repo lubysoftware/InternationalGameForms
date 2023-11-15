@@ -54,6 +54,8 @@ public class GameSettingsPanel : MonoBehaviour
 
     [FormerlySerializedAs("resetButton")] [Header("general")] [SerializeField]
     private Button saveButton;
+    [SerializeField]
+    private Button resetButton;
 
     [SerializeField] private Button closeButton;
 
@@ -70,6 +72,7 @@ public class GameSettingsPanel : MonoBehaviour
     {
         saveButton.onClick.AddListener(SaveButton);
         closeButton.onClick.AddListener(CloseButton);
+        resetButton.onClick.AddListener(ResetButton);
     }
 
     public void OnEnable()
@@ -120,7 +123,8 @@ public class GameSettingsPanel : MonoBehaviour
         inputTimerMin.targetGraphic.color = inputTimerSec.targetGraphic.color =
             inputBonus.targetGraphic.color = inputError.targetGraphic.color = darkColor;
         coloredSymbolBonus.color = coloredSymbolError.color = coloredSymbolTimer.color = SymbolColor;
-        saveButton.image.color = secondaryColor;
+        saveButton.image.color =secondaryColor;
+        resetButton.image.color = darkColor;
         closeButton.image.color = darkColor;
 
         normalColor = darkColor;
@@ -132,6 +136,9 @@ public class GameSettingsPanel : MonoBehaviour
 
     public void CloseButton()
     {
+        BackToNormalField("timer");
+        BackToNormalField("bonus");
+        BackToNormalField("error");
         gameObject.SetActive(false);
     }
 
@@ -162,6 +169,10 @@ public class GameSettingsPanel : MonoBehaviour
         inputTimerSec.text = string.Empty;
         inputBonus.text = string.Empty;
         inputError.text = string.Empty;
+        
+        toggleBonus.isOn =false;
+        toggleError.isOn =false;
+        toggleTimer.isOn =false;
     }
 
     public void SaveButton()
