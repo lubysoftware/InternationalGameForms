@@ -321,6 +321,7 @@ public class GameSettingsPanel : MonoBehaviour
             gameType == GameType.QUIZ)
         {
             overlayError.SetActive(true);
+            inputError.text = string.Empty;
             toggleError.SetIsOnWithoutNotify(false);
             toggleError.interactable = false;
             return false;

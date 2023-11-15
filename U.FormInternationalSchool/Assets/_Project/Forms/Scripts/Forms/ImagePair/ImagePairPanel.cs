@@ -116,10 +116,9 @@ public class ImagePairPanel : MonoBehaviour
         List<File> files = new List<File>();
         foreach (ImagePair pair in pairs)
         {
-            if(pair.GetFiles() != null && pair.GetFiles().Count == 2)
+            if(pair.GetFiles() != null && pair.GetFiles().Count > 0)
                 files.AddRange(pair.GetFiles());
         }
-        
         return files;
     }
 

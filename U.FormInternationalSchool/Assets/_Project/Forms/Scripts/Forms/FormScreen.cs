@@ -276,9 +276,9 @@ public class FormScreen : MonoBehaviour
     protected virtual void ValidateFields()
     {
         hasValidationError = false;
+        int.TryParse(timerBonus.InputField.text, out bonusTimer);
         if (!CheckBetweenValues(timerBonus,0,100, "Bônus do timer"))
         {
-            int.TryParse(timerBonus.InputField.text, out bonusTimer);
             hasValidationError = true;
             return;
         }

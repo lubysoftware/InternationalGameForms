@@ -123,7 +123,7 @@ public class ImagePairingForm : FormScreen
         }
 
         List<Pair> listPair = new List<Pair>();
-        if (filledImages.Count == pairsQtt || urls == null)
+        if (urls == null)
         {
             for (int i = 0; i < pairsQtt; i++)
             {
