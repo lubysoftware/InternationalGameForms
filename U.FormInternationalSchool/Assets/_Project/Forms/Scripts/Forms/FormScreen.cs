@@ -134,6 +134,7 @@ public class FormScreen : MonoBehaviour
     {
         canClick = status;
         sendForm.interactable = status;
+        previewForm.interactable = status;
     }
 
     protected void StopLoading()
@@ -758,6 +759,14 @@ public class FormScreen : MonoBehaviour
     {
         isPreview = false;
         PortalBridge.Instance.OnShowPreviewEvent(so.gameType.ToString(), jsonData);
+
+        StartCoroutine(EnableClickCoroutine());
+    }
+    
+    private IEnumerator EnableClickCoroutine()
+    {
+        yield return new WaitForSeconds(5);
+        SetCanClick(true);
     }
     
 

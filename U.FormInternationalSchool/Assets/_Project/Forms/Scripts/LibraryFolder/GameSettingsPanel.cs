@@ -320,7 +320,6 @@ public class GameSettingsPanel : MonoBehaviour
         if (gameType == GameType.PUZZLE || gameType == GameType.CROSS_WORD || gameType == GameType.MATCH_CARD ||
             gameType == GameType.QUIZ)
         {
-            Debug.Log("without error");
             overlayError.SetActive(true);
             toggleError.SetIsOnWithoutNotify(false);
             toggleError.interactable = false;

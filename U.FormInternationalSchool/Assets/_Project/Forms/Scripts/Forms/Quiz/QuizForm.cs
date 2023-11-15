@@ -142,8 +142,23 @@ public class QuizForm : FormScreen
                 questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
                 failPenalty = completeForm.gameData.failPenalty,
                 randomAnswers = completeForm.gameData.randomAnswers,
-                questions = completeForm.gameData.questions
+                questions = new QuizQuestionPreview[completeForm.gameData.questions.Length]
             };
+
+            for (int i = 0; i < completeForm.gameData.questions.Length; i++)
+            {
+                preview.questions[i] = new QuizQuestionPreview(completeForm.gameData.questions[i].answers)
+                    {
+                        quizType = completeForm.gameData.questions[i].quizType,
+                        questionAudioEnglishUrl = completeForm.gameData.questions[i].questionAudioEnglishUrl,
+                        questionTitleEnglish = completeForm.gameData.questions[i].questionTitleEnglish,
+                        questionTitlePortuguese = completeForm.gameData.questions[i].questionTitlePortuguese,
+                        answerType = completeForm.gameData.questions[i].answerType,
+                        correctAnswer = completeForm.gameData.questions[i].correctAnswer,
+                        questionFileUrl = completeForm.gameData.questions[i].questionFileUrl,
+                        questionAudioPortugueseUrl = completeForm.gameData.questions[i].questionAudioPortugueseUrl,
+                    };
+            }
 
             QuizPreview previewData = new QuizPreview()
             {
@@ -183,13 +198,49 @@ public class FormQuizPreviewData : BaseGameJson
 {
     public int failPenalty;
     public bool randomAnswers;
-    public Question[] questions;
+    public QuizQuestionPreview[] questions;
 }
 
+[Serializable]
+public class QuizQuestionPreview
+{
+    public string quizType;
+    public string questionTitleEnglish;
+    public string questionTitlePortuguese;
+    public string questionAudioEnglishUrl;
+    public string questionAudioPortugueseUrl;
+    public string questionFileUrl;
+    public string answerType;
+    public int correctAnswer;
+    public OptionData[] answers;
+
+    public QuizQuestionPreview(List<string> answers)
+    {
+        this.answers = new OptionData[answers.Count];
+        for (int i = 0; i < answers.Count; i++)
+        {
+            this.answers[i] = new OptionData
+            {
+                answer = answers[i]
+            };
+        }
+    }
+}
+
+[Serializable]
 public class QuizPreview
 {
     public FormQuizPreviewData previewData;
     public List<string> filesToDelete;
+}
+
+[Serializable]
+public class OptionData
+{
+    [JsonProperty("id")]
+    public string id;
+    [JsonProperty("answer")]
+    public string answer;
 }
 
 

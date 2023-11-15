@@ -313,7 +313,7 @@ public class QuestionManager : MonoBehaviour
             }
         }
 
-        Debug.LogError(previousQttDropdown);
+        Debug.Log(previousQttDropdown);
         if (!alternativesGroup.IsAllAlternativeCompleted(previousQttDropdown))
         {
             isComplete = false;
