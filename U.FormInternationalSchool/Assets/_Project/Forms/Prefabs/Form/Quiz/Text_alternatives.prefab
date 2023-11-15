@@ -225,7 +225,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5073708937343200910, guid: d6c443138a5e1e747a05ef297a3ac570, type: 3}
       propertyPath: m_CharacterLimit
-      value: 75
+      value: 74
       objectReference: {fileID: 0}
     - target: {fileID: 5073708937343200910, guid: d6c443138a5e1e747a05ef297a3ac570, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
@@ -437,7 +437,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5073708937343200910, guid: d6c443138a5e1e747a05ef297a3ac570, type: 3}
       propertyPath: m_CharacterLimit
-      value: 75
+      value: 74
       objectReference: {fileID: 0}
     - target: {fileID: 5073708937343200910, guid: d6c443138a5e1e747a05ef297a3ac570, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
@@ -674,7 +674,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5073708937343200910, guid: d6c443138a5e1e747a05ef297a3ac570, type: 3}
       propertyPath: m_CharacterLimit
-      value: 75
+      value: 74
       objectReference: {fileID: 0}
     - target: {fileID: 5073708937343200910, guid: d6c443138a5e1e747a05ef297a3ac570, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
@@ -894,7 +894,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5073708937343200910, guid: d6c443138a5e1e747a05ef297a3ac570, type: 3}
       propertyPath: m_CharacterLimit
-      value: 75
+      value: 74
       objectReference: {fileID: 0}
     - target: {fileID: 5073708937343200910, guid: d6c443138a5e1e747a05ef297a3ac570, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
