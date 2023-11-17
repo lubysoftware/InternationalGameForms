@@ -123,7 +123,7 @@ public class CrosswordForm : FormScreen
         }
         else
         {
-            urlsToDelete.AddRange(urls.ToList());
+            previewUrlsToDelete.AddRange(urls.ToList());
         }
 
         List<Words> listWords = new List<Words>();
@@ -218,7 +218,7 @@ public class CrosswordForm : FormScreen
             CrosswordPreview previewData = new CrosswordPreview()
             {
                 previewData = preview,
-                filesToDelete = urlsToDelete
+                filesToDelete = previewUrlsToDelete
             };
             
             string json = JsonConvert.SerializeObject(previewData);

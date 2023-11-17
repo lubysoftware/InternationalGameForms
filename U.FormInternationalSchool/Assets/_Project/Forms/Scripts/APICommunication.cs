@@ -101,7 +101,6 @@ public class APICommunication : SimpleSingleton<APICommunication>
 		}
 		else
 		{
-			Debug.Log(www.downloadHandler.text);
 			SucessPanel.Instance.SetText("Preferências de jogo foram salvas com sucesso.",
 				SucessPanel.MessageType.SUCCESS);
 			screen.CloseButton();
@@ -132,10 +131,7 @@ public class APICommunication : SimpleSingleton<APICommunication>
 		}
 		else
 		{
-			Debug.Log(www.downloadHandler.text);
 			panel.SaveSettingsData(www.downloadHandler.text);
-			
-			
 		}
 	}
 }

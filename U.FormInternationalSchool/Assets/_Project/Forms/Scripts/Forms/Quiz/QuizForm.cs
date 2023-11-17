@@ -98,7 +98,7 @@ public class QuizForm : FormScreen
     public void SerializeGameData(Question[] questionsList, List<string> deleteUrls)
     {
         
-        urlsToDelete.AddRange(deleteUrls);
+        previewUrlsToDelete.AddRange(deleteUrls);
         
         FormQuiz completeForm = new FormQuiz()
         {
@@ -163,7 +163,7 @@ public class QuizForm : FormScreen
             QuizPreview previewData = new QuizPreview()
             {
                 previewData = preview,
-                filesToDelete = urlsToDelete
+                filesToDelete = previewUrlsToDelete
             };
             
             string json = JsonConvert.SerializeObject(previewData);

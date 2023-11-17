@@ -138,7 +138,7 @@ public class ImageSequencingForm : FormScreen
         }
         else
         {
-            urlsToDelete.AddRange(urls.ToList());
+            previewUrlsToDelete.AddRange(urls.ToList());
         }
 
         List<Sequence> listSeq = new List<Sequence>();
@@ -221,7 +221,7 @@ public class ImageSequencingForm : FormScreen
             ImageSequencePreview previewData = new ImageSequencePreview()
             {
                 previewData = preview,
-                filesToDelete = urlsToDelete
+                filesToDelete = previewUrlsToDelete
             };
             
             string json = JsonConvert.SerializeObject(previewData);

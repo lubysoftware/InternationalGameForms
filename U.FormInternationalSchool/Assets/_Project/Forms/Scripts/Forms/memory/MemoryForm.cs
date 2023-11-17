@@ -136,7 +136,7 @@ public class MemoryForm : FormScreen
 
         if (urls != null)
         {
-            urlsToDelete.AddRange(urls.ToList());
+            previewUrlsToDelete.AddRange(urls.ToList());
         }
 
         int urlIndex = 0;
@@ -241,7 +241,7 @@ public class MemoryForm : FormScreen
             MatchCardPreview previewData = new MatchCardPreview()
             {
                 previewData = preview,
-                filesToDelete = urlsToDelete
+                filesToDelete = previewUrlsToDelete
             };
             
             string json = JsonConvert.SerializeObject(previewData);

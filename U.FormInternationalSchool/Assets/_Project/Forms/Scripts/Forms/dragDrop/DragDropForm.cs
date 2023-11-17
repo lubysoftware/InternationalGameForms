@@ -176,7 +176,7 @@ public class DragDropForm : FormScreen
 
         if (urls != null)
         {
-            urlsToDelete.AddRange(urls.ToList());
+            previewUrlsToDelete.AddRange(urls.ToList());
         }
 
         int urlIndex = 0;
@@ -278,7 +278,7 @@ public class DragDropForm : FormScreen
             DragDropPreview previewData = new DragDropPreview()
             {
                 previewData = preview,
-                filesToDelete = urlsToDelete
+                filesToDelete = previewUrlsToDelete
             };
             
             string json = JsonConvert.SerializeObject(previewData);

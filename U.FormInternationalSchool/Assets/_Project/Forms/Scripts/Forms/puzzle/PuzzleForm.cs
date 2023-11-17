@@ -161,7 +161,7 @@ public class PuzzleForm : FormScreen
 
         if (urls != null)
         {
-            urlsToDelete.AddRange(urls.ToList());
+            previewUrlsToDelete.AddRange(urls.ToList());
         }
         
         if (puzzleImagePath.IsNullEmptyOrWhitespace())
@@ -230,7 +230,7 @@ public class PuzzleForm : FormScreen
             PuzzlePreview previewData = new PuzzlePreview()
             {
                 previewData = preview,
-                filesToDelete = urlsToDelete
+                filesToDelete = previewUrlsToDelete
             };
             
             string json = JsonConvert.SerializeObject(previewData);

@@ -119,7 +119,7 @@ public class ImagePairingForm : FormScreen
 
         if (urls != null)
         {
-            urlsToDelete.AddRange(urls.ToList());
+            previewUrlsToDelete.AddRange(urls.ToList());
         }
 
         List<Pair> listPair = new List<Pair>();
@@ -214,7 +214,7 @@ public class ImagePairingForm : FormScreen
             ImagePairingPreview previewData = new ImagePairingPreview()
             {
                 previewData = preview,
-                filesToDelete = urlsToDelete
+                filesToDelete = previewUrlsToDelete
             };
             
             string json = JsonConvert.SerializeObject(previewData);

@@ -255,4 +255,19 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
             element.FinishDownloadingGame(www.downloadHandler.text);
         }
     }
+    
+    public void DeleteOldFiles(List<string> filesToDelete)
+    {
+        if (filesToDelete == null || filesToDelete.Count == 0)
+            return;
+        APIFactory.GetApi<FileUpload>().DeleteFile(new FilesToDelete(filesToDelete),
+            list =>
+            {
+                Debug.Log($"Files deleted: {list.Count}");
+            },
+            errorProxy =>
+            {
+                Debug.LogError("error " + errorProxy.message);
+            });
+    }
 }

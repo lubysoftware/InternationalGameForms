@@ -69,7 +69,8 @@ public class FormScreen : MonoBehaviour
     protected List<string> emptyField;
     protected bool hasValidationError;
     protected bool isPreview;
-    protected List<string> urlsToDelete;
+    protected List<string> previewUrlsToDelete;
+    protected List<string> oldUrlsToDelete;
 
     private DefaultSettings settings;
 
@@ -82,7 +83,8 @@ public class FormScreen : MonoBehaviour
         isEdit = false;
         SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
         SceneDataCarrier.GetData(Constants.GAME_SETTINGS, out settings);
-        urlsToDelete = new List<string>();
+        previewUrlsToDelete = new List<string>();
+        oldUrlsToDelete = new List<string>();
         if (isEdit)
         {
             SceneDataCarrier.GetData(Constants.GAME_EDIT, out id);
@@ -438,6 +440,7 @@ public class FormScreen : MonoBehaviour
 
     public void FillUploadFiles(UploadFileElement element, string name, string value)
     {
+        oldUrlsToDelete.Add(value);
         element.FillData(name,value);
         element.OnFill += OnLoadFile;
         currentLoad++;
@@ -613,12 +616,12 @@ public class FormScreen : MonoBehaviour
     public virtual void SerializeBaseFormData(string[] urls)
     {
         Debug.Log("serialize base");
-        urlsToDelete.Clear();
+        previewUrlsToDelete.Clear();
         
         List<SupportMaterial> supportMaterial = new List<SupportMaterial>();
         if (urls != null)
         {
-            urlsToDelete.AddRange(urls.ToList());
+            previewUrlsToDelete.AddRange(urls.ToList());
             if (urls.Length == newUrlFiles.Count + supportMaterialImgsQtt)
             {
                 int urlCount = 0;
@@ -752,7 +755,22 @@ public class FormScreen : MonoBehaviour
     
     public virtual void SendGameInfoToPortal(string responseJson)
     {
+        DeleteOldFiles(responseJson);
         PortalBridge.Instance.OnGameCreatedEvent(responseJson);
+    }
+
+    public void DeleteOldFiles(string json)
+    {
+        List<string> urls = new List<string>();
+        foreach (string url in oldUrlsToDelete)
+        {
+            if (!json.Contains(url))
+            {
+                urls.Add(url);
+            }
+        }
+        oldUrlsToDelete.Clear();
+        SendFilesToAPI.Instance.DeleteOldFiles(urls);
     }
     
     public virtual void PreviewInPortal(string jsonData)

@@ -182,7 +182,6 @@ public class GameSettingsPanel : MonoBehaviour
         int time = -1;
         if (inputTimerMin.text.IsNullEmptyOrWhitespace() || inputTimerSec.text.IsNullEmptyOrWhitespace())
         {
-            Debug.LogError("timer null");
             toggleTimer.SetIsOnWithoutNotify(false);
         }
         else
@@ -197,7 +196,6 @@ public class GameSettingsPanel : MonoBehaviour
         int bonusTime = -1;
         if (inputBonus.text.IsNullEmptyOrWhitespace())
         {
-            Debug.LogError("bonus null");
             toggleBonus.SetIsOnWithoutNotify(false);
         }
         else
@@ -218,7 +216,6 @@ public class GameSettingsPanel : MonoBehaviour
         {
             if (inputError.text.IsNullEmptyOrWhitespace())
             {
-                Debug.LogError("error null");
                 toggleError.SetIsOnWithoutNotify(false);
             }
             else

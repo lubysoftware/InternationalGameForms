@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using API;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using Proyecto26;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public class FileUpload : BaseApi
@@ -39,7 +40,7 @@ public class FileUpload : BaseApi
             Timeout = 15,
             Body = files
         };
-
+    
         Api.Delete(currentRequest, onSuccess, onError);
     }
     
@@ -49,4 +50,17 @@ public class FileUpload : BaseApi
 public class FilesToDelete
 {
     public List<string> fileNames;
+    
+    public FilesToDelete(){}
+
+    public FilesToDelete(List<string> fileNames)
+    {
+        this.fileNames = new List<string>();
+        
+        foreach (var url in fileNames)
+        {
+            string fileName = url.Replace("https://stg1atividades.blob.core.windows.net/arquivos/", string.Empty);
+            this.fileNames.Add(fileName);
+        }
+    }
 }
