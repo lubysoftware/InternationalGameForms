@@ -1,9 +1,12 @@
 using System;
 using LubyLib.Core.Singletons;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GlobalSettings : SimpleSingleton<GlobalSettings>
 {
+    public UnityEvent OnSetup;
+    
     /// <summary>
     /// True caso o usuário abriu o formulário a partir da criação/edição de uma trilha.
     /// Usado para ativar ou desativar o botão de adicionar uma atividade à trilha que está sendo editada.
@@ -14,11 +17,11 @@ public class GlobalSettings : SimpleSingleton<GlobalSettings>
     {
         get
         {
-//#if UNITY_EDITOR
+#if UNITY_EDITOR
             return "Bearer Luby2021";
-//#else
-            //return _userToken;
-//#endif
+#else
+            return _userToken;
+#endif
         }
         private set => _userToken = value;
     }
@@ -33,6 +36,8 @@ public class GlobalSettings : SimpleSingleton<GlobalSettings>
         
         UserToken = setup.userToken;
         OpenedFromPath = setup.openedFromPath;
+        
+        OnSetup?.Invoke();
     }
 }
 

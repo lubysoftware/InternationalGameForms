@@ -18,7 +18,7 @@ public class UploadFileElement : InputElement
     [SerializeField] protected Button deleteFile;
     [SerializeField] public Image showImage;
     [SerializeField] private bool isMultipleFiles = false;
-    private AudioSource _audioSource;
+    [SerializeField] private AudioSource _audioSource;
     [SerializeField] protected bool isImage;
     [SerializeField] private Button playAudio;
     [SerializeField] private Button pauseAudio;
@@ -288,6 +288,11 @@ public class UploadFileElement : InputElement
     {
         fileData.gameObject.SetActive(true);
         fileData.text = $"{fileName}";
+        if (_audioSource == null)
+        {
+            _audioSource = GetComponent<AudioSource>();
+        }
+        
         _audioSource.clip = clip;
         _audioData = GetAudioData();
         playAudio.gameObject.SetActive(true);
