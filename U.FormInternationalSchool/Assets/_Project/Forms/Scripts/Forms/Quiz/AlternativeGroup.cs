@@ -76,12 +76,12 @@ public class AlternativeGroup : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<LayoutGroup>().transform as RectTransform);
     }
 
-    public List<string> GetTextAnswers()
+    public List<string> GetTextAnswers(int qtt)
     {
         List<string> answers = new List<string>();
-        foreach (var item in alternatives)
+        for (int i = 0; i < qtt; i++)
         {
-            answers.Add(item.GetText());
+            answers.Add(alternatives[i].GetText());
         }
 
         return answers;

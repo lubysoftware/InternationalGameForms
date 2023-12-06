@@ -440,9 +440,11 @@ public class QuestionManager : MonoBehaviour
 
         List<string> answersUrls = new List<string>();
         
+        int qtt;
+        int.TryParse(alternativeQtt.options[alternativeQtt.value].text, out qtt);
         if (alternativeType.value == (int)QuestionsGroup.InputType.TEXT)
         {
-            answersUrls = alternativesGroup.GetTextAnswers();
+            answersUrls = alternativesGroup.GetTextAnswers(qtt);
         }
         else
         {
@@ -458,10 +460,6 @@ public class QuestionManager : MonoBehaviour
                     {
                         answersUrls.Add(fileList[index]);
                         index++;
-                    }
-                    else
-                    {
-                        answersUrls.Add("");
                     }
                 }
             }
