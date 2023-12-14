@@ -15,7 +15,8 @@ MonoBehaviour:
   gameType: 0
   title: Image Sequencing
   sprite: {fileID: 21300000, guid: 84477df7ff9ecc247aba85885a90ac87, type: 3}
-  description: description
+  headerSprite: {fileID: 21300000, guid: 1ea86240f0023eb46a9ef1c737d31f42, type: 3}
+  description: Coloque tudo em ordem!
   url: image-sequence
   isActive: 1
   colors:

@@ -15,7 +15,8 @@ MonoBehaviour:
   gameType: 5
   title: Memory Game
   sprite: {fileID: 21300000, guid: 4b26b27786289b94e98cd60c9798c3b8, type: 3}
-  description: description
+  headerSprite: {fileID: 21300000, guid: f6e4a1e42040b524cbdeefe079123c9c, type: 3}
+  description: "Treine sua mem\xF3ria!"
   url: match-cards
   isActive: 1
   colors:
