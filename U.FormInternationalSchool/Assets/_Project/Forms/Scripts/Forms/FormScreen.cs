@@ -126,7 +126,7 @@ public class FormScreen : MonoBehaviour
         SetCanClick(true);
     }
 
-    public void SaveDataFail()
+    public void FinishSaveData()
     {
         StopLoading();
         SetCanClick(true);
@@ -820,7 +820,7 @@ public class FormScreen : MonoBehaviour
 
         errorText.text = error;
         errorPanel.gameObject.SetActive(true);
-        SaveDataFail();
+        FinishSaveData();
     }
     
 
