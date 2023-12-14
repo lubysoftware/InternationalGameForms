@@ -15,7 +15,8 @@ MonoBehaviour:
   gameType: 2
   title: Cross Words
   sprite: {fileID: 21300000, guid: 77f8b3be32446b0488c8233f1516829d, type: 3}
-  description: description
+  headerSprite: {fileID: 21300000, guid: 096d270eb4ee9fe489e5aa7a818dfad0, type: 3}
+  description: Descubra as palavras!
   url: cross-word
   isActive: 1
   colors:

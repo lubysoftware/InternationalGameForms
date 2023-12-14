@@ -12,6 +12,7 @@ public class GameTypeSO : ScriptableObject
    public GameType gameType;
    public string title;
    public Sprite sprite;
+   public Sprite headerSprite;
    public string description;
    public string url;
    public bool isActive;

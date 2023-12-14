@@ -12,6 +12,9 @@ public class GameTypeButton : MonoBehaviour
     [SerializeField] private TextMeshProUGUI description;
     [SerializeField] private TextMeshProUGUI title;
     [SerializeField] private Button button;
+
+    [SerializeField] private Image _headerImage;
+    
     private Image image;
 
     private GameTypeSO so;
@@ -21,6 +24,7 @@ public class GameTypeButton : MonoBehaviour
         description.text = so.description;
         title.text = so.title;
         GetComponent<Image>().sprite = so.sprite;
+        _headerImage.sprite = so.headerSprite;
         button.interactable = so.isActive;
         this.so = so;
         if (so.isActive)

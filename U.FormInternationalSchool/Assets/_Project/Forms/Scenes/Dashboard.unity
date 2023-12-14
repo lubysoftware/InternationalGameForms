@@ -351,10 +351,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23993789cad5017418373084758ed498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeployEnvironment: 2
+  DeployEnvironment: 1
   DeploymentEnvironments:
   - {fileID: 11400000, guid: 10357ef691619b54cbabdaf959d4abec, type: 2}
   - {fileID: 11400000, guid: 5b8328e22b94cc840aaa694663bba728, type: 2}
+  - {fileID: 11400000, guid: ce4949dad8b845944b4fd2c4debd9a67, type: 2}
 --- !u!4 &273825881
 Transform:
   m_ObjectHideFlags: 0
@@ -992,7 +993,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
