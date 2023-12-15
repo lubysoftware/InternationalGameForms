@@ -39,7 +39,7 @@ public class DragDropForm : FormScreen
         {
             loadFileQtt = 1;
             FillUploadFiles(backgroundMusic, "music_theme",
-                "https://stg1atividades.blob.core.windows.net/arquivos/c0c977d6-ba42-43ea-94c2-29793d77889d_name.004_dragndrop.ogg");
+                themeSongsUrls[GameType.DRAGNDROP]);
         }
     }
 

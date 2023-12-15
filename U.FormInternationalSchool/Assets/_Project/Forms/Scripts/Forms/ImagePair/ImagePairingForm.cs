@@ -25,7 +25,7 @@ public class ImagePairingForm : FormScreen
         if (!isEdit)
         {
             loadFileQtt=1;
-            FillUploadFiles(backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/1e793b75-8a67-4dbd-8bf8-38ffc8e99beb_name.002_img_pairing.ogg");
+            FillUploadFiles(backgroundMusic,"music_theme",themeSongsUrls[GameType.IMAGE_PARING]);
         }
     }
     public override void FinishDownloadingGame(string text)

@@ -28,7 +28,7 @@ public class CrosswordForm : FormScreen
         if (!isEdit)
         {
             loadFileQtt=1;
-            FillUploadFiles( backgroundMusic,"music_theme","https://stg1atividades.blob.core.windows.net/arquivos/97bf793e-3497-44e5-a698-5890314692db_name.005_crosswords.ogg");
+            FillUploadFiles( backgroundMusic,"music_theme",themeSongsUrls[GameType.CROSS_WORD]);
         }
     }
     

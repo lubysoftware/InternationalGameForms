@@ -34,7 +34,7 @@ public class ImageSequencingForm : FormScreen
         {
             loadFileQtt = 1;
             FillUploadFiles(backgroundMusic, "music_theme",
-                "https://stg1atividades.blob.core.windows.net/arquivos/0c917c36-1e93-489a-a4d0-e4327cffc752_name.001_img_sequencing.ogg");
+                themeSongsUrls[GameType.IMAGE_SEQUENCE]);
         }
     }
 

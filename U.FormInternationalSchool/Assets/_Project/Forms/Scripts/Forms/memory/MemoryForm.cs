@@ -23,6 +23,7 @@ public class MemoryForm : FormScreen
 
     private string backImagePath = "";
 
+    
 
     protected override void Start()
     {
@@ -33,7 +34,7 @@ public class MemoryForm : FormScreen
         {
             loadFileQtt = 2;
             FillUploadFiles(backgroundMusic, "music_theme",
-                "https://stg1atividades.blob.core.windows.net/arquivos/6c3eafb6-76af-4cd4-a467-c3edcaf68161_name.007_memory.ogg");
+                themeSongsUrls[GameType.MATCH_CARD]);
             FillUploadFiles(backCardImage.Image, "back_card",
                 "https://stg1atividades.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
         }
