@@ -36,7 +36,7 @@ public class MemoryForm : FormScreen
             FillUploadFiles(backgroundMusic, "music_theme",
                 themeSongsUrls[GameType.MATCH_CARD]);
             FillUploadFiles(backCardImage.Image, "back_card",
-                "https://stg1atividades.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
+                "https://edtechprojetos.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
         }
     }
 

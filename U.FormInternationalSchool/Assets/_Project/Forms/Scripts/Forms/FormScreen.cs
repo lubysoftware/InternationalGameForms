@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -42,6 +43,7 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private Button backButton;
     [SerializeField] private Button previewForm;
     [SerializeField] private Sprite inputImage;
+    [Space] [SerializeField] protected TextMeshProUGUI _updateDateText;
 
     protected FormBase game = new FormBase();
 
@@ -79,33 +81,32 @@ public class FormScreen : MonoBehaviour
     {
         {
             GameType.CROSS_WORD,
-            "https://stg1atividades.blob.core.windows.net/arquivos/97bf793e-3497-44e5-a698-5890314692db_name.005_crosswords.ogg"
+            "https://edtechprojetos.blob.core.windows.net/arquivos/97bf793e-3497-44e5-a698-5890314692db_name.005_crosswords.ogg"
         },
         {
             GameType.DRAGNDROP,
-            "https://stg1atividades.blob.core.windows.net/arquivos/c0c977d6-ba42-43ea-94c2-29793d77889d_name.004_dragndrop.ogg"
+            "https://edtechprojetos.blob.core.windows.net/arquivos/c0c977d6-ba42-43ea-94c2-29793d77889d_name.004_dragndrop.ogg"
         },
         {
             GameType.IMAGE_PARING,
-            "https://stg1atividades.blob.core.windows.net/arquivos/1e793b75-8a67-4dbd-8bf8-38ffc8e99beb_name.002_img_pairing.ogg"
+            "https://edtechprojetos.blob.core.windows.net/arquivos/1e793b75-8a67-4dbd-8bf8-38ffc8e99beb_name.002_img_pairing.ogg"
         },
         {
             GameType.IMAGE_SEQUENCE,
-            "https://stg1atividades.blob.core.windows.net/arquivos/0c917c36-1e93-489a-a4d0-e4327cffc752_name.001_img_sequencing.ogg"
+            "https://edtechprojetos.blob.core.windows.net/arquivos/0c917c36-1e93-489a-a4d0-e4327cffc752_name.001_img_sequencing.ogg"
         },
         {
             GameType.PUZZLE,
-            "https://stg1atividades.blob.core.windows.net/arquivos/3cd23a4c-f710-454e-9a2f-7244cadbadc7_name.006_puzzle.ogg"
+            "https://edtechprojetos.blob.core.windows.net/arquivos/3cd23a4c-f710-454e-9a2f-7244cadbadc7_name.006_puzzle.ogg"
         },
         {
             GameType.QUIZ,
-            "https://stg1atividades.blob.core.windows.net/arquivos/3ddfb2ca-57b5-4489-b4cd-7c1c2ff3d7f1_name.003_quiz.ogg"
+            "https://edtechprojetos.blob.core.windows.net/arquivos/3ddfb2ca-57b5-4489-b4cd-7c1c2ff3d7f1_name.003_quiz.ogg"
         },
         {
             GameType.MATCH_CARD,
-            "https://stg1atividades.blob.core.windows.net/arquivos/6c3eafb6-76af-4cd4-a467-c3edcaf68161_name.007_memory.ogg"
-        },
-        
+            "https://edtechprojetos.blob.core.windows.net/arquivos/6c3eafb6-76af-4cd4-a467-c3edcaf68161_name.007_memory.ogg"
+        }
     };
 
     protected virtual void Start()
@@ -447,6 +448,10 @@ public class FormScreen : MonoBehaviour
         title.InputField.text = baseForm.gameTitle;
         statement_EN.InputField.text = baseForm.questionStatementEnglishVersion;
         statement_PT.InputField.text = baseForm.questionStatementPortugueseVersion;
+
+        _updateDateText.enabled = true;
+        _updateDateText.text = $"Alterado em: {DateTime.ParseExact(baseForm.updated_at, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture).ToString(CultureInfo.CurrentCulture)}";
+        
         timer.SetIsOnWithoutNotify(baseForm.hasTimer);
         if (baseForm.hasTimer)
         {
