@@ -368,11 +368,14 @@ public class QuestionManager : MonoBehaviour
         {
             filledUrls.Add(FILE, "");
         }
-
-        if(alternativesGroup.GetFiles().Count > 0)
-            files.AddRange(alternativesGroup.GetFiles());
-        if(alternativesGroup.FilledImages().Count > 0)
-            filledUrls.AddRange(alternativesGroup.FilledImages());
+        int qtt;
+        int.TryParse(alternativeQtt.options[alternativeQtt.value].text, out qtt);
+        List<File> getFiles = alternativesGroup.GetFiles(qtt);
+        if(getFiles.Count > 0)
+            files.AddRange(getFiles);
+        Dictionary<string, string> dictFilled = alternativesGroup.FilledImages(qtt);
+        if(dictFilled.Count > 0)
+            filledUrls.AddRange(dictFilled);
         if (files.Count > 0)
         {
             SendFilesPack(files);
@@ -440,17 +443,19 @@ public class QuestionManager : MonoBehaviour
 
         List<string> answersUrls = new List<string>();
         
+        int qtt;
+        int.TryParse(alternativeQtt.options[alternativeQtt.value].text, out qtt);
         if (alternativeType.value == (int)QuestionsGroup.InputType.TEXT)
         {
-            answersUrls = alternativesGroup.GetTextAnswers();
+            answersUrls = alternativesGroup.GetTextAnswers(qtt);
         }
         else
         {
-            foreach (var letter  in alternativesGroup.Letters)
+            for (int i = 0;i < qtt; i++)
             {
-                if (filledUrls.ContainsKey(letter.ToString()))
+                if (filledUrls.ContainsKey(alternativesGroup.Letters[i].ToString()))
                 {
-                    answersUrls.Add(filledUrls[letter.ToString()]);
+                    answersUrls.Add(filledUrls[alternativesGroup.Letters[i].ToString()]);
                 }
                 else
                 {
@@ -459,11 +464,7 @@ public class QuestionManager : MonoBehaviour
                         answersUrls.Add(fileList[index]);
                         index++;
                     }
-                    else
-                    {
-                        answersUrls.Add("");
-                    }
-                }
+                } 
             }
         }
        

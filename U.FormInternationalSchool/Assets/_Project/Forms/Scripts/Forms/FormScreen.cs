@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -42,6 +43,7 @@ public class FormScreen : MonoBehaviour
     [SerializeField] private Button backButton;
     [SerializeField] private Button previewForm;
     [SerializeField] private Sprite inputImage;
+    [Space] [SerializeField] protected TextMeshProUGUI _updateDateText;
 
     protected FormBase game = new FormBase();
 
@@ -73,6 +75,39 @@ public class FormScreen : MonoBehaviour
     protected List<string> oldUrlsToDelete;
 
     private DefaultSettings settings;
+    
+
+    protected Dictionary<GameType, string> themeSongsUrls = new Dictionary<GameType, string>()
+    {
+        {
+            GameType.CROSS_WORD,
+            "https://edtechprojetos.blob.core.windows.net/arquivos/97bf793e-3497-44e5-a698-5890314692db_name.005_crosswords.ogg"
+        },
+        {
+            GameType.DRAGNDROP,
+            "https://edtechprojetos.blob.core.windows.net/arquivos/c0c977d6-ba42-43ea-94c2-29793d77889d_name.004_dragndrop.ogg"
+        },
+        {
+            GameType.IMAGE_PARING,
+            "https://edtechprojetos.blob.core.windows.net/arquivos/1e793b75-8a67-4dbd-8bf8-38ffc8e99beb_name.002_img_pairing.ogg"
+        },
+        {
+            GameType.IMAGE_SEQUENCE,
+            "https://edtechprojetos.blob.core.windows.net/arquivos/0c917c36-1e93-489a-a4d0-e4327cffc752_name.001_img_sequencing.ogg"
+        },
+        {
+            GameType.PUZZLE,
+            "https://edtechprojetos.blob.core.windows.net/arquivos/3cd23a4c-f710-454e-9a2f-7244cadbadc7_name.006_puzzle.ogg"
+        },
+        {
+            GameType.QUIZ,
+            "https://edtechprojetos.blob.core.windows.net/arquivos/3ddfb2ca-57b5-4489-b4cd-7c1c2ff3d7f1_name.003_quiz.ogg"
+        },
+        {
+            GameType.MATCH_CARD,
+            "https://edtechprojetos.blob.core.windows.net/arquivos/6c3eafb6-76af-4cd4-a467-c3edcaf68161_name.007_memory.ogg"
+        }
+    };
 
     protected virtual void Start()
     {
@@ -126,7 +161,7 @@ public class FormScreen : MonoBehaviour
         SetCanClick(true);
     }
 
-    public void SaveDataFail()
+    public void FinishSaveData()
     {
         StopLoading();
         SetCanClick(true);
@@ -413,6 +448,10 @@ public class FormScreen : MonoBehaviour
         title.InputField.text = baseForm.gameTitle;
         statement_EN.InputField.text = baseForm.questionStatementEnglishVersion;
         statement_PT.InputField.text = baseForm.questionStatementPortugueseVersion;
+
+        _updateDateText.enabled = true;
+        _updateDateText.text = $"Alterado em: {DateTime.ParseExact(baseForm.updated_at, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture).ToString(CultureInfo.CurrentCulture)}";
+        
         timer.SetIsOnWithoutNotify(baseForm.hasTimer);
         if (baseForm.hasTimer)
         {
@@ -759,17 +798,22 @@ public class FormScreen : MonoBehaviour
         PortalBridge.Instance.OnGameCreatedEvent(responseJson);
     }
 
-    public void DeleteOldFiles(string json)
+    protected void DeleteOldFiles(string json)
     {
+        List<string> urlsToIgnore = themeSongsUrls.Values.ToList();
+        urlsToIgnore.Add("https://stg1atividades.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
+        
         List<string> urls = new List<string>();
+        
         foreach (string url in oldUrlsToDelete)
         {
-            if (!json.Contains(url))
+            if (!json.Contains(url) && !urlsToIgnore.Contains(url))
             {
                 urls.Add(url);
             }
         }
         oldUrlsToDelete.Clear();
+        
         SendFilesToAPI.Instance.DeleteOldFiles(urls);
     }
     
@@ -820,7 +864,7 @@ public class FormScreen : MonoBehaviour
 
         errorText.text = error;
         errorPanel.gameObject.SetActive(true);
-        SaveDataFail();
+        FinishSaveData();
     }
     
 

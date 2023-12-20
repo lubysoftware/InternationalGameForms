@@ -23,7 +23,7 @@ public class QuizForm : FormScreen
         {
             loadFileQtt = 1;
             FillUploadFiles(backgroundMusic, "music_theme",
-                "https://stg1atividades.blob.core.windows.net/arquivos/3ddfb2ca-57b5-4489-b4cd-7c1c2ff3d7f1_name.003_quiz.ogg");
+                themeSongsUrls[GameType.QUIZ]);
         }
     }
 

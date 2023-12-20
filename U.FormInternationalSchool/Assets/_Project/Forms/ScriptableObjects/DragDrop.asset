@@ -15,7 +15,8 @@ MonoBehaviour:
   gameType: 6
   title: Drag and Drop
   sprite: {fileID: 21300000, guid: d83f129b62035c24299853dd43ad28db, type: 3}
-  description: description
+  headerSprite: {fileID: 21300000, guid: 9ca6f2131716ad146ab0071dbfa2c870, type: 3}
+  description: "Encaixe as pe\xE7as no lugar certo!"
   url: dragndrop
   isActive: 1
   colors:

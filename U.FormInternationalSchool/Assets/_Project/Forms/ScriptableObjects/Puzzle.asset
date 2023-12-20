@@ -15,7 +15,8 @@ MonoBehaviour:
   gameType: 4
   title: Puzzle
   sprite: {fileID: 21300000, guid: d585559222e9bb149a21a78e0de82271, type: 3}
-  description: description
+  headerSprite: {fileID: 21300000, guid: 7ecfb8fbd07ac2740b5cfda5fee657e0, type: 3}
+  description: "Monte o Quebra-Cabe\xE7a!"
   url: puzzle
   isActive: 1
   colors:

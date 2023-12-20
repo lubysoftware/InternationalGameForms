@@ -15,7 +15,8 @@ MonoBehaviour:
   gameType: 1
   title: Image Pairing
   sprite: {fileID: 21300000, guid: 92d6df67463da314caaf7494a7002787, type: 3}
-  description: description
+  headerSprite: {fileID: 21300000, guid: 5625facfead2a094dbbbf24f7afdcc80, type: 3}
+  description: "Fa\xE7a pares com as imagens!"
   url: image-paring
   isActive: 1
   colors:

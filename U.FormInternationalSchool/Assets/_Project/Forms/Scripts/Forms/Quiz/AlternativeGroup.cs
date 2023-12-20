@@ -76,38 +76,38 @@ public class AlternativeGroup : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<LayoutGroup>().transform as RectTransform);
     }
 
-    public List<string> GetTextAnswers()
+    public List<string> GetTextAnswers(int qtt)
     {
         List<string> answers = new List<string>();
-        foreach (var item in alternatives)
+        for (int i = 0; i < qtt; i++)
         {
-            answers.Add(item.GetText());
+            answers.Add(alternatives[i].GetText());
         }
 
         return answers;
     }
     
-    public List<File> GetFiles()
+    public List<File> GetFiles(int qtt)
     {
         List<File> files = new List<File>();
-        foreach (var item in alternatives)
+        for(int i = 0; i < qtt; i++)
         {
-            if (item.IsCompleted() && !item.IsFilled)
+            if (alternatives[i].IsCompleted() && !alternatives[i].IsFilled)
             {
-                files.Add(item.GetFile());
+                files.Add(alternatives[i].GetFile());
             }
         }
         return files;
     }
 
-    public Dictionary<string,string> FilledImages()
+    public Dictionary<string,string> FilledImages(int qtt)
     {
         Dictionary<string, string> listFilledImages = new Dictionary<string, string>();
-        foreach (var item in alternatives)
+        for(int i = 0; i < qtt; i++)
         {
-            if (item.IsCompleted() && item.IsFilled)
+            if (alternatives[i].IsCompleted() && alternatives[i].IsFilled)
             {
-                listFilledImages.Add(item.Index.ToString(),item.GetFilledUrl());
+                listFilledImages.Add(alternatives[i].Index.ToString(),alternatives[i].GetFilledUrl());
             }
         }
 
@@ -130,7 +130,7 @@ public class AlternativeGroup : MonoBehaviour
     public int FillAlternativeGroup(List<AnswerGet> answers, int selectedAnswer, FormScreen form, QuestionsGroup.InputType type)
     {
         int count = 0;
-        for(int i =0;i < alternatives.Count; i++)
+        for(int i =0;i < answers.Count; i++)
         {
             if (!answers[i].answer.IsNullEmptyOrWhitespace())
             {

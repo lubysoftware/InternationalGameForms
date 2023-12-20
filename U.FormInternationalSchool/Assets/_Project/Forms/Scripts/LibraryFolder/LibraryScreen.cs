@@ -5,6 +5,7 @@ using LubyLib.Core;
 using LubyLib.Core.Extensions;
 using Newtonsoft.Json;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,7 +16,8 @@ public class LibraryScreen : MonoBehaviour
     [SerializeField] private Button newGame;
     [SerializeField] private Button backButton;
     [SerializeField] private TMP_InputField searchTitle;
-
+    [SerializeField] private Button searchButton;
+    
     [SerializeField] private GameComponent[] component;
     [SerializeField] private LoadingDots loading;
     [SerializeField] private DeleteGamePanel confirmDialog;
@@ -28,7 +30,7 @@ public class LibraryScreen : MonoBehaviour
 
     [SerializeField] private GameSettingsPanel settingsPanel;
     [SerializeField] private Button settings;
-
+    
     private GameTypeSO so;
 
     private int gameId;
@@ -45,6 +47,7 @@ public class LibraryScreen : MonoBehaviour
         nextPage.onClick.AddListener(OnClickNext);
         previousPage.onClick.AddListener(OnClickPrevious);
         settings.onClick.AddListener(OpenSettings);
+        searchButton.onClick.AddListener(OnSearchButton);
         SceneDataCarrier.AddData(Constants.GAME_SETTINGS,new DefaultSettings());
         SceneDataCarrier.GetData(Constants.GAME_SO, out so);
         loading.SetColors(so.colors[0], so.colors[1]);
@@ -65,6 +68,7 @@ public class LibraryScreen : MonoBehaviour
         newGame.image.color = so.colors[1];
         settings.image.color = so.colors[0];
         searchTitle.image.color = so.colors[3];
+        searchButton.image.color = so.colors[0];
         title.text = so.title;
 
         //scroll
@@ -142,7 +146,7 @@ public class LibraryScreen : MonoBehaviour
         SceneManager.LoadScene("Dashboard");
     }
 
-    public void OnSearchEndEdit()
+    public void OnSearchButton()
     {
         DownloadData(1);
     }

@@ -29,10 +29,21 @@ public class GlobalSettings : SimpleSingleton<GlobalSettings>
     private string _userToken;
     
     protected override bool DestroyOnLoad => false;
-
+    
     public void Setup(string setupConfig)
     {
         SetupConfig setup = JsonUtility.FromJson<SetupConfig>(setupConfig);
+        
+        UserToken = setup.userToken;
+        OpenedFromPath = setup.openedFromPath;
+        
+        OnSetup?.Invoke();
+    }
+    
+    [ContextMenu("Setup Test")]
+    public void SetupTest()
+    {
+        SetupConfig setup = new SetupConfig { userToken = "Bearer Luby2021", openedFromPath = true };
         
         UserToken = setup.userToken;
         OpenedFromPath = setup.openedFromPath;
