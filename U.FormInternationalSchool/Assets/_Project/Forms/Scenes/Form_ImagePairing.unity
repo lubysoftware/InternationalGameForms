@@ -128,6 +128,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2200035958990165319, guid: e5bf6e59baeea544d989c28e74e640d6, type: 3}
   m_PrefabInstance: {fileID: 1640872046}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &735729251 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9084056110345432998, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+  m_PrefabInstance: {fileID: 1797403793}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1016274102 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7313233730318637664, guid: 9d35766ff7b40be419d3ee2b39e57674, type: 3}
@@ -1736,7 +1747,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8276339890387360604, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 244.1547
       objectReference: {fileID: 0}
     - target: {fileID: 8292039928620292281, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1786,6 +1797,22 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 3ba41fb955898a34f86189706d68d79c, type: 3}
+    - target: {fileID: 8602232124051399897, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8602232124051399897, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8602232124051399897, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8602232124051399897, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8749364698906948468, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
       propertyPath: m_Name
       value: YesButton
@@ -2062,6 +2089,7 @@ MonoBehaviour:
   backButton: {fileID: 1797403813}
   previewForm: {fileID: 1050168160}
   inputImage: {fileID: 21300000, guid: 4482d9ad7c2cbb1448542d6bb23b6de6, type: 3}
+  _updateDateText: {fileID: 735729251}
   loadFileQtt: 0
   isEdit: 0
   so: {fileID: 11400000, guid: dcbf445db116630479e93bbea47a9243, type: 2}

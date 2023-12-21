@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using FrostweepGames.Plugins.WebGLFileBrowser;
 using LubyLib.Core;
 using LubyLib.Core.Extensions;
@@ -26,35 +24,29 @@ public class MemoryForm : FormScreen
     private Texture2D deafultBackcardSprite;
     private string backImagePath = "";
 
-    
-
     protected override void Start()
     {
         base.Start();
         isEdit = false;
         deleteBackCard.onClick.AddListener(OnDeleteBackCard);
         SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
+        SendFilesToAPI.Instance.StartDownloadImageForm(this, "https://edtechprojetos.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
         if (!isEdit)
         {
             loadFileQtt = 2;
             FillUploadFiles(backgroundMusic, "music_theme",
                 themeSongsUrls[GameType.MATCH_CARD]);
             FillUploadFiles(backCardImage.Image, "back_card",
-                "https://stg1atividades.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
-        }
-        else
-        {
-            SendFilesToAPI.Instance.StartDownloadImageForm(this, "https://stg1atividades.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
+                "https://edtechprojetos.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
         }
     }
 
     public override void FinishDownloadingGame(string text)
     {
-        if (text != null)
-        {
-            FillBaseData(JsonConvert.DeserializeObject<BaseGameJson>(text));
-            FillGameData(JsonConvert.DeserializeObject<MemoryJsonGet>(text));
-        }
+        if (string.IsNullOrEmpty(text)) return;
+
+        FillBaseData(JsonConvert.DeserializeObject<BaseGameJson>(text));
+        FillGameData(JsonConvert.DeserializeObject<MemoryJsonGet>(text));
     }
 
 
@@ -126,7 +118,7 @@ public class MemoryForm : FormScreen
         ValidateFields();
     }
 
-    protected virtual void ValidateFields()
+    protected override void ValidateFields()
     {
         base.ValidateFields();
         if (hasValidationError) return;
@@ -252,12 +244,11 @@ public class MemoryForm : FormScreen
                 previewData = preview,
                 filesToDelete = previewUrlsToDelete
             };
-            
+
             string json = JsonConvert.SerializeObject(previewData);
             PreviewInPortal(json);
             StopLoading();
         }
-
     }
 
     private void FillGameData(MemoryJsonGet json)
@@ -282,8 +273,8 @@ public class MemoryForm : FormScreen
         if (time >= 0)
         {
             timeInSec = time;
-            FillTimerText(oneStar,timeInSec * 0.3f);
-            FillTimerText(twoStars,timeInSec * 0.7f);
+            FillTimerText(oneStar, timeInSec * 0.3f);
+            FillTimerText(twoStars, timeInSec * 0.7f);
             FillTimerText(threeStars, timeInSec);
         }
     }
@@ -298,13 +289,14 @@ public class MemoryForm : FormScreen
             hour = min / 60;
             min = min - hour * 60;
         }
+
         if (hour > 0)
         {
-            field.text =  String.Format("{0:00}:{1:00}:{2:00}", hour,min,sec);
+            field.text = String.Format("{0:00}:{1:00}:{2:00}", hour, min, sec);
         }
         else
         {
-            field.text =  String.Format("{0:00}:{1:00}", min,sec);
+            field.text = String.Format("{0:00}:{1:00}", min, sec);
         }
     }
 
@@ -317,7 +309,7 @@ public class MemoryForm : FormScreen
     {
         deafultBackcardSprite = texture;
     }
-
+    
 }
 
 [Serializable]
@@ -347,5 +339,3 @@ public class MatchCardPreview
     public FormMatchCardPreviewData previewData;
     public List<string> filesToDelete;
 }
-
-

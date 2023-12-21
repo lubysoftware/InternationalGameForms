@@ -14,11 +14,11 @@ public class GlobalSettings : SimpleSingleton<GlobalSettings>
     {
         get
         {
-//#if UNITY_EDITOR
+#if UNITY_EDITOR
             return "Bearer Luby2021";
-//#else
-            //return _userToken;
-//#endif
+#else
+            return _userToken;
+#endif
         }
         private set => _userToken = value;
     }

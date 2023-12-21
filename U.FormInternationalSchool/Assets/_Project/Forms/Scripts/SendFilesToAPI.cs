@@ -280,6 +280,9 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
     {
         if (filesToDelete == null || filesToDelete.Count == 0)
             return;
+        
+        RestClient.DefaultRequestHeaders["Authorization"] = GlobalSettings.Instance.UserToken;
+        
         APIFactory.GetApi<FileUpload>().DeleteFile(new FilesToDelete(filesToDelete),
             list =>
             {
