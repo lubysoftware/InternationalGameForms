@@ -1272,7 +1272,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5608244869116636485, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5681050381262933948, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1481,6 +1481,26 @@ PrefabInstance:
     - target: {fileID: 6657196100857880344, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6682585335015518081, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6682585335015518081, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6682585335015518081, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6682585335015518081, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6682585335015518081, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
+      propertyPath: m_Maskable
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6685093887813795252, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
       propertyPath: m_Color.b
@@ -2767,7 +2787,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7963040356156963976, guid: 621e020ec07b9b14eaa71ceb69de9826, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 401
       objectReference: {fileID: 0}
     - target: {fileID: 7963040356156963976, guid: 621e020ec07b9b14eaa71ceb69de9826, type: 3}
       propertyPath: m_AnchoredPosition.y
