@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class MemoryForm : FormScreen
 {
@@ -21,6 +22,8 @@ public class MemoryForm : FormScreen
     [SerializeField] private TextMeshProUGUI twoStars;
     [SerializeField] private TextMeshProUGUI threeStars;
 
+    [SerializeField] private Button deleteBackCard;
+    private Texture2D deafultBackcardSprite;
     private string backImagePath = "";
 
     
@@ -29,6 +32,7 @@ public class MemoryForm : FormScreen
     {
         base.Start();
         isEdit = false;
+        deleteBackCard.onClick.AddListener(OnDeleteBackCard);
         SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
         if (!isEdit)
         {
@@ -37,6 +41,10 @@ public class MemoryForm : FormScreen
                 themeSongsUrls[GameType.MATCH_CARD]);
             FillUploadFiles(backCardImage.Image, "back_card",
                 "https://stg1atividades.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
+        }
+        else
+        {
+            SendFilesToAPI.Instance.StartDownloadImageForm(this, "https://stg1atividades.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
         }
     }
 
@@ -298,6 +306,16 @@ public class MemoryForm : FormScreen
         {
             field.text =  String.Format("{0:00}:{1:00}", min,sec);
         }
+    }
+
+    public void OnDeleteBackCard()
+    {
+        backCardImage.Image.FinishedDownloadFileData(deafultBackcardSprite);
+    }
+    
+    public override void FinishDownloadImage(Texture2D texture)
+    {
+        deafultBackcardSprite = texture;
     }
 
 }

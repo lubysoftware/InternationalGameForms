@@ -2094,6 +2094,7 @@ MonoBehaviour:
   oneStar: {fileID: 235234854}
   twoStars: {fileID: 1231975697}
   threeStars: {fileID: 847875902}
+  deleteBackCard: {fileID: 2246942055427749121}
 --- !u!224 &1797403822 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8276339890387360604, guid: 54226f84bea1a0847a28ac4c78c6412a, type: 3}
@@ -2856,6 +2857,17 @@ PrefabInstance:
 --- !u!114 &2246942055427749120 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4782342316611343270, guid: 621e020ec07b9b14eaa71ceb69de9826, type: 3}
+  m_PrefabInstance: {fileID: 2246942055427749119}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2246942055427749121 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2194615963585791153, guid: 621e020ec07b9b14eaa71ceb69de9826, type: 3}
   m_PrefabInstance: {fileID: 2246942055427749119}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

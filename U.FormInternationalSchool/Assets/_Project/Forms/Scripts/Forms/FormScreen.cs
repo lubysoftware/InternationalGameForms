@@ -873,6 +873,10 @@ public class FormScreen : MonoBehaviour
         
     }
 
+    public virtual void FinishDownloadImage(Texture2D texture)
+    {
+    }
+
 
 }
 
