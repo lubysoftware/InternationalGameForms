@@ -87,7 +87,7 @@ public class CrosswordForm : FormScreen
         ValidateFields();
     }
 
-    protected virtual void ValidateFields()
+    protected override void ValidateFields()
     {
         base.ValidateFields();
         if (hasValidationError) return;
