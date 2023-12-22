@@ -21,8 +21,9 @@ public class MemoryForm : FormScreen
     [SerializeField] private TextMeshProUGUI threeStars;
 
     [SerializeField] private Button deleteBackCard;
-    private Texture2D deafultBackcardSprite;
     private string backImagePath = "";
+    
+    private string defaultBackCardPath ="https://edtechprojetos.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png";
 
     protected override void Start()
     {
@@ -30,14 +31,13 @@ public class MemoryForm : FormScreen
         isEdit = false;
         deleteBackCard.onClick.AddListener(OnDeleteBackCard);
         SceneDataCarrier.GetData(Constants.IS_EDIT, out isEdit);
-        SendFilesToAPI.Instance.StartDownloadImageForm(this, "https://edtechprojetos.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
         if (!isEdit)
         {
             loadFileQtt = 2;
             FillUploadFiles(backgroundMusic, "music_theme",
                 themeSongsUrls[GameType.MATCH_CARD]);
             FillUploadFiles(backCardImage.Image, "back_card",
-                "https://edtechprojetos.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
+                defaultBackCardPath);
         }
     }
 
@@ -302,12 +302,7 @@ public class MemoryForm : FormScreen
 
     public void OnDeleteBackCard()
     {
-        backCardImage.Image.FinishedDownloadFileData(deafultBackcardSprite);
-    }
-    
-    public override void FinishDownloadImage(Texture2D texture)
-    {
-        deafultBackcardSprite = texture;
+        backCardImage.Image.FillData(name, defaultBackCardPath);
     }
     
 }
