@@ -28,11 +28,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 #define WEBGL_COPY_AND_PASTE_SUPPORT_TEXTMESH_PRO
+
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Runtime.InteropServices;
-using UnityEngine.UIElements;
 
 public class WebGLCopyAndPasteAPI
 {
@@ -95,40 +96,7 @@ public class WebGLCopyAndPasteAPI
       private static void GetClipboard(string key)
       {
         SendKey(key);
-        var eltInFocus = ElementInFocus();
-        if (eltInFocus != null)
-        {
-          // add a delay because the copy buffer is not filled in immediately
-          (eltInFocus as VisualElement).schedule.Execute(() =>
-          {
-            passCopyToBrowser(GUIUtility.systemCopyBuffer);
-          }).StartingIn(100);
-        }
-      }
-      
-      public static Focusable ElementInFocus()
-      {
-        EventSystem eventSystem = EventSystem.current;
-        if (eventSystem == null)
-        {
-          return null;
-        }
-        GameObject selectedGameObject = eventSystem.currentSelectedGameObject;
-        if (selectedGameObject == null)
-        {
-          return null;
-        }
-        PanelEventHandler panelEventHandler = selectedGameObject.GetComponent<PanelEventHandler>();
-        if (panelEventHandler != null)
-        {
-          var elt = panelEventHandler.panel.focusController.focusedElement;
-          if (elt != null)
-          {
-            return elt;
-          }
-          return null;
-        }
-        return null;
+        passCopyToBrowser(GUIUtility.systemCopyBuffer);
       }
 
       [AOT.MonoPInvokeCallback( typeof(StringCallback) )]

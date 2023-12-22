@@ -200,8 +200,28 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         }
         else
         {
-            DownloadHandlerTexture.GetContent(www);
             element.FinishedDownloadFileData(DownloadHandlerTexture.GetContent(www));
+        }
+    }
+    
+    public void StartDownloadImageForm(FormScreen form, string path)
+    {
+        StartCoroutine(DownloadImageForm(form, path));
+    }
+
+    IEnumerator DownloadImageForm(FormScreen form, string path)
+    {
+        UnityWebRequest www = UnityWebRequestTexture.GetTexture(path);
+
+        yield return www.SendWebRequest();
+
+        if (www.result is UnityWebRequest.Result.ProtocolError or UnityWebRequest.Result.ConnectionError)
+        {
+            Debug.LogError(www.error);
+        }
+        else
+        {
+            form.FinishDownloadImage(DownloadHandlerTexture.GetContent(www));
         }
     }
 

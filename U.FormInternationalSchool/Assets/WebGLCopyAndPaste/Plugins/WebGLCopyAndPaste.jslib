@@ -104,10 +104,9 @@ var WebGLCopyAndPaste = {
   },
 
   passCopyToBrowser: function (stringPtr) {
-      var fn = typeof UTF8ToString === 'function' ? UTF8ToString : Pointer_stringify;
-      navigator.clipboard.writeText(fn(stringPtr));
-      WebGLCopyAndPaste.data.clipboardStr = fn(stringPtr);
-   },
+    var fn = typeof UTF8ToString === 'function' ? UTF8ToString : Pointer_stringify;
+    WebGLCopyAndPaste.data.clipboardStr = fn(stringPtr);
+  },
 };
 
 autoAddDeps(WebGLCopyAndPaste, '$WebGLCopyAndPaste');

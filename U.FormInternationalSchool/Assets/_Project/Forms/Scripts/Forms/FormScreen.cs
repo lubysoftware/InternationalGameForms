@@ -820,6 +820,11 @@ public class FormScreen : MonoBehaviour
     public virtual void PreviewInPortal(string jsonData)
     {
         isPreview = false;
+        
+        backgroundMusic.PauseAudio();
+        audioStatement_PT.PauseAudio();
+        audioStatement_EN.PauseAudio();
+        
         PortalBridge.Instance.OnShowPreviewEvent(so.gameType.ToString(), jsonData);
 
         StartCoroutine(EnableClickCoroutine());
@@ -876,6 +881,10 @@ public class FormScreen : MonoBehaviour
     protected virtual void SetFailsPenalty(int points)
     {
         
+    }
+
+    public virtual void FinishDownloadImage(Texture2D texture)
+    {
     }
 
 
