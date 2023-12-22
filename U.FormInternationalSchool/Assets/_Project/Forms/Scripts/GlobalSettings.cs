@@ -17,20 +17,21 @@ public class GlobalSettings : SimpleSingleton<GlobalSettings>
 #if UNITY_EDITOR
             return "Bearer Luby2021";
 #else
-            return _userToken;
+            return string.IsNullOrEmpty(_userToken) ? "Bearer Luby2021" : _userToken;
+
 #endif
         }
         private set => _userToken = value;
     }
 
-    private string _userToken;
-    
+    private string _userToken = string.Empty;
+
     protected override bool DestroyOnLoad => false;
 
     public void Setup(string setupConfig)
     {
         SetupConfig setup = JsonUtility.FromJson<SetupConfig>(setupConfig);
-        
+
         UserToken = setup.userToken;
         OpenedFromPath = setup.openedFromPath;
     }
