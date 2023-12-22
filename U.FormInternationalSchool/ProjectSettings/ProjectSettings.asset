@@ -133,7 +133,7 @@ PlayerSettings:
   vulkanEnableLateAcquireNextImage: 0
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
-  bundleVersion: 1.0.3
+  bundleVersion: 1.0.5
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -697,7 +697,7 @@ PlayerSettings:
     Stadia: FG_WEBGLFB
     Standalone: FG_WEBGLFB
     VisionOS: FG_WEBGLFB
-    WebGL: FG_WEBGLFB
+    WebGL: FG_WEBGLFB;WEBGL_COPY_AND_PASTE_SUPPORT_TEXTMESH_PRO
     Windows Store Apps: FG_WEBGLFB
     XboxOne: FG_WEBGLFB
     iPhone: FG_WEBGLFB
