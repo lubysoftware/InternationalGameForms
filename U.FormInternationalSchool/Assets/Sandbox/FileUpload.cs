@@ -59,7 +59,7 @@ public class FilesToDelete
         
         foreach (var url in fileNames)
         {
-            string fileName = url.Replace("https://stg1atividades.blob.core.windows.net/arquivos/", string.Empty);
+            string fileName = url.Replace("https://edtechprojetos.blob.core.windows.net/arquivos/", string.Empty);
             this.fileNames.Add(fileName);
         }
     }

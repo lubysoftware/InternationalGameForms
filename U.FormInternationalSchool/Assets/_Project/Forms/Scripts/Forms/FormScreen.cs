@@ -792,8 +792,9 @@ public class FormScreen : MonoBehaviour
     }
     
     
-    public virtual void SendGameInfoToPortal(string responseJson)
+    public void SendGameInfoToPortal(string responseJson)
     {
+        Debug.Log(responseJson);
         DeleteOldFiles(responseJson);
         PortalBridge.Instance.OnGameCreatedEvent(responseJson);
     }
@@ -801,7 +802,7 @@ public class FormScreen : MonoBehaviour
     protected void DeleteOldFiles(string json)
     {
         List<string> urlsToIgnore = themeSongsUrls.Values.ToList();
-        urlsToIgnore.Add("https://stg1atividades.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
+        urlsToIgnore.Add("https://edtechprojetos.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
         
         List<string> urls = new List<string>();
         
@@ -809,6 +810,7 @@ public class FormScreen : MonoBehaviour
         {
             if (!json.Contains(url) && !urlsToIgnore.Contains(url))
             {
+                Debug.Log(url);
                 urls.Add(url);
             }
         }

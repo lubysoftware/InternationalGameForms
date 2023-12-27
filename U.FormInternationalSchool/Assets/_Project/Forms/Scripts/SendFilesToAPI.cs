@@ -71,7 +71,7 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
             SucessPanel.Instance.SetText("O jogo \"" + titulo + "\" foi alterado com sucesso",
                 SucessPanel.MessageType.SUCCESS);
             
-            onSuccess?.Invoke(www.downloadHandler.text);
+            onSuccess?.Invoke(json);
             screen.FinishSaveData();
         }
     }
