@@ -7,7 +7,7 @@ public class PortalBridge : SimpleSingleton<PortalBridge>
 {
     [DllImport("__Internal")]
     protected static extern void OnGameCreated(int gameId, string gameType);
-    
+
     [DllImport("__Internal")]
     protected static extern void OnShowPreview(string gameType, string json);
 
@@ -20,7 +20,8 @@ public class PortalBridge : SimpleSingleton<PortalBridge>
 #if UNITY_WEBGL && !UNITY_EDITOR
         try
         {
-            GameCreationResponse response = Newtonsoft.Json.JsonConvert.DeserializeObject<GameCreationResponse>(responseJson);
+            GameCreationResponse response =
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Newtonsoft.Json.JsonConvert.DeserializeObject<GameCreationResponse>(responseJson);
             OnGameCreated(response.id, response.gameType);
         }
         catch (System.Exception ex)
