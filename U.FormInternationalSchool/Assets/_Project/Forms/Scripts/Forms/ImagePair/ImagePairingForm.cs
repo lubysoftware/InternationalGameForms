@@ -41,20 +41,35 @@ public class ImagePairingForm : FormScreen
     protected override void SendGameFiles()
     {   filledImages = panel.GetAllFilled();
         pairsQtt = panel.CompletedPairs();
-        if (pairsQtt < 2)
+        if (isPreview)
         {
-            ShowError("Deve conter no minimo 2 pares.", ErrorType.CUSTOM, null);
+            pairsQtt = panel.CompletedPairs();
+            
+            if (pairsQtt < 2)
+            {
+
+                ShowError("Deve conter no minimo 2 pares.", ErrorType.CUSTOM, null);
+                return;
+            }
         }
         else
         {
-            if (panel.GetAllFiles() != null && panel.GetAllFiles().Count > 0)
+            int active = panel.ActivePairs();
+            if (pairsQtt != active)
             {
-                SendFilesToAPI.Instance.StartUploadFiles(this, panel.GetAllFiles(), false);
-            }else
-            {
-                SerializeGameData(null);
+                pairsQtt = active;
+                isCompleted = false;
             }
         }
+
+        if (panel.GetAllFiles() != null && panel.GetAllFiles().Count > 0)
+        {
+            SendFilesToAPI.Instance.StartUploadFiles(this, panel.GetAllFiles(), false);
+        }else
+        {
+            SerializeGameData(null);
+        }
+        
     }
     
     protected override void ValidateFields()
@@ -64,21 +79,34 @@ public class ImagePairingForm : FormScreen
         {
             return;
         }
-        if (CheckGreatherThanZero(failsPenalty, "Pontuação descontada por erro"))
+
+        if (!failsPenalty.Null)
         {
-            int.TryParse(failsPenalty.InputField.text, out failsPenaltyValue);
+            if (CheckGreatherThanZero(failsPenalty, "Pontuação descontada por erro"))
+            {
+                int.TryParse(failsPenalty.InputField.text, out failsPenaltyValue);
+            }
+            else
+            {
+                return;
+            }
         }
         else
         {
-            return;
+            isCompleted = false;
         }
-        
-        if (!panel.AllPairsFilled())
+
+        if (isPreview)
         {
-            ShowError("Todos os pares devem ser preenchidos.", ErrorType.CUSTOM, null);
-            return;
+            if (!panel.AllPairsFilled())
+            {
+
+                ShowError("Todos os pares devem ser preenchidos.", ErrorType.CUSTOM, null);
+                return;
+            
+            }
         }
-        
+
         SendBaseFormFiles();
     }
     
@@ -86,7 +114,7 @@ public class ImagePairingForm : FormScreen
     {
         if (failsPenalty.InputField.text.IsNullEmptyOrWhitespace())
         {
-            failsPenalty.ActivateErrorMode();
+            failsPenalty.ActivateNullMode();
             emptyField.Add("Pontuação descontada por erro");
         }else
         {
@@ -95,14 +123,19 @@ public class ImagePairingForm : FormScreen
 
         if (emptyField.Count > 0)
         {
-            if (emptyField.Count == 1)
+            if (isPreview)
             {
-                ShowError(emptyField[0], ErrorType.EMPTY, null);
+                if (emptyField.Count == 1)
+                {
+                    ShowError(emptyField[0], ErrorType.EMPTY, null);
+                    return;
+                }
+
+                ShowError("", ErrorType.ALL_FIELDS, null);
                 return;
             }
-            
-            ShowError("", ErrorType.ALL_FIELDS, null);
-            return;
+
+            isCompleted = false;
         }
 
         ValidateFields();
@@ -173,7 +206,7 @@ public class ImagePairingForm : FormScreen
             game = this.game,
             gameData = new ImagePairing()
             {
-                failPenalty = failsPenaltyValue,
+                failPenalty = failsPenaltyValue == 0 ? null : failsPenaltyValue,
                 pairs = listPair
             }
         };
@@ -181,6 +214,7 @@ public class ImagePairingForm : FormScreen
         if (!isPreview)
         {
             string json = JsonConvert.SerializeObject(completeForm);
+            Debug.Log(json);
             if (isEdit)
             {
                 SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
@@ -207,7 +241,7 @@ public class ImagePairingForm : FormScreen
                 questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
                 timer = game.timer,
                 questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
-                failPenalty = completeForm.gameData.failPenalty,
+                failPenalty =  completeForm.gameData.failPenalty,
                 pairs = completeForm.gameData.pairs
             };
 
@@ -235,8 +269,7 @@ public class ImagePairingForm : FormScreen
             string[] urlPair = new[] { json.pairs[i].firstImageUrl, json.pairs[i].secondImageUrl };
             urls.Add(urlPair);
         }
-        panel.FillImages(urls, FillUploadFiles);
-        loadFileQtt = loadFileQtt + urls.Count * 2;
+        panel.FillImages(urls, CheckFillFile);
         CheckIfMaxQtt();
     }
     
@@ -256,7 +289,7 @@ public struct Pair
 [Serializable]
 public class ImagePairing
 {
-    public int failPenalty;
+    public Nullable<int> failPenalty;
     public List<Pair> pairs;
 }
 
@@ -271,7 +304,7 @@ public class FormImagePairing
 [Serializable]
 public class FormImagePairingPreviewData : BaseGameJson
 {
-    public int failPenalty;
+    public Nullable<int> failPenalty;
     public List<Pair> pairs;
 }
 

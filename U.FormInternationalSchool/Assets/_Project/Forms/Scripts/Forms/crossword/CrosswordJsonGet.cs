@@ -27,6 +27,7 @@ public class CrosswordJsonGet
     public int crossWordId;
     public string questionType;
     public List<WordsGet> words;
+    public bool isDraft;
 }
 
 [Serializable]

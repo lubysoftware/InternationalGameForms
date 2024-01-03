@@ -236,6 +236,7 @@ MonoBehaviour:
   gameTitle: {fileID: 7640124223235965150}
   library: {fileID: 0}
   fieldBackground: {fileID: 5075453361953882536}
+  draftColor: {r: 0.90196085, g: 0.90196085, b: 0.90196085, a: 1}
 --- !u!1 &4226417806162761978
 GameObject:
   m_ObjectHideFlags: 0

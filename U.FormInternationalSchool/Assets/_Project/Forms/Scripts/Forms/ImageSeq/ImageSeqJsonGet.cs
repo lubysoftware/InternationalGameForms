@@ -26,8 +26,9 @@ public class ImageSeqJsonGet
     public bool deleted;
     public List<SupportMaterialGet> supportMaterial;
     public int imageSequenceId;
-    public int failPenalty;
+    public Nullable<int> failPenalty;
     public List<SequenceGet> sequences;
+    public bool isDraft;
 }
 
 

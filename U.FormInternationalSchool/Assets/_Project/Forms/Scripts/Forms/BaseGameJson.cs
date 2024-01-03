@@ -26,6 +26,7 @@ public class BaseGameJson
     public string updated_at;
     public bool deleted;
     public List<SupportMaterial> SupportMaterial;
+    public bool isDraft;
 }
 
 

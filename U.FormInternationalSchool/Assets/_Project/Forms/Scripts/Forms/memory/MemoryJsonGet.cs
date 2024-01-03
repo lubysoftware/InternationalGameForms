@@ -28,6 +28,7 @@ public class MemoryJsonGet
     public int matchCardId;
     public string backImageUrl;
     public List<MatchPairGet> cardPairs;
+    public bool isDraft;
 }
 
 [Serializable]

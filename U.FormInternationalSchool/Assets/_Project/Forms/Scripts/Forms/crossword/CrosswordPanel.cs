@@ -347,7 +347,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
         foreach (var input in wordInputs)
         {
             ImageElement el = input.imageComp.Image;
-            if (el.IsActive && el.UploadedFile != null)
+            if (el.isActiveAndEnabled && el.UploadedFile != null)
             {
                 listImages.Add(el.UploadedFile);
             }
@@ -361,11 +361,15 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
         foreach (var input in wordInputs)
         {
             ImageElement el = input.imageComp.Image;
-            if (el.IsActive && el.UploadedFile == null)
+            if (el.isActiveAndEnabled && el.UploadedFile == null)
             {
                 if (el.IsFilled)
                 {
                     listFilledImages.Add(input.Info, el.url);
+                }
+                else if(input.Null)
+                {
+                    listFilledImages.Add(input.Info, null);
                 }
             }
         }
@@ -379,7 +383,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
         foreach (var input in wordInputs)
         {
             ImageElement el = input.imageComp.Image;
-            if (el.IsActive)
+            if (el.isActiveAndEnabled)
             {
                 listFilledImages.Add(input.Info, el.PreviewImageData);
             }
@@ -395,7 +399,7 @@ public class CrosswordPanel : SimpleSingleton<CrosswordPanel>
         {
             if (!input.IsFilled)
             {
-                input.ActivateErrorMode();
+                input.ActivateNullMode();
                 status = false;
             }
         }

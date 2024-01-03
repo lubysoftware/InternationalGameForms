@@ -161,7 +161,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
         foreach (Transform child in gridBackground.transform)
         {
             ImageElement el = child.GetComponent<ImageFrameDragDrop>().Image;
-            if (el.IsActive && el.UploadedFile == null)
+            if (el.isActiveAndEnabled && el.UploadedFile == null)
             {
                 if (el.IsFilled)
                 {
@@ -179,7 +179,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
         foreach (Transform child in gridBackground.transform)
         {
             ImageElement el = child.GetComponent<ImageFrameDragDrop>().Image;
-            if (el.IsActive)
+            if (el.isActiveAndEnabled)
             {
                 listFilledImages.Add(el.Index, el.PreviewImageData);
             }
@@ -194,7 +194,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
         foreach (Transform child in gridBackground.transform)
         {
             ImageElement el = child.GetComponent<ImageFrameDragDrop>().Image;
-            if (el.IsActive && el.UploadedFile != null)
+            if (el.isActiveAndEnabled && el.UploadedFile != null)
             {
                 listImages.Add(el.UploadedFile);
             }
@@ -348,7 +348,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
     {
         if (dragBackInput.UploadedFile == null && !dragBackInput.IsFilled)
         {
-            dragBackInput.ActivateErrorMode();
+            dragBackInput.ActivateNullMode();
             return false;
         }
         dragBackInput.DeactivateErrorMode(null);  

@@ -45,7 +45,7 @@ public class QuizAlternative : MonoBehaviour
                          gameObject.GetComponent<UploadFileElement>().UploadedFile != null;
             if (!isComplete)
             {
-                FileElement.ActivateErrorMode();
+                FileElement.ActivateNullMode();
             }
             return isComplete;
         }
@@ -53,7 +53,7 @@ public class QuizAlternative : MonoBehaviour
         isComplete = !input.InputField.text.IsNullEmptyOrWhitespace();
         if (!isComplete)
         {
-            input.ActivateErrorMode();
+            input.ActivateNullMode();
         }
         return isComplete;
     }

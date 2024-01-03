@@ -106,7 +106,7 @@ public class DragDropForm : FormScreen
     {
         if (failsPenalty.InputField.text.IsNullEmptyOrWhitespace())
         {
-            failsPenalty.ActivateErrorMode();
+            failsPenalty.ActivateNullMode();
             emptyField.Add("Pontuação descontada por erro");
         }
         else

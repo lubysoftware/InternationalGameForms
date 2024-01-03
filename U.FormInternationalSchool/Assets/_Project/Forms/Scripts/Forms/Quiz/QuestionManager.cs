@@ -275,25 +275,25 @@ public class QuestionManager : MonoBehaviour
         bool isComplete = true;
         if (statementEN_text.InputField.text.IsNullEmptyOrWhitespace())
         {
-            statementEN_text.ActivateErrorMode();
+            statementEN_text.ActivateNullMode();
             isComplete = false;
         }
        
         if (statementPT_text.InputField.text.IsNullEmptyOrWhitespace())
         {
-            statementPT_text.ActivateErrorMode();
+            statementPT_text.ActivateNullMode();
             isComplete = false;
         } 
         
         if (statementPT_audio.UploadedFile == null && !statementPT_audio.IsFilled)
         {
-            statementPT_audio.ActivateErrorMode();
+            statementPT_audio.ActivateNullMode();
             isComplete = false;
         } 
         
         if (statementEN_audio.UploadedFile == null && !statementEN_audio.IsFilled)
         {
-            statementEN_audio.ActivateErrorMode();
+            statementEN_audio.ActivateNullMode();
             isComplete = false;
         } 
 
@@ -301,14 +301,14 @@ public class QuestionManager : MonoBehaviour
         {
             if (extra_statementAudio.UploadedFile == null && !extra_statementAudio.IsFilled)
             {
-                extra_statementAudio.ActivateErrorMode();
+                extra_statementAudio.ActivateNullMode();
                 isComplete = false;
             }
         }else if (questionType.value == (int)QuestionsGroup.InputType.IMAGE)
         {
             if (extra_statementImg.UploadedFile == null && !extra_statementImg.IsFilled)
             {
-                extra_statementImg.ActivateErrorMode();
+                extra_statementImg.ActivateNullMode();
                 isComplete = false;
             }
         }

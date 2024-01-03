@@ -59,4 +59,9 @@ public class ImageElement : UploadFileElement
         if(!managedByParent)
             Init();
     }
+
+    public bool IsEnabled()
+    {
+        return isActiveAndEnabled;
+    }
 }

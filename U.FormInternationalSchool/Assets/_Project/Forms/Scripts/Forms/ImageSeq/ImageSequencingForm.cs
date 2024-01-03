@@ -54,26 +54,31 @@ public class ImageSequencingForm : FormScreen
         imageSeqQtt = panel.ImageQtt();
         if (imageSeqQtt < 2)
         {
-            ShowError("O sequenciamento de imagens deve conter no mínimo duas imagens.", ErrorType.CUSTOM, null);
+            if (isPreview)
+            {
+                ShowError("O sequenciamento de imagens deve conter no mínimo duas imagens.", ErrorType.CUSTOM, null);
+                return;
+            }
+
+            isCompleted = false;
+        }
+  
+        if (panel.GetImages() != null && panel.GetImages().Count > 0)
+        {
+            SendFilesToAPI.Instance.StartUploadFiles(this, panel.GetImages(), false);
         }
         else
         {
-            if (panel.GetImages() != null && panel.GetImages().Count > 0)
-            {
-                SendFilesToAPI.Instance.StartUploadFiles(this, panel.GetImages(), false);
-            }
-            else
-            {
-                SerializeGameData(null);
-            }
+            SerializeGameData(null);
         }
+        
     }
 
     protected override void CheckEmptyGameFields()
     {
         if (failsPenalty.InputField.text.IsNullEmptyOrWhitespace())
         {
-            failsPenalty.ActivateErrorMode();
+            failsPenalty.ActivateNullMode();
             emptyField.Add("Pontuação descontada por erro");
         }
         else
@@ -83,14 +88,19 @@ public class ImageSequencingForm : FormScreen
 
         if (emptyField.Count > 0)
         {
-            if (emptyField.Count == 1)
+            if (isPreview)
             {
-                ShowError(emptyField[0], ErrorType.EMPTY, null);
+                if (emptyField.Count == 1)
+                {
+                    ShowError(emptyField[0], ErrorType.EMPTY, null);
+                    return;
+                }
+
+                ShowError("", ErrorType.ALL_FIELDS, null);
                 return;
             }
 
-            ShowError("", ErrorType.ALL_FIELDS, null);
-            return;
+            isCompleted = false;
         }
 
         ValidateFields();
@@ -109,21 +119,31 @@ public class ImageSequencingForm : FormScreen
             return;
         }
 
-        if (CheckGreatherThanZero(failsPenalty, "Pontuação descontada por erro"))
+        if (!failsPenalty.Null)
         {
-            int.TryParse(failsPenalty.InputField.text, out failsPenaltyValue);
+            if (CheckGreatherThanZero(failsPenalty, "Pontuação descontada por erro"))
+            {
+                int.TryParse(failsPenalty.InputField.text, out failsPenaltyValue);
+            }
+            else
+            {
+                return;
+            }
         }
         else
         {
-            return;
+            isCompleted = false;
         }
 
-        if (panel.ImageQtt() < 2)
+        if (isPreview)
         {
-            ShowError("O sequenciamento de imagens deve conter no mínimo duas imagens.", ErrorType.CUSTOM, null);
-            return;
+            if (panel.ImageQtt() < 2)
+            {
+                ShowError("O sequenciamento de imagens deve conter no mínimo duas imagens.", ErrorType.CUSTOM, null);
+                return;
+            }
         }
-
+        
         SendBaseFormFiles();
         
     }
@@ -178,7 +198,7 @@ public class ImageSequencingForm : FormScreen
             game = this.game,
             gameData = new ImageSequence()
             {
-                failPenalty = failsPenaltyValue,
+                failPenalty =  failsPenaltyValue == 0 ? null : failsPenaltyValue,
                 sequences = listSeq
             }
         };
@@ -233,9 +253,8 @@ public class ImageSequencingForm : FormScreen
     private void FillGameData(ImageSeqJsonGet json)
     {
         failsPenalty.InputField.text = json.failPenalty.ToString();
-        panel.FillImages(json.sequences, FillUploadFiles);
+        panel.FillImages(json.sequences, CheckFillFile);
         sequenceQtt = json.sequences.Count;
-        loadFileQtt = loadFileQtt + sequenceQtt;
         CheckIfMaxQtt();
     }
     
@@ -256,7 +275,7 @@ public struct Sequence
 [Serializable]
 public class ImageSequence
 {
-    public int failPenalty;
+    public Nullable<int> failPenalty;
     public List<Sequence> sequences;
 }
 
@@ -270,7 +289,7 @@ public class FormImageSequence
 [Serializable]
 public class FormImageSequencePreviewData : BaseGameJson
 {
-    public int failPenalty;
+    public Nullable<int> failPenalty;
     public List<Sequence> sequences;
 }
 

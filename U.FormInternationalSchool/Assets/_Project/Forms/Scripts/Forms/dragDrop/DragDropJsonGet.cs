@@ -27,8 +27,9 @@ public class DragDropJsonGet : MonoBehaviour
     public string dropPlaceBackgroundUrl;
     public string materialType;
     public string dragType;
-    public int failPenalty;
+    public Nullable<int> failPenalty;
     public List<DraggableItemJson> draggableItem;
+    public bool isDraft;
 }
 
 [Serializable]

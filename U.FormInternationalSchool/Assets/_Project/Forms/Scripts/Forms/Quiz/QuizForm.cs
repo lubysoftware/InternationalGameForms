@@ -47,10 +47,11 @@ public class QuizForm : FormScreen
 
         if (emptyField.Count > 0)
         {
+            isCompleted = false;
             if (emptyField.Count == 1)
             {
-                ShowError(emptyField[0], ErrorType.EMPTY, null);
-                return;
+                // ShowError(emptyField[0], ErrorType.EMPTY, null);
+                // return;
             }
 
             ShowError("", ErrorType.ALL_FIELDS, null);
@@ -75,17 +76,19 @@ public class QuizForm : FormScreen
 
         if (questionsGroup.QuestionsQtt == 0)
         { 
-            string errormessage = "O quiz deve possuir ao menos uma questão.";
-            ShowError(errormessage, ErrorType.CUSTOM, null);
-            return;
-            
+            // string errormessage = "O quiz deve possuir ao menos uma questão.";
+            // ShowError(errormessage, ErrorType.CUSTOM, null);
+            // return;
+            isCompleted = false;
+
         }
         
         if (!questionsGroup.CheckAllQuestions())
         {
-            string errormessage = "Todos as questões devem ser preenchidas.";
-            ShowError(errormessage, ErrorType.CUSTOM, null);
-            return;
+            // string errormessage = "Todos as questões devem ser preenchidas.";
+            // ShowError(errormessage, ErrorType.CUSTOM, null);
+            // return;
+            isCompleted = false;
         }
 
         SendBaseFormFiles();

@@ -30,6 +30,7 @@ public class PuzzleJsonGet
     public int tipShowTime;
     public int tipCoolDown;
     public int tipCount;
+    public bool isDraft;
 }
     
 [Serializable]

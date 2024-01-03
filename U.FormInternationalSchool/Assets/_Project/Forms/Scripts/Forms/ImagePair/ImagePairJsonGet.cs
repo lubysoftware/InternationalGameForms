@@ -26,8 +26,9 @@ public class ImagePairJsonGet
     public string updated_at;
     public bool deleted;
     public List<SupportMaterialGet> supportMaterial;
-    public int failPenalty;
+    public Nullable<int> failPenalty;
     public List<PairGet> pairs;
+    public bool isDraft;
 }
 
 [Serializable]

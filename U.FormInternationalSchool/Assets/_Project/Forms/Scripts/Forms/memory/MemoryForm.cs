@@ -99,7 +99,7 @@ public class MemoryForm : FormScreen
     {
         if (backCardImage.Image.UploadedFile == null && backCardImage.Image.IsFilled == false)
         {
-            backCardImage.GetComponentInChildren<InputElement>().ActivateErrorMode();
+            backCardImage.GetComponentInChildren<InputElement>().ActivateNullMode();
             emptyField.Add("Imagem de verso da carta");
         }
 

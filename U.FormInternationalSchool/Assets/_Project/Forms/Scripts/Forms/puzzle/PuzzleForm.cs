@@ -80,7 +80,7 @@ public class PuzzleForm : FormScreen
     {
         if (puzzleImage.UploadedFile == null && puzzleImage.IsFilled == false)
         {
-            puzzleImage.ActivateErrorMode();
+            puzzleImage.ActivateNullMode();
             emptyField.Add("Imagem do quebra cabeça");
         }
 
@@ -88,12 +88,12 @@ public class PuzzleForm : FormScreen
         {
             if (timeTipMin.InputField.text.IsNullEmptyOrWhitespace())
             {
-                timeTipMin.ActivateErrorMode();
+                timeTipMin.ActivateNullMode();
                 emptyField.Add("Minutos do timer de dicas");
             }
             if (timeTipSec.InputField.text.IsNullEmptyOrWhitespace())
             {
-                timeTipSec.ActivateErrorMode();
+                timeTipSec.ActivateNullMode();
                 emptyField.Add("Segundos do timer de dicas");
             }
         }
@@ -134,7 +134,7 @@ public class PuzzleForm : FormScreen
 
             if (tipTimeInSec > timeInSec)
             {
-                timeTipMin.ActivateErrorMode();
+                timeTipMin.ActivateNullMode();
                 ShowError("O timer de dicas não deve possuir um tempo maior que o tempo total do jogo.", ErrorType.CUSTOM, null);
                 return;
             }

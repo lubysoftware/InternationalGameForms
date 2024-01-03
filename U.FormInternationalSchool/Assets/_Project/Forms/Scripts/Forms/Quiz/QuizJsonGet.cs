@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,8 +24,9 @@ public class QuizJsonGet : MonoBehaviour
     public bool deleted;
     public List<SupportMaterialGet> supportMaterial;
     public int quizId;
-    public int failPenalty;
+    public Nullable<int> failPenalty;
     public bool randomAnswers;
+    public bool isDraft;
     public List<QuestionGet> questions;
 }
 
