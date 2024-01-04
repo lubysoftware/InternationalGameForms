@@ -473,12 +473,14 @@ public class FormScreen : MonoBehaviour
         if (baseForm.hasTimer)
         {
             timer.onValueChanged.Invoke(baseForm.hasTimer);
-            int min = baseForm.timer / 60;
-            int sec = baseForm.timer - min * 60;
-            timeMin.InputField.text =  String.Format("{0:00}", min);
-            timeSec.InputField.text = String.Format("{0:00}", sec);
-
-            timerBonus.InputField.text = baseForm.bonustimer.ToString();
+            if (baseForm.timer != null && baseForm.timer > 0)
+            {
+                timeMin.InputField.text =  String.Format("{0:00}", baseForm.timer / 60);
+                timeSec.InputField.text = String.Format("{0:00}", baseForm.timer - (baseForm.timer / 60) * 60);
+            }
+            
+            if(baseForm.bonustimer != null)
+                timerBonus.InputField.text = baseForm.bonustimer.ToString();
         }
 
         if (baseForm.hasSupportMaterial)
@@ -822,7 +824,7 @@ public class FormScreen : MonoBehaviour
             questionStatementEnglishAudioUrl = urlDict[Constants.AUDIO_EN],
             questionStatementEnglishVersion = statement_EN.InputField.text,
             questionStatementPortugueseAudioUrl = urlDict[Constants.AUDIO_PT],
-            timer = timeInSec,
+            timer = timeInSec <= 0? null : timeInSec,
             questionStatementPortugueseVersion = statement_PT.InputField.text,
             isDraft = !isCompleted
         };
@@ -972,7 +974,7 @@ public class FormBase
     public string questionStatementEnglishAudioUrl;
     public bool hasSupportMaterial;
     public bool hasTimer;
-    public int timer;
+    public Nullable<int> timer;
     public int bonustimer;
     public List<SupportMaterial> supportMaterial;
     public bool isDraft;

@@ -233,7 +233,7 @@ public class MemoryForm : FormScreen
                 questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
                 questionStatementEnglishVersion = game.questionStatementEnglishVersion,
                 questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
-                timer = game.timer,
+                timer = timeInSec,
                 questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
                 backImageUrl = completeForm.gameData.backImageUrl,
                 cardPairs = completeForm.gameData.cardPairs

@@ -228,7 +228,7 @@ public class CrosswordForm : FormScreen
                 questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
                 questionStatementEnglishVersion = game.questionStatementEnglishVersion,
                 questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
-                timer = game.timer,
+                timer = timeInSec,
                 questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
                 questionType = completeForm.gameData.questionType,
                 words = completeForm.gameData.words

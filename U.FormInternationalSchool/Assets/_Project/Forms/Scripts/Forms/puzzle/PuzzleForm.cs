@@ -71,7 +71,15 @@ public class PuzzleForm : FormScreen
             }
             else
             {
-                ShowError("Imagem do quebra-cabeça.", ErrorType.EMPTY, null);
+                if (isPreview)
+                {
+                    ShowError("Imagem do quebra-cabeça.", ErrorType.EMPTY, null);
+                }
+                else
+                {
+                    puzzleImagePath = null;
+                    SerializeGameData(null);
+                }
             }
         }
     }
@@ -102,17 +110,22 @@ public class PuzzleForm : FormScreen
             tipTimeInSec = 0;
             cooldownTimeInSec = 0;
         }
-        
+
         if (emptyField.Count > 0)
         {
-            if (emptyField.Count == 1)
+            if (isPreview)
             {
-                ShowError(emptyField[0], ErrorType.EMPTY, null);
+                if (emptyField.Count == 1)
+                {
+                    ShowError(emptyField[0], ErrorType.EMPTY, null);
+                    return;
+                }
+
+                ShowError("", ErrorType.ALL_FIELDS, null);
                 return;
             }
 
-            ShowError("", ErrorType.ALL_FIELDS, null);
-            return;
+            isCompleted = false;
         }
 
         ValidateFields();
@@ -128,8 +141,11 @@ public class PuzzleForm : FormScreen
             tipTimeInSec = CalculateTimeInSec("de dicas", timeTipMin, timeTipSec, false);
             if (tipTimeInSec == -1)
             {
-                tipTimeInSec = 0;
-                return;
+                if (isPreview)
+                {
+                    tipTimeInSec = 0;
+                    return;
+                }
             }
 
             if (tipTimeInSec > timeInSec)
@@ -142,14 +158,26 @@ public class PuzzleForm : FormScreen
             cooldownTimeInSec = CalculateTimeInSec("de intervalo", timeCooldownMin, timeCooldownSec, true);
             if (cooldownTimeInSec == -1)
             {
-                cooldownTimeInSec = 0;
-                return;
+                if (isPreview)
+                {
+                    cooldownTimeInSec = 0;
+                    return;
+                }
             }
         }
         else
         {
-            tipTimeInSec = 0;
-            cooldownTimeInSec = 0;
+            if (isPreview)
+            {
+                tipTimeInSec = 0;
+                cooldownTimeInSec = 0;
+            }
+            else
+            {
+                tipTimeInSec = -1;
+                cooldownTimeInSec = -1;
+            }
+    
         }
         
         SendBaseFormFiles();
@@ -164,7 +192,7 @@ public class PuzzleForm : FormScreen
             previewUrlsToDelete.AddRange(urls.ToList());
         }
         
-        if (puzzleImagePath.IsNullEmptyOrWhitespace())
+        if (puzzleImagePath== "")
         {
             puzzleImagePath = urls[0];
         }
@@ -184,8 +212,8 @@ public class PuzzleForm : FormScreen
             {
                 imageUrl = puzzleImagePath,
                 pieceCount = pieces,
-                tipCoolDown = this.tips.isOn? cooldownTimeInSec:0,
-                tipShowTime = this.tips.isOn? tipTimeInSec:0,
+                tipCoolDown = this.tips.isOn? cooldownTimeInSec== -1? null:0 :0,
+                tipShowTime = this.tips.isOn? tipTimeInSec== -1? null:0 :0,
                 tipCount = this.tips.isOn? tips : 0
             }
         };
@@ -194,6 +222,7 @@ public class PuzzleForm : FormScreen
         {
             string json = JsonConvert.SerializeObject(completeForm);
 
+            Debug.Log(json);
             if (isEdit)
             {
                 SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
@@ -218,7 +247,7 @@ public class PuzzleForm : FormScreen
                 questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
                 questionStatementEnglishVersion = game.questionStatementEnglishVersion,
                 questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
-                timer = game.timer,
+                timer = timeInSec,
                 questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
                 imageUrl = completeForm.gameData.imageUrl,
                 pieceCount = completeForm.gameData.pieceCount,
@@ -242,7 +271,7 @@ public class PuzzleForm : FormScreen
     
     private void FillGameData(PuzzleJsonGet json)
     {
-        FillUploadFiles(puzzleImage, "puzzle_image", json.imageUrl);
+        CheckFillFile(puzzleImage, "puzzle_image", json.imageUrl);
         piecesQtt.value = piecesQtt.options.FindIndex(x => x.text == json.pieceCount.ToString());
         bool hasTips = json.tipCount > 0;
         tips.SetIsOnWithoutNotify(hasTips);
@@ -266,7 +295,6 @@ public class PuzzleForm : FormScreen
             timeCooldownSec.InputField.text = String.Format("{0:00}", coolSec);
         }
         
-        loadFileQtt = loadFileQtt + 1;
         UpdateStarsPoints();
         CheckIfMaxQtt();
     }
@@ -310,8 +338,8 @@ public class Puzzle
 {
     public string imageUrl;
     public int pieceCount;
-    public int tipShowTime;
-    public int tipCoolDown;
+    public Nullable<int> tipShowTime;
+    public Nullable<int> tipCoolDown;
     public int tipCount;
 }
 
@@ -327,8 +355,8 @@ public class FormPuzzlePreviewData : BaseGameJson
 {
     public string imageUrl;
     public int pieceCount;
-    public int tipShowTime;
-    public int tipCoolDown;
+    public Nullable<int> tipShowTime;
+    public Nullable<int> tipCoolDown;
     public int tipCount;
 }
 

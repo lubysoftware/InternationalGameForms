@@ -239,9 +239,9 @@ public class ImagePairingForm : FormScreen
                 questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
                 questionStatementEnglishVersion = game.questionStatementEnglishVersion,
                 questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
-                timer = game.timer,
+                timer = timeInSec,
                 questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
-                failPenalty =  completeForm.gameData.failPenalty,
+                failPenalty = completeForm.gameData.failPenalty,
                 pairs = completeForm.gameData.pairs
             };
 
