@@ -43,8 +43,6 @@ public class ImagePairingForm : FormScreen
         pairsQtt = panel.CompletedPairs();
         if (isPreview)
         {
-            pairsQtt = panel.CompletedPairs();
-            
             if (pairsQtt < 2)
             {
 

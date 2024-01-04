@@ -73,25 +73,35 @@ public class MemoryForm : FormScreen
 
         filledImages = panel.GetAllFilled();
         pairsQtt = panel.CompletedPairs();
-        if (pairsQtt < 2)
+        if (isPreview)
         {
-            ShowError("Deve conter no minimo 2 pares.", ErrorType.CUSTOM, null);
+            if (pairsQtt < 2)
+            {
+                ShowError("Deve conter no minimo 2 pares.", ErrorType.CUSTOM, null);
+            }
+        }else
+        {
+            int active = panel.ActivePairs();
+            if (pairsQtt != active)
+            {
+                pairsQtt = active;
+                isCompleted = false;
+            }
+        }
+        
+        
+        if (panel.GetAllFiles() != null && panel.GetAllFiles().Count > 0)
+        {
+            files.AddRange(panel.GetAllFiles());
+        }
+
+        if (files.Count > 0)
+        {
+            SendFilesToAPI.Instance.StartUploadFiles(this, files, false);
         }
         else
         {
-            if (panel.GetAllFiles() != null && panel.GetAllFiles().Count > 0)
-            {
-                files.AddRange(panel.GetAllFiles());
-            }
-
-            if (files.Count > 0)
-            {
-                SendFilesToAPI.Instance.StartUploadFiles(this, files, false);
-            }
-            else
-            {
-                SerializeGameData(null);
-            }
+            SerializeGameData(null);
         }
     }
 
@@ -105,14 +115,19 @@ public class MemoryForm : FormScreen
 
         if (emptyField.Count > 0)
         {
-            if (emptyField.Count == 1)
+            if (isPreview)
             {
-                ShowError(emptyField[0], ErrorType.EMPTY, null);
+                if (emptyField.Count == 1)
+                {
+                    ShowError(emptyField[0], ErrorType.EMPTY, null);
+                    return;
+                }
+
+                ShowError("", ErrorType.ALL_FIELDS, null);
                 return;
             }
 
-            ShowError("", ErrorType.ALL_FIELDS, null);
-            return;
+            isCompleted = false;
         }
 
         ValidateFields();
@@ -122,10 +137,13 @@ public class MemoryForm : FormScreen
     {
         base.ValidateFields();
         if (hasValidationError) return;
-        if (!panel.AllPairsFilled())
+        if (isPreview)
         {
-            ShowError("Todos os pares devem ser preenchidos.", ErrorType.CUSTOM, null);
-            return;
+            if (!panel.AllPairsFilled())
+            {
+                ShowError("Todos os pares devem ser preenchidos.", ErrorType.CUSTOM, null);
+                return;
+            }
         }
 
         SendBaseFormFiles();
@@ -253,7 +271,7 @@ public class MemoryForm : FormScreen
 
     private void FillGameData(MemoryJsonGet json)
     {
-        FillUploadFiles(backCardImage.Image, "back_card", json.backImageUrl);
+        CheckFillFile(backCardImage.Image, "back_card", json.backImageUrl);
         List<string[]> urls = new List<string[]>();
         for (int i = 0; i < json.cardPairs.Count; i++)
         {
@@ -261,8 +279,7 @@ public class MemoryForm : FormScreen
             urls.Add(urlPair);
         }
 
-        panel.FillImages(urls, FillUploadFiles);
-        loadFileQtt = loadFileQtt + 1 + urls.Count * 2;
+        panel.FillImages(urls, CheckFillFile);
         UpdateStarsPoints();
         CheckIfMaxQtt();
     }
