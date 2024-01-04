@@ -118,9 +118,7 @@ public class QuizAlternative : MonoBehaviour
         FileElement = gameObject.GetComponent<UploadFileElement>();
         if (FileElement != null)
         {
-            form.loadFileQtt += 1;
-            
-            form.FillUploadFiles( FileElement,(type +"_"+Index).ToLower(),url);
+            form.CheckFillFile(FileElement,(type +"_"+Index).ToLower(),url);
         }
         else
         {

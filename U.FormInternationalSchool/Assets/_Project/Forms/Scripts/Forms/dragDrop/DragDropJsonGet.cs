@@ -17,7 +17,7 @@ public class DragDropJsonGet : MonoBehaviour
     public string questionStatementEnglishVersion;
     public bool hasSupportMaterial;
     public bool hasTimer;
-    public int timer;
+    public Nullable<int> timer;
     public int bonustimer;
     public string created_at;
     public string updated_at;

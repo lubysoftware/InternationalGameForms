@@ -63,7 +63,7 @@ public class ImagePair : MonoBehaviour
                     }
                     else
                     {
-                        listFilledImages.Add(null);
+                        listFilledImages.Add(Constants.ERROR_IMAGE_URL);
                     }
                    
                 }

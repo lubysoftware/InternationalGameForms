@@ -167,6 +167,10 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
                 {
                     listFilledImages.Add(el.Index, el.url);
                 }
+                else
+                {
+                    listFilledImages.Add(el.Index, Constants.ERROR_IMAGE_URL);
+                }
             }
         }
 

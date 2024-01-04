@@ -137,9 +137,16 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
         receivedData = 0;
         urlsToDelete.Clear();
         questionsData = new Question[QuestionsQtt];
-        foreach(Transform child in questionsContainer)
+        if (QuestionsQtt > 0)
         {
-            child.GetComponent<QuestionManager>().GetQuestion();
+            foreach(Transform child in questionsContainer)
+            {
+                child.GetComponent<QuestionManager>().GetQuestion();
+            }
+        }
+        else
+        {
+            form.SerializeGameData(null,new List<string>());
         }
     }
 
@@ -184,7 +191,7 @@ public class QuestionsGroup : SimpleSingleton<QuestionsGroup>
 [Serializable]
 public class Quiz
 {
-    public int failPenalty;
+    public Nullable<int> failPenalty;
     public bool randomAnswers;
     public Question[] questions;
 }

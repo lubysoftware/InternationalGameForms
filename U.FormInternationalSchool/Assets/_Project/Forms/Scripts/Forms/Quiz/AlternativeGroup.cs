@@ -102,12 +102,18 @@ public class AlternativeGroup : MonoBehaviour
 
     public Dictionary<string,string> FilledImages(int qtt)
     {
+        Debug.Log(qtt);
         Dictionary<string, string> listFilledImages = new Dictionary<string, string>();
         for(int i = 0; i < qtt; i++)
         {
-            if (alternatives[i].IsCompleted() && alternatives[i].IsFilled)
+            if (!alternatives[i].IsCompleted())
             {
-                listFilledImages.Add(alternatives[i].Index.ToString(),alternatives[i].GetFilledUrl());
+                listFilledImages.Add(alternatives[i].Index.ToString(),null);
+            }
+            else
+            {
+                if(alternatives[i].IsFilled)
+                    listFilledImages.Add(alternatives[i].Index.ToString(), alternatives[i].GetFilledUrl());
             }
         }
 
@@ -132,11 +138,8 @@ public class AlternativeGroup : MonoBehaviour
         int count = 0;
         for(int i =0;i < answers.Count; i++)
         {
-            if (!answers[i].answer.IsNullEmptyOrWhitespace())
-            {
-                alternatives[i].FillAlternative(answers[i].answer, i == selectedAnswer, form, type);
-                count++;
-            }
+            alternatives[i].FillAlternative(answers[i].answer, i == selectedAnswer, form, type);
+            count++;
         }
         DeactivateAlternatives(count);
         return count;

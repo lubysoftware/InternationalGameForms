@@ -16,7 +16,7 @@ public class GameComponent : MonoBehaviour
 
     [SerializeField] private Image fieldBackground;
     [SerializeField] private Image draftIcon;
-
+    [SerializeField] private Color draftColor;
 
     private string title;
     private int id;
@@ -25,7 +25,7 @@ public class GameComponent : MonoBehaviour
 
     private bool _canClick;
 
-    public void Init(string titleGame, int idGame, string sceneGame, string gameType, Color button, Color field, Color draftColor,bool isDraft)
+    public void Init(string titleGame, int idGame, string sceneGame, string gameType, Color button, Color field, bool isDraft)
     {
         title = titleGame;
         id = idGame;
@@ -33,7 +33,7 @@ public class GameComponent : MonoBehaviour
         gameTitle.text = title;
         _gameType = gameType;
         
-        SetColors(button,field, draftColor,isDraft);
+        SetColors(button,field,isDraft);
         
         editButton.onClick.AddListener(OnEditButton);
         deleteButton.onClick.AddListener(OnDeleteButton);
@@ -46,14 +46,12 @@ public class GameComponent : MonoBehaviour
         _canClick = true;
     }
 
-    private void SetColors(Color buttonColor, Color fieldColor,Color draftColor, bool isDraft)
+    private void SetColors(Color buttonColor, Color fieldColor, bool isDraft)
     {
         editButton.image.color = buttonColor;
         deleteButton.image.color = buttonColor;
         _pathButton.image.color = buttonColor;
-        //Color draft = new Color(draftColor.r,draftColor.g,draftColor.b,0.7f);
         fieldBackground.color = isDraft? draftColor : fieldColor;
-        draftIcon.color = fieldColor;
         draftIcon.gameObject.SetActive(isDraft);
     }
     

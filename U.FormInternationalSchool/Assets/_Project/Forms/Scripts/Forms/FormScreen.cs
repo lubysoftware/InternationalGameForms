@@ -501,7 +501,7 @@ public class FormScreen : MonoBehaviour
        
     }
 
-    protected void CheckFillFile(UploadFileElement element, string title, string path)
+    public void CheckFillFile(UploadFileElement element, string title, string path)
     {
         if (!path.IsNullEmptyOrWhitespace())
         {

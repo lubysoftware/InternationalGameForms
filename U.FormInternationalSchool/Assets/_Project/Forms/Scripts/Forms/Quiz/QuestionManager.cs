@@ -492,17 +492,14 @@ public class QuestionManager : MonoBehaviour
             .Cast<QuestionsGroup.InputType>().ToList();
         alternativeType.SetValueWithoutNotify( list.FindIndex(x => x.ToString() == questionData.answerType));
         ChangeAlternativeType();
-        form.FillUploadFiles(statementPT_audio,PT,questionData.questionAudioPortugueseUrl);
-        form.FillUploadFiles(statementEN_audio,EN, questionData.questionAudioEnglishUrl );
-        form.loadFileQtt += 2;
+        form.CheckFillFile(statementPT_audio,PT,questionData.questionAudioPortugueseUrl);
+        form.CheckFillFile(statementEN_audio,EN, questionData.questionAudioEnglishUrl );
         if (questionData.quizType == QuestionsGroup.InputType.IMAGE.ToString())
         {
-            form.loadFileQtt += 1;
-            form.FillUploadFiles(extra_statementImg,"statement_img", questionData.questionFileUrl);
+            form.CheckFillFile(extra_statementImg,"statement_img", questionData.questionFileUrl);
         }else if (questionData.quizType == QuestionsGroup.InputType.AUDIO.ToString())
         {
-            form.loadFileQtt += 1;
-            form.FillUploadFiles( extra_statementAudio,"statement_audio", questionData.questionFileUrl);
+            form.CheckFillFile( extra_statementAudio,"statement_audio", questionData.questionFileUrl);
         }
 
         statementEN_text.InputField.text = questionData.questionTitleEnglish;
