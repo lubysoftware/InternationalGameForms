@@ -216,11 +216,16 @@ public class FormScreen : MonoBehaviour
         {
             emptyField.Clear();
         }
-        
+
         if (title.InputField.text.IsNullEmptyOrWhitespace())
         {
             title.ActivateNullMode();
             emptyField.Add("Identificador do jogo");
+            if (!isPreview)
+            {
+                ShowError("Identificador do jogo",ErrorType.EMPTY,null);
+                return;
+            }
         }
         else
         {
