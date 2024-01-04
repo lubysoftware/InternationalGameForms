@@ -21,8 +21,8 @@ public class FileUpload : BaseApi
 
         foreach (var file in files)
         {
-            string contentType = file.fileInfo.extension == "ogg" || file.fileInfo.extension == ".ogg"
-                ? "audio/ogg"
+            string contentType = file.fileInfo.extension.ToUpper() == "OGG" || file.fileInfo.extension.ToUpper() == ".OGG"
+            ? "audio/ogg"
                 : "image/jpg";
             currentRequest.FormSections.Add(new MultipartFormFileSection("arquivos", file.data, file.fileInfo.fullName, contentType));
         }
