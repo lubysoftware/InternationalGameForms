@@ -586,8 +586,8 @@ namespace FrostweepGames.Plugins.WebGLFileBrowser
 
     public static class FileExtension
 	{
-        public static readonly string[] ImageTypes = new string[] { "BMP", "TIF", "TGA", "JPG", "PSD", "PNG", "JPEG", "EXR" };
-        public static readonly string[] AudioTypes = new string[] { "WAV", "MP3", "OGG"};
+        public static readonly string[] ImageTypes = new string[] { "BMP", "TIF", "TGA", "JPG", "PSD", "PNG", "JPEG", "EXR", ".JPG", ".PNG" };
+        public static readonly string[] AudioTypes = new string[] { "WAV", "MP3", "OGG", ".OGG"};
         public static readonly string[] TextTypes = new string[] { "TXT", "JSON" };
 
         /// <summary>
@@ -680,7 +680,7 @@ namespace FrostweepGames.Plugins.WebGLFileBrowser
             if (file == null || file.data == null)
                 throw new Exception($"Failed to create an Audio Clip. File or it's data is null.");
 
-            if (file.fileInfo.extension == ".ogg" || file.fileInfo.extension == "ogg")
+            if (file.fileInfo.extension.ToUpper() == ".OGG" || file.fileInfo.extension.ToUpper() == "OGG")
             {
                 return OggFileToUnityAudioClip.ToAudioClip(file.data, file.fileInfo.name);
             }

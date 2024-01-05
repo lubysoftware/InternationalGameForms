@@ -191,6 +191,8 @@ public class FormScreen : MonoBehaviour
     
     public void ShowPreview()
     {
+        return;
+        
         isPreview = true;
         if (!canClick) return;
         loading.gameObject.SetActive(true);

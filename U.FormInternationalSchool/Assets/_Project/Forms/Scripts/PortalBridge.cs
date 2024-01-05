@@ -17,47 +17,47 @@ public class PortalBridge : SimpleSingleton<PortalBridge>
     public void OnGameCreatedEvent(string responseJson)
     {
         Debug.Log("[DEBUG] Informação do game enviada para o portal.");
-#if UNITY_WEBGL && !UNITY_EDITOR
-        try
-        {
-            GameCreationResponse response =
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Newtonsoft.Json.JsonConvert.DeserializeObject<GameCreationResponse>(responseJson);
-            OnGameCreated(response.id, response.gameType);
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError(ex.Message);
-        }
-#endif
+// #if UNITY_WEBGL && !UNITY_EDITOR
+//         try
+//         {
+//             GameCreationResponse response =
+//                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   Newtonsoft.Json.JsonConvert.DeserializeObject<GameCreationResponse>(responseJson);
+//             OnGameCreated(response.id, response.gameType);
+//         }
+//         catch (System.Exception ex)
+//         {
+//             Debug.LogError(ex.Message);
+//         }
+// #endif
     }
 
     public void OnShowPreviewEvent(string gameType, string jsonData)
     {
         Debug.Log("[DEBUG] Solicitacao preview para o portal.");
-#if UNITY_WEBGL && !UNITY_EDITOR
-        try
-        {
-            OnShowPreview(gameType, jsonData);
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError(ex.Message);
-        }
-#endif
+// #if UNITY_WEBGL && !UNITY_EDITOR
+//         try
+//         {
+//             OnShowPreview(gameType, jsonData);
+//         }
+//         catch (System.Exception ex)
+//         {
+//             Debug.LogError(ex.Message);
+//         }
+// #endif
     }
 
     public void AddGameToPathEvent(int gameId, string gameType)
     {
         Debug.Log($"[DEBUG] Id do [{gameId}] jogo enviado para ser adicionado na trilha");
-#if UNITY_WEBGL && !UNITY_EDITOR
-        try
-        {
-            AddGameToPath(gameId, gameType);
-        }
-        catch (System.Exception ex)
-        {
-            Debug.LogError(ex.Message);
-        }
-#endif
+// #if UNITY_WEBGL && !UNITY_EDITOR
+//         try
+//         {
+//             AddGameToPath(gameId, gameType);
+//         }
+//         catch (System.Exception ex)
+//         {
+//             Debug.LogError(ex.Message);
+//         }
+// #endif
     }
 }
