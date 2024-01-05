@@ -13,6 +13,7 @@ using LubyLib.Core.Singletons;
 using TMPro;
 using Newtonsoft.Json;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -75,6 +76,8 @@ public class FormScreen : MonoBehaviour
     protected List<string> oldUrlsToDelete;
 
     private DefaultSettings settings;
+
+    protected bool isCompleted;
     
 
     protected Dictionary<GameType, string> themeSongsUrls = new Dictionary<GameType, string>()
@@ -181,6 +184,7 @@ public class FormScreen : MonoBehaviour
 
     public void SendFormData()
     {
+        isCompleted = true;
         isPreview = false;
         if (!canClick) return;
         loading.gameObject.SetActive(true);
@@ -191,6 +195,7 @@ public class FormScreen : MonoBehaviour
     
     public void ShowPreview()
     {
+        isCompleted = true;
         isPreview = true;
         if (!canClick) return;
         loading.gameObject.SetActive(true);
@@ -211,11 +216,16 @@ public class FormScreen : MonoBehaviour
         {
             emptyField.Clear();
         }
-        
+
         if (title.InputField.text.IsNullEmptyOrWhitespace())
         {
-            title.ActivateErrorMode();
+            title.ActivateNullMode();
             emptyField.Add("Identificador do jogo");
+            if (!isPreview)
+            {
+                ShowError("Identificador do jogo",ErrorType.EMPTY,null);
+                return;
+            }
         }
         else
         {
@@ -224,7 +234,7 @@ public class FormScreen : MonoBehaviour
         
         if (statement_EN.InputField.text.IsNullEmptyOrWhitespace())
         {
-            statement_EN.ActivateErrorMode();
+            statement_EN.ActivateNullMode();
             emptyField.Add("Enunciado em Inglês");
         } else
         {
@@ -233,7 +243,7 @@ public class FormScreen : MonoBehaviour
 
         if (statement_PT.InputField.text.IsNullEmptyOrWhitespace() )
         {
-            statement_PT.ActivateErrorMode();
+            statement_PT.ActivateNullMode();
             emptyField.Add("Enunciado em Português");
         }else
         {
@@ -242,32 +252,32 @@ public class FormScreen : MonoBehaviour
         
         if (titleImage.UploadedFile == null && titleImage.IsFilled == false)
         {
-            titleImage.ActivateErrorMode();
+            titleImage.ActivateNullMode();
             emptyField.Add("Imagem do enunciado");
         }
 
         if (backgroundMusic.UploadedFile == null && backgroundMusic.IsFilled == false)
         {
             emptyField.Add("Música de fundo");
-            backgroundMusic.ActivateErrorMode();
+            backgroundMusic.ActivateNullMode();
         }
         
         if (audioStatement_EN.UploadedFile == null && audioStatement_PT.IsFilled == false)
         {
             emptyField.Add("Áudio do enunciado em inglês");
-            audioStatement_EN.ActivateErrorMode();
+            audioStatement_EN.ActivateNullMode();
         }
         
         if (audioStatement_PT.UploadedFile == null && audioStatement_PT.IsFilled == false)
         {
             emptyField.Add("Áudio do enunciado em português");
-            audioStatement_PT.ActivateErrorMode();
+            audioStatement_PT.ActivateNullMode();
         }
         
         if (backgroundImage.UploadedFile == null && backgroundImage.IsFilled == false)
         {
             emptyField.Add("Imagem de fundo");
-            backgroundImage.ActivateErrorMode();
+            backgroundImage.ActivateNullMode();
         }
         
 
@@ -275,7 +285,7 @@ public class FormScreen : MonoBehaviour
         {
             if (timeMin.InputField.text.IsNullEmptyOrWhitespace())
             {
-                timeMin.ActivateErrorMode();
+                timeMin.ActivateNullMode();
                 emptyField.Add("minutos do timer");
             }else
             {
@@ -284,7 +294,7 @@ public class FormScreen : MonoBehaviour
             
             if (timeSec.InputField.text.IsNullEmptyOrWhitespace())
             {
-                timeSec.ActivateErrorMode();
+                timeSec.ActivateNullMode();
                 emptyField.Add("segundos do timer");
             }else
             {
@@ -293,7 +303,7 @@ public class FormScreen : MonoBehaviour
             
             if (timerBonus.InputField.text.IsNullEmptyOrWhitespace())
             {
-                timerBonus.ActivateErrorMode();
+                timerBonus.ActivateNullMode();
                 emptyField.Add("Bônus do timer");
             }else
             {
@@ -313,12 +323,21 @@ public class FormScreen : MonoBehaviour
     protected virtual void ValidateFields()
     {
         hasValidationError = false;
-        int.TryParse(timerBonus.InputField.text, out bonusTimer);
-        if (!CheckBetweenValues(timerBonus,0,100, "Bônus do timer"))
+        if (!timerBonus.Null)
         {
-            hasValidationError = true;
-            return;
+            int.TryParse(timerBonus.InputField.text, out bonusTimer);
+        
+            if (!CheckBetweenValues(timerBonus,0,100, "Bônus do timer"))
+            {
+                hasValidationError = true;
+                return;
+            }
         }
+        else
+        {
+            isCompleted = false;
+        }
+        
         if (timer.isOn)
         {
             timeInSec = CalculateTimeInSec("do jogo", timeMin, timeSec, false);
@@ -326,6 +345,9 @@ public class FormScreen : MonoBehaviour
             {
                 hasValidationError = true;
                 timeInSec = 0;
+            }else if (timeInSec == 0)
+            {
+                isCompleted = false;
             }
         }
     }
@@ -339,7 +361,7 @@ public class FormScreen : MonoBehaviour
             if (value < 0)
             {
                 ShowError(field, ErrorType.GREATER_OR_EQUAL, new int[]{0});
-                input.ActivateErrorMode(true);
+                input.ActivateNullMode(true);
                 return false;
             }
         }
@@ -348,7 +370,7 @@ public class FormScreen : MonoBehaviour
             if (value <= 0)
             {
                 ShowError(field, ErrorType.GREATER_THAN, new int[]{0});
-                input.ActivateErrorMode(true);
+                input.ActivateNullMode(true);
                 return false;
             }
         }
@@ -394,8 +416,8 @@ public class FormScreen : MonoBehaviour
             if (min + sec <= 0)
             {
                 ShowError("Tempo total do timer " + name, ErrorType.GREATER_THAN, new int[]{0});
-                minText.ActivateErrorMode();
-                secText.ActivateErrorMode(true);
+                minText.ActivateNullMode();
+                secText.ActivateNullMode(true);
                 return -1;
             }
         }
@@ -404,8 +426,8 @@ public class FormScreen : MonoBehaviour
             if (min + sec < 0)
             {
                 ShowError("Tempo total do timer " + name, ErrorType.GREATER_OR_EQUAL, new int[]{0});
-                minText.ActivateErrorMode(true);
-                secText.ActivateErrorMode(true);
+                minText.ActivateNullMode(true);
+                secText.ActivateNullMode(true);
                 return -1;
             }
         }
@@ -436,7 +458,7 @@ public class FormScreen : MonoBehaviour
         if (value < min || value > max)
         {
             ShowError(field, ErrorType.BETWEEN, new int[]{min,max});
-           input.ActivateErrorMode(true);
+           input.ActivateNullMode(true);
            return false;
         }
         input.DeactivateErrorMode(inputImage);
@@ -456,12 +478,14 @@ public class FormScreen : MonoBehaviour
         if (baseForm.hasTimer)
         {
             timer.onValueChanged.Invoke(baseForm.hasTimer);
-            int min = baseForm.timer / 60;
-            int sec = baseForm.timer - min * 60;
-            timeMin.InputField.text =  String.Format("{0:00}", min);
-            timeSec.InputField.text = String.Format("{0:00}", sec);
-
-            timerBonus.InputField.text = baseForm.bonustimer.ToString();
+            if (baseForm.timer != null && baseForm.timer > 0)
+            {
+                timeMin.InputField.text =  String.Format("{0:00}", baseForm.timer / 60);
+                timeSec.InputField.text = String.Format("{0:00}", baseForm.timer - (baseForm.timer / 60) * 60);
+            }
+            
+            if(baseForm.bonustimer != null)
+                timerBonus.InputField.text = baseForm.bonustimer.ToString();
         }
 
         if (baseForm.hasSupportMaterial)
@@ -469,12 +493,21 @@ public class FormScreen : MonoBehaviour
             supportMaterialPanel.FillSupportMaterial(baseForm.SupportMaterial);
         }
         
-        FillUploadFiles(titleImage,"gameTitleImg",baseForm.gameTitleImageUrl);
-        FillUploadFiles(backgroundImage,"background",baseForm.backgroundUrl);
-        FillUploadFiles( backgroundMusic,"music_theme",baseForm.backgroundMusicUrl);
-        FillUploadFiles( audioStatement_EN,"statement_en",baseForm.questionStatementEnglishAudioUrl);
-        FillUploadFiles( audioStatement_PT,"statement_pt",baseForm.questionStatementPortugueseAudioUrl);
-        loadFileQtt = loadFileQtt + 5;
+        CheckFillFile(titleImage,"gameTitleImg",baseForm.gameTitleImageUrl);
+        CheckFillFile(backgroundImage,"background",baseForm.backgroundUrl);
+        CheckFillFile(backgroundMusic,"music_theme",baseForm.backgroundMusicUrl);
+        CheckFillFile( audioStatement_EN,"statement_en",baseForm.questionStatementEnglishAudioUrl);
+        CheckFillFile( audioStatement_PT,"statement_pt",baseForm.questionStatementPortugueseAudioUrl);
+       
+    }
+
+    public void CheckFillFile(UploadFileElement element, string title, string path)
+    {
+        if (!path.IsNullEmptyOrWhitespace())
+        {
+            FillUploadFiles(element,title,path);
+            loadFileQtt++;
+        }
     }
 
     public void FillUploadFiles(UploadFileElement element, string name, string value)
@@ -534,8 +567,14 @@ public class FormScreen : MonoBehaviour
             }
             else
             {
-                ShowError("Imagem de título do jogo", ErrorType.EMPTY, null);
-                return;
+                if (isPreview)
+                {
+                    ShowError("Imagem de título do jogo", ErrorType.EMPTY, null);
+                    return;
+                }
+
+                filledUrlFiles.TryAdd(fields[0], null);
+                isCompleted = false;
             }
         }
 
@@ -552,8 +591,14 @@ public class FormScreen : MonoBehaviour
             }
             else
             {
-                ShowError("Música de fundo", ErrorType.EMPTY, null);
-                return;
+                if (isPreview)
+                {
+                    ShowError("Música de fundo", ErrorType.EMPTY, null);
+                    return;
+                }
+                
+                filledUrlFiles.TryAdd(fields[1], null);
+                isCompleted = false;
             }
         }
 
@@ -570,8 +615,13 @@ public class FormScreen : MonoBehaviour
             }
             else
             {
-                ShowError("Imagem de fundo", ErrorType.EMPTY, null);
-                return;
+                if (isPreview)
+                {
+                    ShowError("Imagem de fundo", ErrorType.EMPTY, null);
+                    return;
+                }
+                filledUrlFiles.TryAdd(fields[2], null);
+                isCompleted = false;
             }
         }
 
@@ -588,8 +638,14 @@ public class FormScreen : MonoBehaviour
             }
             else
             {
-                ShowError("Áudio do enunciado em Português", ErrorType.EMPTY, null);
-                return;
+                if (isPreview)
+                {
+                    ShowError("Áudio do enunciado em Português", ErrorType.EMPTY, null);
+                    return;
+                }
+
+                filledUrlFiles.TryAdd(fields[3], null);
+                isCompleted = false;
             }
         }
 
@@ -606,8 +662,13 @@ public class FormScreen : MonoBehaviour
             }
             else
             {
-                ShowError("Áudio do enunciado em inglês", ErrorType.EMPTY, null);
-                return;
+                if (isPreview)
+                {
+                    ShowError("Áudio do enunciado em inglês", ErrorType.EMPTY, null);
+                    return;
+                }
+                filledUrlFiles.TryAdd(fields[4], null);
+                isCompleted = false;
             }
         }
 
@@ -634,7 +695,12 @@ public class FormScreen : MonoBehaviour
         
         if (files.Count < newUrlFiles.Count)
         {
-            ShowError("Por favor, preencha todos os campos de arquivos.", ErrorType.CUSTOM, null);
+            if (isPreview)
+            { 
+                ShowError("Por favor, preencha todos os campos de arquivos.", ErrorType.CUSTOM, null);
+                return;
+            }
+            isCompleted = false;
         }
         else
         {
@@ -763,8 +829,9 @@ public class FormScreen : MonoBehaviour
             questionStatementEnglishAudioUrl = urlDict[Constants.AUDIO_EN],
             questionStatementEnglishVersion = statement_EN.InputField.text,
             questionStatementPortugueseAudioUrl = urlDict[Constants.AUDIO_PT],
-            timer = timeInSec,
-            questionStatementPortugueseVersion = statement_PT.InputField.text
+            timer = timeInSec <= 0? null : timeInSec,
+            questionStatementPortugueseVersion = statement_PT.InputField.text,
+            isDraft = !isCompleted
         };
         SendGameFiles();
 
@@ -912,7 +979,8 @@ public class FormBase
     public string questionStatementEnglishAudioUrl;
     public bool hasSupportMaterial;
     public bool hasTimer;
-    public int timer;
+    public Nullable<int> timer;
     public int bonustimer;
     public List<SupportMaterial> supportMaterial;
+    public bool isDraft;
 }

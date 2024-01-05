@@ -45,7 +45,7 @@ public class QuizAlternative : MonoBehaviour
                          gameObject.GetComponent<UploadFileElement>().UploadedFile != null;
             if (!isComplete)
             {
-                FileElement.ActivateErrorMode();
+                FileElement.ActivateNullMode();
             }
             return isComplete;
         }
@@ -53,7 +53,7 @@ public class QuizAlternative : MonoBehaviour
         isComplete = !input.InputField.text.IsNullEmptyOrWhitespace();
         if (!isComplete)
         {
-            input.ActivateErrorMode();
+            input.ActivateNullMode();
         }
         return isComplete;
     }
@@ -118,9 +118,7 @@ public class QuizAlternative : MonoBehaviour
         FileElement = gameObject.GetComponent<UploadFileElement>();
         if (FileElement != null)
         {
-            form.loadFileQtt += 1;
-            
-            form.FillUploadFiles( FileElement,(type +"_"+Index).ToLower(),url);
+            form.CheckFillFile(FileElement,(type +"_"+Index).ToLower(),url);
         }
         else
         {

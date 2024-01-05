@@ -47,14 +47,18 @@ public class QuizForm : FormScreen
 
         if (emptyField.Count > 0)
         {
-            if (emptyField.Count == 1)
+            isCompleted = false;
+            if(isPreview)
             {
-                ShowError(emptyField[0], ErrorType.EMPTY, null);
+                if (emptyField.Count == 1)
+                {
+                    ShowError(emptyField[0], ErrorType.EMPTY, null);
+                    return;
+                }
+
+                ShowError("", ErrorType.ALL_FIELDS, null);
                 return;
             }
-
-            ShowError("", ErrorType.ALL_FIELDS, null);
-            return;
         }
 
         ValidateFields();
@@ -74,18 +78,28 @@ public class QuizForm : FormScreen
         }
 
         if (questionsGroup.QuestionsQtt == 0)
-        { 
-            string errormessage = "O quiz deve possuir ao menos uma questão.";
-            ShowError(errormessage, ErrorType.CUSTOM, null);
-            return;
-            
+        {
+            if (isPreview)
+            {
+                string errormessage = "O quiz deve possuir ao menos uma questão.";
+                ShowError(errormessage, ErrorType.CUSTOM, null);
+                return;
+            }
+            isCompleted = false;
+
         }
         
         if (!questionsGroup.CheckAllQuestions())
         {
-            string errormessage = "Todos as questões devem ser preenchidas.";
-            ShowError(errormessage, ErrorType.CUSTOM, null);
-            return;
+            if (isPreview)
+            {
+                string errormessage = "Todos as questões devem ser preenchidas.";
+                ShowError(errormessage, ErrorType.CUSTOM, null);
+                return;
+            }
+            
+            isCompleted = false;
+            
         }
 
         SendBaseFormFiles();
@@ -105,15 +119,16 @@ public class QuizForm : FormScreen
             game = this.game,
             gameData = new Quiz()
             {
-                failPenalty = failsPenaltyValue,
+                failPenalty = failsPenaltyValue == 0 ? null : failsPenaltyValue,
                 randomAnswers = randomize.isOn,
-                questions = questionsList,
+                questions = questionsList == null? new Question[0] : questionsList,
             }
         };
         
         if (!isPreview)
         {
             string json = JsonConvert.SerializeObject(completeForm);
+            Debug.Log(json);
             if (isEdit)
             {
                 SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this, SendGameInfoToPortal);
@@ -138,7 +153,7 @@ public class QuizForm : FormScreen
                 questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
                 questionStatementEnglishVersion = game.questionStatementEnglishVersion,
                 questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
-                timer = game.timer,
+                timer = timeInSec,
                 questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
                 failPenalty = completeForm.gameData.failPenalty,
                 randomAnswers = completeForm.gameData.randomAnswers,
@@ -196,7 +211,7 @@ public class FormQuiz
 
 public class FormQuizPreviewData : BaseGameJson
 {
-    public int failPenalty;
+    public Nullable<int> failPenalty;
     public bool randomAnswers;
     public QuizQuestionPreview[] questions;
 }

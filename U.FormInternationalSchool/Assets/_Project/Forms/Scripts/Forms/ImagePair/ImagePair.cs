@@ -37,14 +37,13 @@ public class ImagePair : MonoBehaviour
     public List<File> GetFiles()
     {
         List<File> files = new List<File>();
-        if (IsCompleted())
+
+        foreach (var frame in frames)
         {
-            foreach (var frame in frames)
-            {
-                if(!frame.Image.IsFilled && frame.Image.UploadedFile != null)
-                    files.Add(frame.Image.UploadedFile);
-            }
+            if(!frame.Image.IsFilled && frame.Image.UploadedFile != null)
+                files.Add(frame.Image.UploadedFile);
         }
+        
 
         return files;
     }
@@ -54,15 +53,23 @@ public class ImagePair : MonoBehaviour
         List<string> listFilledImages = new List<string>();
         foreach (var frame in frames)
         {
-            if (frame.Image.IsActive && frame.Image.UploadedFile == null)
+            if (frame.Image.isActiveAndEnabled)
             {
-                if (frame.Image.IsFilled)
+                if (frame.Image.UploadedFile == null)
                 {
-                    listFilledImages.Add(frame.Image.url);
+                    if (frame.Image.IsFilled)
+                    {
+                        listFilledImages.Add(frame.Image.url);
+                    }
+                    else
+                    {
+                        listFilledImages.Add(Constants.ERROR_IMAGE_URL);
+                    }
+                   
                 }
             }
         }
-
+        
         return listFilledImages;
     }
     
@@ -72,7 +79,7 @@ public class ImagePair : MonoBehaviour
         foreach (var frame in frames)
         {
             Debug.LogError("frame");
-            if (frame.Image.IsActive)
+            if (frame.Image.isActiveAndEnabled)
             {
                 Debug.LogError("isactive");
                 listFilledImages.Add(frame.Image.PreviewImageData);

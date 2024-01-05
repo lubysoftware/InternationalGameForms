@@ -18,7 +18,7 @@ public class PuzzleJsonGet
     public string questionStatementEnglishVersion;
     public bool hasSupportMaterial;
     public bool hasTimer;
-    public int timer;
+    public Nullable<int> timer;
     public int bonustimer;
     public string created_at;
     public string updated_at;
@@ -30,6 +30,7 @@ public class PuzzleJsonGet
     public int tipShowTime;
     public int tipCoolDown;
     public int tipCount;
+    public bool isDraft;
 }
     
 [Serializable]

@@ -114,6 +114,21 @@ public class MemoryPanel : MonoBehaviour
 
         return counter;
     }
+    
+    public int ActivePairs()
+    {
+        int counter = 0;
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).GetComponent<ImagePair>().isActiveAndEnabled)
+            {
+                counter++;
+            }
+        }
+
+        return counter;
+    }
+
 
     public bool AllPairsFilled()
     {

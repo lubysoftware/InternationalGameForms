@@ -208,9 +208,9 @@ public class NewWordInput : InputElement
         deleteButton.interactable = status;
     }
     
-    public override void ActivateErrorMode(bool cleanInput = false)
+    public override void ActivateNullMode(bool cleanInput = false)
     {
-        base.ActivateErrorMode(cleanInput);
+        base.ActivateNullMode(cleanInput);
         background.sprite = backgroundSprites[1];
     }
 

@@ -73,10 +73,17 @@ public class DragDropForm : FormScreen
             }
             else
             {
-                ShowError("Imagem de fundo do grid", ErrorType.EMPTY, null);
-                return;
+                if (isPreview)
+                {
+                    ShowError("Imagem de fundo do grid", ErrorType.EMPTY, null);
+                    return;
+                }else
+                {
+                    backImagePath = null;
+                }
             }
         }
+        
         
         if (items != null && items.Count > 0)
         {
@@ -106,7 +113,7 @@ public class DragDropForm : FormScreen
     {
         if (failsPenalty.InputField.text.IsNullEmptyOrWhitespace())
         {
-            failsPenalty.ActivateErrorMode();
+            failsPenalty.ActivateNullMode();
             emptyField.Add("Pontuação descontada por erro");
         }
         else
@@ -121,14 +128,19 @@ public class DragDropForm : FormScreen
 
         if (emptyField.Count > 0)
         {
-            if (emptyField.Count == 1)
+            if (isPreview)
             {
-                ShowError(emptyField[0], ErrorType.EMPTY, null);
+                if (emptyField.Count == 1)
+                {
+                    ShowError(emptyField[0], ErrorType.EMPTY, null);
+                    return;
+                }
+
+                ShowError("", ErrorType.ALL_FIELDS, null);
                 return;
             }
 
-            ShowError("", ErrorType.ALL_FIELDS, null);
-            return;
+            isCompleted = false;
         }
 
         ValidateFields();
@@ -147,26 +159,37 @@ public class DragDropForm : FormScreen
             return;
         }
 
-        if (CheckGreatherThanZero(failsPenalty, "Pontuação descontada por erro"))
+        if (!failsPenalty.Null)
         {
-            int.TryParse(failsPenalty.InputField.text, out failsPenaltyValue);
-        }
-        else
+            if (CheckGreatherThanZero(failsPenalty, "Pontuação descontada por erro"))
+            {
+                int.TryParse(failsPenalty.InputField.text, out failsPenaltyValue);
+            }
+            else
+            {
+                return;
+            }
+            
+        }else
         {
-            return;
+            isCompleted = false;
         }
 
-        if (!panel.CheckIfAllElementsAreFullyComplete())
+        if (isPreview)
         {
-            string errormessage = "Todos os elementos devem ser preenchidos.";
-            if (panel.IsGroup)
+            if (!panel.CheckIfAllElementsAreFullyComplete())
             {
-                errormessage = "Todos os elementos devem ter imagem e número do grupo preenchidos.";
+                string errormessage = "Todos os elementos devem ser preenchidos.";
+                if (panel.IsGroup)
+                {
+                    errormessage = "Todos os elementos devem ter imagem e número do grupo preenchidos.";
+                }
+
+                ShowError(errormessage, ErrorType.CUSTOM, null);
+                return;
             }
-            ShowError(errormessage, ErrorType.CUSTOM, null);
-            return;
         }
-        
+
         SendBaseFormFiles();
     }
 
@@ -180,7 +203,7 @@ public class DragDropForm : FormScreen
         }
 
         int urlIndex = 0;
-        if (backImagePath.IsNullEmptyOrWhitespace())
+        if (backImagePath == "")
         {
             backImagePath = urls[0];
             urlIndex = 1;
@@ -230,7 +253,7 @@ public class DragDropForm : FormScreen
             gameData = new DragDrop()
             {
                 dropPlaceBackgroundUrl = backImagePath,
-                failPenalty = failsPenaltyValue,
+                failPenalty = failsPenaltyValue == 0 ? null : failsPenaltyValue,
                 materialType = panel.IsText ? "TEXT" : "IMAGE",
                 dragType = panel.IsGroup ? "CATEGORY" : "UNIQUE",
                 draggableItems = listDraggableItems,
@@ -266,7 +289,7 @@ public class DragDropForm : FormScreen
                 questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
                 questionStatementEnglishVersion = game.questionStatementEnglishVersion,
                 questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
-                timer = game.timer,
+                timer = timeInSec,
                 questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
                 dropPlaceBackgroundUrl = completeForm.gameData.dropPlaceBackgroundUrl,
                 failPenalty = completeForm.gameData.failPenalty,
@@ -291,12 +314,12 @@ public class DragDropForm : FormScreen
     private void FillGameData(DragDropJsonGet json)
     {
         failsPenalty.InputField.text = json.failPenalty.ToString();
-        FillUploadFiles(panel.BackImage(), "grid_image", json.dropPlaceBackgroundUrl);
+        CheckFillFile(panel.BackImage(), "grid_image", json.dropPlaceBackgroundUrl);
         panel.previousDropdown = json.draggableItem.Count;
         panel.FillToggles(json.materialType == "TEXT",json.dragType == "CATEGORY");
         panel.InstantiateFilledElements(json.draggableItem, OnLoadFile);
         elementsQtt = json.draggableItem.Count;
-        loadFileQtt = loadFileQtt + elementsQtt + 1;
+        loadFileQtt = loadFileQtt + elementsQtt;
         currentLoad += elementsQtt;
         CheckIfMaxQtt();
     }
@@ -313,7 +336,7 @@ public class DragDropForm : FormScreen
 public class DragDrop
 {
     public string dropPlaceBackgroundUrl;
-    public int failPenalty;
+    public Nullable<int> failPenalty;
     public string materialType;
     public string dragType;    
     public List<DraggableItemJson> draggableItems;
@@ -331,7 +354,7 @@ public class FormDragDrop
 public class FormDragDropPreviewData : BaseGameJson
 {
     public string dropPlaceBackgroundUrl;
-    public int failPenalty;
+    public Nullable<int> failPenalty;
     public string materialType;
     public string dragType;    
     public List<DraggableItemJson> draggableItem;

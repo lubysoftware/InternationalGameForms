@@ -18,7 +18,7 @@ public class CrosswordJsonGet
     public string questionStatementEnglishVersion;
     public bool hasSupportMaterial;
     public bool hasTimer;
-    public int timer;
+    public Nullable<int> timer;
     public int bonustimer;
     public string created_at;
     public string updated_at;
@@ -27,6 +27,7 @@ public class CrosswordJsonGet
     public int crossWordId;
     public string questionType;
     public List<WordsGet> words;
+    public bool isDraft;
 }
 
 [Serializable]

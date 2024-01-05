@@ -78,6 +78,7 @@ public class ImagePairPanel : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             transform.GetChild(i).gameObject.GetComponent<ImagePair>().Activate(i < previousDropdown);
+            transform.GetChild(i).GetComponent<ImagePair>().SetId(idsList[i], true);
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(layoutGroup.transform as RectTransform);
@@ -96,6 +97,20 @@ public class ImagePairPanel : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             if (transform.GetChild(i).GetComponent<ImagePair>().IsCompleted())
+            {
+                counter++;
+            }
+        }
+
+        return counter;
+    }
+    
+    public int ActivePairs()
+    {
+        int counter = 0;
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).GetComponent<ImagePair>().isActiveAndEnabled)
             {
                 counter++;
             }
@@ -130,7 +145,7 @@ public class ImagePairPanel : MonoBehaviour
             if(pair.FilledImages() != null && pair.FilledImages().Count > 0)
                 files.Add(pair.Id, pair.FilledImages());
         }
-
+        
         return files;
     }
     

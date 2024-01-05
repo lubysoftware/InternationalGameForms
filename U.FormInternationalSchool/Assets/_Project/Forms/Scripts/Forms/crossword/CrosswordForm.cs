@@ -47,42 +47,52 @@ public class CrosswordForm : FormScreen
         wordsQtt = panel.WordsQtt;
         if (wordsQtt < 1)
         {
-            ShowError("O grid de palavras deve conter no mínimo uma palavra.", ErrorType.CUSTOM, null);
-        }
-        else
-        {
-            if (panel.IsImage)
+            isCompleted = false;
+            if (isPreview)
             {
-                filledImages = panel.FilledImage();
-                if (panel.GetImages() != null && panel.GetImages().Count > 0)
-                {
-                    SendFilesToAPI.Instance.StartUploadFiles(this, panel.GetImages(), false);
-                }
-                else
-                {
-                    SerializeGameData(null);
-                }
+                ShowError("O grid de palavras deve conter no mínimo uma palavra.", ErrorType.CUSTOM, null);
+                return;
+            }
+            
+        }
+
+        if (panel.IsImage)
+        {
+            filledImages = panel.FilledImage();
+            if (panel.GetImages() != null && panel.GetImages().Count > 0)
+            {
+                SendFilesToAPI.Instance.StartUploadFiles(this, panel.GetImages(), false);
             }
             else
             {
-                filledImages = panel.FilledInputs();
                 SerializeGameData(null);
             }
         }
+        else
+        {
+            filledImages = panel.FilledInputs();
+            SerializeGameData(null);
+        }
+        
     }
     
     protected override void CheckEmptyGameFields()
     {
         if (emptyField.Count > 0)
         {
-            if (emptyField.Count == 1)
+            if (isPreview)
             {
-                ShowError(emptyField[0], ErrorType.EMPTY, null);
+                if (emptyField.Count == 1)
+                {
+                    ShowError(emptyField[0], ErrorType.EMPTY, null);
+                    return;
+                }
+
+                ShowError("", ErrorType.ALL_FIELDS, null);
                 return;
             }
 
-            ShowError("", ErrorType.ALL_FIELDS, null);
-            return;
+            isCompleted = false;
         }
         ValidateFields();
     }
@@ -91,22 +101,30 @@ public class CrosswordForm : FormScreen
     {
         base.ValidateFields();
         if (hasValidationError) return;
-        if (panel.WordsQtt < 1)
-        {
-            ShowError("O grid de palavras deve conter no mínimo uma palavra.", ErrorType.CUSTOM, null);
-            return;
-        }
-
+        
         if (panel.editingInput != null)
         {
             ShowError("Finalize a edição da palavra " + panel.editingInput.Index + ".", ErrorType.CUSTOM, null);
             return;
         }
+        if (panel.WordsQtt < 1)
+        {
+            if (isPreview)
+            {
+                ShowError("O grid de palavras deve conter no mínimo uma palavra.", ErrorType.CUSTOM, null);
+                return;
+            }
+            isCompleted = false;
+        }
 
         if (!panel.IsAllFilled())
         {
-            ShowError("Todas as palavras devem ter as dicas preenchidas.", ErrorType.CUSTOM, null);
-            return;
+            if (isPreview)
+            {
+                ShowError("Todas as palavras devem ter as dicas preenchidas.", ErrorType.CUSTOM, null);
+                return;
+            }
+            isCompleted = false;
         }
 
 
@@ -183,6 +201,7 @@ public class CrosswordForm : FormScreen
         {
             string json = JsonConvert.SerializeObject(completeForm);
 
+            Debug.Log(json);
             if (isEdit)
             {
                 SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this,
@@ -209,7 +228,7 @@ public class CrosswordForm : FormScreen
                 questionStatementEnglishAudioUrl = game.questionStatementEnglishAudioUrl,
                 questionStatementEnglishVersion = game.questionStatementEnglishVersion,
                 questionStatementPortugueseAudioUrl = game.questionStatementPortugueseAudioUrl,
-                timer = game.timer,
+                timer = timeInSec,
                 questionStatementPortugueseVersion = game.questionStatementPortugueseVersion,
                 questionType = completeForm.gameData.questionType,
                 words = completeForm.gameData.words
@@ -230,13 +249,15 @@ public class CrosswordForm : FormScreen
 
     private void FillGameData(CrosswordJsonGet json)
     {
-        pointPerWord.InputField.text = (100/json.words.Count).ToString();
+        if (json.words.Count > 0)
+        {
+            pointPerWord.InputField.text = (100/json.words.Count).ToString();
+        }
         bool isImage = json.questionType == "IMAGE";
         panel.SetImageToggle(isImage);
-        panel.FillData(json.words,FillUploadFiles,isImage);
+        panel.FillData(json.words,CheckFillFile,isImage);
         
         wordImagesQtt = isImage?json.words.Count:0;
-        loadFileQtt = loadFileQtt + wordImagesQtt;
         CheckIfMaxQtt();
     }
 

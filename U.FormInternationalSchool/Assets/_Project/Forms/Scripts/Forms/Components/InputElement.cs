@@ -12,6 +12,8 @@ public class InputElement : MonoBehaviour
     [SerializeField] private Sprite fieldNormalMode;
     [SerializeField] private Image field;
 
+    public bool Null = false;
+
     public TMP_InputField InputField => GetComponentInChildren<TMP_InputField>();
     private string title = "";
 
@@ -24,20 +26,23 @@ public class InputElement : MonoBehaviour
         }
     }
 
-    public virtual void ActivateErrorMode(bool cleanInput = false)
+    public virtual void ActivateNullMode(bool cleanInput = false)
     {
         AddErrorMessage();
         errorSymbol.gameObject.SetActive(true);
         field.sprite = fieldErrorMode;
         if (cleanInput && InputField != null)
         {
-            InputField.text = "";
+            InputField.text = null;
         }
+
+        Null = true;
     }
 
     public void DeactivateErrorMode()
     {
         DeactivateErrorMode(fieldNormalMode);
+        Null = false;
     }
 
     public virtual void DeactivateErrorMode(Sprite normal,bool changeSprite = true)

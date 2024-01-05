@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,15 +17,16 @@ public class QuizJsonGet : MonoBehaviour
     public string questionStatementEnglishVersion;
     public bool hasSupportMaterial;
     public bool hasTimer;
-    public int timer;
+    public Nullable<int> timer;
     public int bonustimer;
     public string created_at;
     public string updated_at;
     public bool deleted;
     public List<SupportMaterialGet> supportMaterial;
     public int quizId;
-    public int failPenalty;
+    public Nullable<int> failPenalty;
     public bool randomAnswers;
+    public bool isDraft;
     public List<QuestionGet> questions;
 }
 

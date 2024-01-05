@@ -99,7 +99,7 @@ public class LibraryScreen : MonoBehaviour
                 if (!list.data[i].deleted)
                 {
                     component[i].Init(list.data[i].gameTitle, list.data[i].id, so.scene, list.data[i].gameType,
-                        so.colors[0], so.colors[2]);
+                        so.colors[0], so.colors[2], list.data[i].isDraft);
                     component[i].gameObject.SetActive(true);
                 }
             }

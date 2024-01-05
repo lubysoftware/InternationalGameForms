@@ -152,9 +152,7 @@ public class UploadFileElement : InputElement
                             fileData.text = $"{file.fileInfo.name}{file.fileInfo.extension}";
                         }
 
-                        WebGLFileBrowser
-                            .RegisterFileObject(file
-                                .ToSprite());
+                      //  WebGLFileBrowser.RegisterFileObject(file.ToSprite());
                         // add sprite with texture to cache list. should be used with  fileBrowserFreeMemory() when its no need anymore
                         if (hasErrorMode)
                         {
@@ -174,10 +172,10 @@ public class UploadFileElement : InputElement
       */
                     if (file.IsAudio(AudioType.OGG) || file.IsAudio(AudioType.OGGVORBIS))
                     {
-                        // Debug.Log("File is OGG. " + file.fileInfo.extension);
+                     //    Debug.Log("File is OGG. " + file.fileInfo.extension);
                         AudioClip clip = file.ToAudioClip();
 
-                        WebGLFileBrowser.RegisterFileObject(clip);
+                   //     WebGLFileBrowser.RegisterFileObject(clip);
                         // add audio clip to cache list. should be used with  fileBrowserFreeMemory() when its no need anymore
                         fileData.text = $"{file.fileInfo.fullName}";
                         _audioSource.clip = clip;
@@ -210,6 +208,7 @@ public class UploadFileElement : InputElement
         {
             Debug.LogError("loaded files = null ou = 0");
         }
+        
     }
 
     public void Clear()
