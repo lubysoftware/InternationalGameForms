@@ -265,11 +265,14 @@ public class SendFilesToAPI : SimpleSingleton<SendFilesToAPI>
         APIFactory.GetApi<FileUpload>().DeleteFile(new FilesToDelete(filesToDelete),
             list =>
             {
-                Debug.Log($"Files deleted: {list.Count}");
+                if (list != null)
+                {
+                    Debug.Log($"Files deleted: {list.Count}");
+                }
             },
             errorProxy =>
             {
-                Debug.LogError("error " + errorProxy.message);
+                Debug.LogError("Erro ao deletar arquivos: " + errorProxy.message);
             });
     }
 }

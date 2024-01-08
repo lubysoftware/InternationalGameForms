@@ -6,27 +6,30 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Project/Forms/Scenes/InitialScene.unity
+    guid: 58ad01bad174e7045b1662b4cc50350d
+  - enabled: 0
     path: Assets/_Project/Forms/Scenes/Dashboard.unity
     guid: ef45deff3f9377b45a74fc270264b215
   - enabled: 1
     path: Assets/_Project/Forms/Scenes/Library.unity
     guid: 5420da13ac774ff4cbc767471ac02999
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Project/Forms/Scenes/Form_ImageSeq.unity
     guid: 7f64fdfa23adf7e4681fea2174a4861e
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Project/Forms/Scenes/Form_ImagePairing.unity
     guid: 7e5ac4643cdaeaa41a103cbda824e098
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Project/Forms/Scenes/Form_Memory.unity
     guid: 4e6dc84c3f1523e499c426acea6dd543
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Project/Forms/Scenes/Form_Crossword.unity
     guid: 5b3cc934e82f3ed41b49c1e1d70bc1ee
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Project/Forms/Scenes/Form_Puzzle.unity
     guid: ca4f609c2dbacd7448c65f13c164a224
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Project/Forms/Scenes/Form_Drag_drop.unity
     guid: 8aa9dee74abd7f446ae8281b40b50e2e
   - enabled: 1
