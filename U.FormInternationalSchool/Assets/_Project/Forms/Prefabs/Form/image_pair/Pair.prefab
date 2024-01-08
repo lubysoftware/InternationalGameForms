@@ -81,6 +81,8 @@ MonoBehaviour:
   - {fileID: 4728335721775108549}
   - {fileID: 5910189894246148855}
   Id: 581
+  titleText: {fileID: 0}
+  isSquare: 1
 --- !u!1001 &7390885991317969546
 PrefabInstance:
   m_ObjectHideFlags: 0

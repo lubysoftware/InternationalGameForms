@@ -169,7 +169,7 @@ public class DragDropPanel : SimpleSingleton<DragDropPanel>
                 }
                 else
                 {
-                    listFilledImages.Add(el.Index, Constants.ERROR_IMAGE_URL);
+                    listFilledImages.Add(el.Index, Constants.ERROR_IMAGE_URL_SQUARE);
                 }
             }
         }

@@ -19,5 +19,7 @@ public class Constants : MonoBehaviour
     public const string URL_UPLOAD_MEDIA = URL_DATABASE + "file-upload";
 
     public const string ERROR_IMAGE_URL =
-        "https://edtechprojetos.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png";
+        "https://edtechprojetos.blob.core.windows.net/arquivos/e0b7d321-fcaf-44bf-ac33-bb7fc8679e72_name.Vector.png";
+
+    public const string ERROR_IMAGE_URL_SQUARE = "https://edtechprojetos.blob.core.windows.net/arquivos/217cbcc2-c2b3-41a3-9b77-f44eb8f077ba_name.pair_left.png";
 }

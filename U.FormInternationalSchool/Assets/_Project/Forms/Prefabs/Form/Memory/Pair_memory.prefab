@@ -293,6 +293,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3346211080189678853, guid: 1c4f7197c78694041bcc17a96045cdb5, type: 3}
+      propertyPath: isSquare
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3346211080189678853, guid: 1c4f7197c78694041bcc17a96045cdb5, type: 3}
       propertyPath: titleText
       value: 
       objectReference: {fileID: 7845157270701487609}

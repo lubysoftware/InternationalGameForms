@@ -857,6 +857,11 @@ public class FormScreen : MonoBehaviour
     {
         
     }
+
+    public bool CheckIfHasImageToFill(string json)
+    {
+        return json.Contains(Constants.ERROR_IMAGE_URL) || json.Contains(Constants.ERROR_IMAGE_URL_SQUARE);
+    }
     
     
     public void SendGameInfoToPortal(string responseJson)
@@ -870,6 +875,8 @@ public class FormScreen : MonoBehaviour
     {
         List<string> urlsToIgnore = themeSongsUrls.Values.ToList();
         urlsToIgnore.Add("https://edtechprojetos.blob.core.windows.net/arquivos/f8e9e553-ccc2-4a48-b9b0-3c205d73357d_name.verso.png");
+        urlsToIgnore.Add(Constants.ERROR_IMAGE_URL);
+        urlsToIgnore.Add(Constants.ERROR_IMAGE_URL_SQUARE);
         
         List<string> urls = new List<string>();
         

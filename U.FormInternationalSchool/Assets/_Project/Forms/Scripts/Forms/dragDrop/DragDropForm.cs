@@ -264,6 +264,11 @@ public class DragDropForm : FormScreen
         if (!isPreview)
         {
             string json = JsonConvert.SerializeObject(completeForm);
+            if (CheckIfHasImageToFill(json))
+            {
+                completeForm.game.isDraft = true;
+                json = JsonConvert.SerializeObject(completeForm);
+            }
             
             if (isEdit)
             {

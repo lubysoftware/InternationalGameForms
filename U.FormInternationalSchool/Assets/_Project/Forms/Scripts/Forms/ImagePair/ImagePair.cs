@@ -14,6 +14,8 @@ public class ImagePair : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI titleText;
 
+    [SerializeField] private bool isSquare;
+
     private void Start()
     {
         foreach (var frame in frames)
@@ -63,7 +65,14 @@ public class ImagePair : MonoBehaviour
                     }
                     else
                     {
-                        listFilledImages.Add(Constants.ERROR_IMAGE_URL);
+                        if (isSquare)
+                        {
+                            listFilledImages.Add(Constants.ERROR_IMAGE_URL_SQUARE);
+                        }
+                        else
+                        {
+                            listFilledImages.Add(Constants.ERROR_IMAGE_URL);
+                        }
                     }
                    
                 }

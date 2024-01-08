@@ -224,7 +224,12 @@ public class MemoryForm : FormScreen
         if (!isPreview)
         {
             string json = JsonConvert.SerializeObject(completeForm);
-
+            if (CheckIfHasImageToFill(json))
+            {
+                completeForm.game.isDraft = true;
+                json = JsonConvert.SerializeObject(completeForm);
+            }
+            
             if (isEdit)
             {
                 SendFilesToAPI.Instance.StartUploadJsonUpdate(json, so.url, id, title.InputField.text, this,
